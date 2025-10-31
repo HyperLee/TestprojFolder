@@ -31,7 +31,7 @@ public class CurrencyConverterModel : PageModel
     /// 台幣金額 (用於台幣轉外幣)
     /// </summary>
     [BindProperty]
-    public decimal TwdAmount { get; set; }
+    public decimal? TwdAmount { get; set; }
 
     /// <summary>
     /// 選擇的目標外幣代碼
@@ -43,7 +43,7 @@ public class CurrencyConverterModel : PageModel
     /// 外幣金額 (用於外幣轉台幣)
     /// </summary>
     [BindProperty]
-    public decimal ForeignAmount { get; set; }
+    public decimal? ForeignAmount { get; set; }
 
     /// <summary>
     /// 選擇的來源外幣代碼
@@ -116,6 +116,14 @@ public class CurrencyConverterModel : PageModel
     /// <returns>頁面結果,包含計算結果或驗證錯誤</returns>
     public async Task<IActionResult> OnPostCalculateTwdToForeignAsync()
     {
+        // 清除不相關的欄位驗證錯誤
+        ModelState.Remove(nameof(ForeignAmount));
+        
+        if (!TwdAmount.HasValue || TwdAmount.Value <= 0)
+        {
+            ModelState.AddModelError(nameof(TwdAmount), "請輸入大於 0 的金額");
+        }
+
         if (!ModelState.IsValid)
         {
             await OnGetAsync();
@@ -124,7 +132,7 @@ public class CurrencyConverterModel : PageModel
 
         try
         {
-            Result = await _currencyService.CalculateTwdToForeignAsync(TwdAmount, SelectedCurrency);
+            Result = await _currencyService.CalculateTwdToForeignAsync(TwdAmount!.Value, SelectedCurrency);
             await OnGetAsync(); // 重新載入匯率資訊
             return Page();
         }
@@ -154,6 +162,14 @@ public class CurrencyConverterModel : PageModel
     /// <returns>頁面結果,包含計算結果或驗證錯誤</returns>
     public async Task<IActionResult> OnPostCalculateForeignToTwdAsync()
     {
+        // 清除不相關的欄位驗證錯誤
+        ModelState.Remove(nameof(TwdAmount));
+        
+        if (!ForeignAmount.HasValue || ForeignAmount.Value <= 0)
+        {
+            ModelState.AddModelError(nameof(ForeignAmount), "請輸入大於 0 的金額");
+        }
+
         if (!ModelState.IsValid)
         {
             await OnGetAsync();
@@ -162,7 +178,7 @@ public class CurrencyConverterModel : PageModel
 
         try
         {
-            Result = await _currencyService.CalculateForeignToTwdAsync(ForeignAmount, SourceCurrency);
+            Result = await _currencyService.CalculateForeignToTwdAsync(ForeignAmount!.Value, SourceCurrency);
             await OnGetAsync(); // 重新載入匯率資訊
             return Page();
         }

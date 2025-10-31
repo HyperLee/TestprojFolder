@@ -128,12 +128,21 @@
                     {
                         <div class="alert alert-success mt-4" role="status" aria-live="polite">
                             <h6 class="alert-heading">✓ 計算結果</h6>
-                            <p class="mb-0">
-                                <strong>@Model.Result.GetFormattedResult()</strong>
-                            </p>
+                            <div class="mb-2">
+                                <div class="row">
+                                    <div class="col-6 text-muted">原始金額：</div>
+                                    <div class="col-6 text-end"><strong>@Model.Result.GetFormattedSourceAmount() TWD</strong></div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-6 text-muted">兌換後金額：</div>
+                                    <div class="col-6 text-end">
+                                        <span class="fs-5 text-success fw-bold">@Model.Result.GetFormattedTargetAmount() @Model.Result.TargetCurrency</span>
+                                    </div>
+                                </div>
+                            </div>
                             <hr />
                             <small class="text-muted">
-                                匯率：@Model.Result.ExchangeRate.ToString("N6")<br />
+                                匯率：1 TWD = @Model.Result.ExchangeRate.ToString("N6") @Model.Result.TargetCurrency<br />
                                 計算時間：@BNICalculate.Helpers.DateTimeHelper.GetFullDateTimeString(Model.Result.CalculatedAt)
                             </small>
                         </div>
@@ -194,12 +203,21 @@
                     {
                         <div class="alert alert-success mt-4" role="status" aria-live="polite">
                             <h6 class="alert-heading">✓ 計算結果</h6>
-                            <p class="mb-0">
-                                <strong>@Model.Result.GetFormattedResult()</strong>
-                            </p>
+                            <div class="mb-2">
+                                <div class="row">
+                                    <div class="col-6 text-muted">原始金額：</div>
+                                    <div class="col-6 text-end"><strong>@Model.Result.GetFormattedSourceAmount() @Model.Result.SourceCurrency</strong></div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-6 text-muted">兌換後金額：</div>
+                                    <div class="col-6 text-end">
+                                        <span class="fs-5 text-success fw-bold">@Model.Result.GetFormattedTargetAmount() TWD</span>
+                                    </div>
+                                </div>
+                            </div>
                             <hr />
                             <small class="text-muted">
-                                匯率：@Model.Result.ExchangeRate.ToString("N6")<br />
+                                匯率：1 @Model.Result.SourceCurrency = @Model.Result.ExchangeRate.ToString("N6") TWD<br />
                                 計算時間：@BNICalculate.Helpers.DateTimeHelper.GetFullDateTimeString(Model.Result.CalculatedAt)
                             </small>
                         </div>

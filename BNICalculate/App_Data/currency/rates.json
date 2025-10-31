@@ -5,51 +5,51 @@
       "CurrencyName": "美金",
       "CashBuyRate": 30.33000,
       "CashSellRate": 31.00000,
-      "LastUpdated": "2025-11-01T05:25:39.972542"
+      "LastUpdated": "2025-11-01T05:26:15.467923"
     },
     {
       "CurrencyCode": "HKD",
       "CurrencyName": "港幣",
       "CashBuyRate": 3.80000,
       "CashSellRate": 4.00400,
-      "LastUpdated": "2025-11-01T05:25:39.973221"
+      "LastUpdated": "2025-11-01T05:26:15.467938"
     },
     {
       "CurrencyCode": "GBP",
       "CurrencyName": "英鎊",
       "CashBuyRate": 39.19000,
       "CashSellRate": 41.31000,
-      "LastUpdated": "2025-11-01T05:25:39.973222"
+      "LastUpdated": "2025-11-01T05:26:15.467939"
     },
     {
       "CurrencyCode": "AUD",
       "CurrencyName": "澳幣",
       "CashBuyRate": 19.72000,
       "CashSellRate": 20.50000,
-      "LastUpdated": "2025-11-01T05:25:39.973223"
+      "LastUpdated": "2025-11-01T05:26:15.46794"
     },
     {
       "CurrencyCode": "JPY",
       "CurrencyName": "日圓",
       "CashBuyRate": 0.19030,
       "CashSellRate": 0.20310,
-      "LastUpdated": "2025-11-01T05:25:39.973223"
+      "LastUpdated": "2025-11-01T05:26:15.46794"
     },
     {
       "CurrencyCode": "EUR",
       "CurrencyName": "歐元",
       "CashBuyRate": 34.75000,
       "CashSellRate": 36.09000,
-      "LastUpdated": "2025-11-01T05:25:39.973224"
+      "LastUpdated": "2025-11-01T05:26:15.467941"
     },
     {
       "CurrencyCode": "CNY",
       "CurrencyName": "人民幣",
       "CashBuyRate": 4.22000,
       "CashSellRate": 4.38200,
-      "LastUpdated": "2025-11-01T05:25:39.973224"
+      "LastUpdated": "2025-11-01T05:26:15.467941"
     }
   ],
-  "LastFetchTime": "2025-11-01T05:25:39.973483",
+  "LastFetchTime": "2025-11-01T05:26:15.468336",
   "DataSource": "台灣銀行"
 }

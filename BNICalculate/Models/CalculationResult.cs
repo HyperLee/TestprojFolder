@@ -42,8 +42,27 @@ public class CalculationResult
     public string GetFormattedResult()
     {
         var sourceFormatted = SourceAmount.ToString("N" + (SourceCurrency == "TWD" ? "0" : "2"));
-        var targetFormatted = TargetAmount.ToString("N6");
+        var targetFormatted = TargetAmount.ToString("N2"); // 改為顯示 2 位小數，更易讀
 
         return $"{sourceFormatted} {SourceCurrency} = {targetFormatted} {TargetCurrency}";
+    }
+
+    /// <summary>
+    /// 取得兌換後的金額（格式化，2位小數）
+    /// </summary>
+    /// <returns>格式化的目標金額字串</returns>
+    public string GetFormattedTargetAmount()
+    {
+        return TargetAmount.ToString("N2");
+    }
+
+    /// <summary>
+    /// 取得來源金額（格式化）
+    /// </summary>
+    /// <returns>格式化的來源金額字串</returns>
+    public string GetFormattedSourceAmount()
+    {
+        var decimals = SourceCurrency == "TWD" ? 0 : 2;
+        return SourceAmount.ToString("N" + decimals);
     }
 }
