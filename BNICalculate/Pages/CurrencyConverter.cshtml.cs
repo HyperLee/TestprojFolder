@@ -41,11 +41,29 @@ public class CurrencyConverterModel : PageModel
 
     public string? ErrorMessage { get; set; }
 
+    public bool IsUpdating { get; set; }
+
     public async Task OnGetAsync()
     {
         try
         {
             CurrentRates = await _currencyService.GetRatesAsync();
+            
+            // 如果無資料，自動取得
+            if (CurrentRates == null)
+            {
+                _logger.LogInformation("首次載入，自動從台銀 API 取得匯率資料");
+                try
+                {
+                    CurrentRates = await _currencyService.FetchAndUpdateRatesAsync();
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "自動更新匯率失敗");
+                    ErrorMessage = "無法取得匯率資料，請稍後手動更新。";
+                }
+            }
+            
             IsDataStale = await _currencyService.IsDataStaleAsync();
         }
         catch (Exception ex)
@@ -117,6 +135,39 @@ public class CurrencyConverterModel : PageModel
         {
             _logger.LogError(ex, "計算時發生未預期的錯誤");
             ModelState.AddModelError(string.Empty, "計算時發生錯誤，請稍後再試。");
+        }
+
+        await OnGetAsync();
+        return Page();
+    }
+
+    public async Task<IActionResult> OnPostUpdateRatesAsync()
+    {
+        try
+        {
+            IsUpdating = true;
+            _logger.LogInformation("手動更新匯率");
+            
+            CurrentRates = await _currencyService.FetchAndUpdateRatesAsync();
+            IsDataStale = false;
+            
+            TempData["SuccessMessage"] = "匯率已成功更新！";
+            return RedirectToPage();
+        }
+        catch (ExternalServiceException ex)
+        {
+            _logger.LogError(ex, "更新匯率失敗: {Message}", ex.Message);
+            ErrorMessage = $"更新失敗：{ex.Message}";
+        }
+        catch (DataFormatException ex)
+        {
+            _logger.LogError(ex, "資料格式錯誤: {Message}", ex.Message);
+            ErrorMessage = $"資料格式錯誤：{ex.Message}";
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "更新匯率時發生未預期的錯誤");
+            ErrorMessage = "更新匯率時發生錯誤，請稍後再試。";
         }
 
         await OnGetAsync();

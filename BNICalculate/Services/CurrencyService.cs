@@ -1,5 +1,10 @@
 using BNICalculate.Models;
+using BNICalculate.Helpers;
+using CsvHelper;
+using CsvHelper.Configuration;
 using Microsoft.Extensions.Caching.Memory;
+using System.Globalization;
+using System.Text;
 
 namespace BNICalculate.Services;
 
@@ -10,6 +15,8 @@ public class CurrencyService : ICurrencyService
 {
     private readonly ICurrencyDataService _dataService;
     private readonly IMemoryCache _cache;
+    private readonly IHttpClientFactory _httpClientFactory;
+    private readonly ILogger<CurrencyService> _logger;
     private const string CacheKey = "CurrencyRates:Latest";
     private static readonly TimeSpan CacheDuration = TimeSpan.FromMinutes(30);
 
@@ -18,10 +25,18 @@ public class CurrencyService : ICurrencyService
     /// </summary>
     /// <param name="dataService">資料存取服務</param>
     /// <param name="cache">記憶體快取</param>
-    public CurrencyService(ICurrencyDataService dataService, IMemoryCache cache)
+    /// <param name="httpClientFactory">HTTP 客戶端工廠</param>
+    /// <param name="logger">日誌記錄器</param>
+    public CurrencyService(
+        ICurrencyDataService dataService, 
+        IMemoryCache cache,
+        IHttpClientFactory httpClientFactory,
+        ILogger<CurrencyService> logger)
     {
         _dataService = dataService;
         _cache = cache;
+        _httpClientFactory = httpClientFactory;
+        _logger = logger;
     }
 
     /// <summary>
@@ -157,5 +172,141 @@ public class CurrencyService : ICurrencyService
         }
 
         return data.IsStale();
+    }
+
+    /// <summary>
+    /// 從台銀 API 取得最新匯率並更新本地資料
+    /// </summary>
+    /// <returns>更新後的匯率資料</returns>
+    /// <exception cref="ExternalServiceException">API 呼叫失敗時拋出</exception>
+    /// <exception cref="DataFormatException">資料格式錯誤時拋出</exception>
+    public async Task<ExchangeRateData> FetchAndUpdateRatesAsync()
+    {
+        try
+        {
+            _logger.LogInformation("開始從台銀 API 取得匯率資料");
+
+            // 建立 HTTP 客戶端
+            var httpClient = _httpClientFactory.CreateClient("TaiwanBankApi");
+            
+            // 呼叫台銀 CSV API
+            var response = await httpClient.GetAsync("/xrt/flcsv/0/day");
+            
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new ExternalServiceException($"台銀 API 呼叫失敗: HTTP {response.StatusCode}");
+            }
+
+            // 讀取 CSV 內容（Big5 編碼）
+            var bytes = await response.Content.ReadAsByteArrayAsync();
+            var encoding = Encoding.GetEncoding("Big5");
+            var csvContent = encoding.GetString(bytes);
+
+            // 解析 CSV
+            var rates = ParseCsvContent(csvContent);
+
+            // 建立匯率資料物件
+            var ratesData = new ExchangeRateData
+            {
+                Rates = rates,
+                LastFetchTime = DateTimeHelper.GetTaiwanTime(),
+                DataSource = "台灣銀行"
+            };
+
+            // 儲存到檔案
+            await _dataService.SaveAsync(ratesData);
+
+            // 清除快取，強制重新載入
+            _cache.Remove(CacheKey);
+
+            _logger.LogInformation("成功從台銀 API 取得並儲存 {Count} 筆匯率資料", rates.Count);
+
+            return ratesData;
+        }
+        catch (HttpRequestException ex)
+        {
+            _logger.LogError(ex, "HTTP 請求失敗");
+            throw new ExternalServiceException("無法連線到台銀 API", ex);
+        }
+        catch (TaskCanceledException ex)
+        {
+            _logger.LogError(ex, "請求逾時");
+            throw new ExternalServiceException("台銀 API 請求逾時", ex);
+        }
+        catch (DataFormatException)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "取得匯率資料時發生未預期的錯誤");
+            throw new ExternalServiceException("取得匯率資料失敗", ex);
+        }
+    }
+
+    /// <summary>
+    /// 解析 CSV 內容
+    /// </summary>
+    private List<ExchangeRate> ParseCsvContent(string csvContent)
+    {
+        try
+        {
+            var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                HasHeaderRecord = true,
+                MissingFieldFound = null,
+                BadDataFound = null
+            };
+
+            using var reader = new StringReader(csvContent);
+            using var csv = new CsvReader(reader, config);
+            
+            var records = csv.GetRecords<TaiwanBankCsvRecord>().ToList();
+            var rates = new List<ExchangeRate>();
+            var supportedCurrencies = new HashSet<string> { "USD", "JPY", "CNY", "EUR", "GBP", "HKD", "AUD" };
+
+            foreach (var record in records)
+            {
+                // 只處理支援的貨幣
+                if (!supportedCurrencies.Contains(record.CurrencyCode))
+                {
+                    continue;
+                }
+
+                // 解析匯率（可能包含破折號 "-" 表示無資料）
+                if (!decimal.TryParse(record.CashBuyRate, out var buyRate) || buyRate <= 0)
+                {
+                    _logger.LogWarning("貨幣 {Currency} 的現金買入匯率無效: {Rate}", record.CurrencyCode, record.CashBuyRate);
+                    continue;
+                }
+
+                if (!decimal.TryParse(record.CashSellRate, out var sellRate) || sellRate <= 0)
+                {
+                    _logger.LogWarning("貨幣 {Currency} 的現金賣出匯率無效: {Rate}", record.CurrencyCode, record.CashSellRate);
+                    continue;
+                }
+
+                rates.Add(new ExchangeRate
+                {
+                    CurrencyCode = record.CurrencyCode,
+                    CurrencyName = record.CurrencyName,
+                    CashBuyRate = buyRate,
+                    CashSellRate = sellRate,
+                    LastUpdated = DateTimeHelper.GetTaiwanTime()
+                });
+            }
+
+            if (rates.Count == 0)
+            {
+                throw new DataFormatException("CSV 解析後沒有有效的匯率資料");
+            }
+
+            return rates;
+        }
+        catch (Exception ex) when (ex is not DataFormatException)
+        {
+            _logger.LogError(ex, "CSV 解析失敗");
+            throw new DataFormatException("CSV 格式錯誤", ex);
+        }
     }
 }

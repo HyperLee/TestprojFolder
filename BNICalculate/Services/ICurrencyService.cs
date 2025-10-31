@@ -38,4 +38,12 @@ public interface ICurrencyService
     /// </summary>
     /// <returns>資料是否過期</returns>
     Task<bool> IsDataStaleAsync();
+
+    /// <summary>
+    /// 從台銀 API 取得最新匯率並更新本地資料
+    /// </summary>
+    /// <returns>更新後的匯率資料</returns>
+    /// <exception cref="ExternalServiceException">API 呼叫失敗時拋出</exception>
+    /// <exception cref="DataFormatException">資料格式錯誤時拋出</exception>
+    Task<ExchangeRateData> FetchAndUpdateRatesAsync();
 }

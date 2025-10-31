@@ -7,6 +7,14 @@
 <div class="container mt-4">
     <h1 class="mb-4">💱 匯率計算器</h1>
 
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            ✓ @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
     @if (!string.IsNullOrEmpty(Model.ErrorMessage))
     {
         <div class="alert alert-danger" role="alert">
@@ -25,11 +33,30 @@
     {
         <div class="card mb-4">
             <div class="card-body">
-                <h5 class="card-title">📊 當前匯率資訊</h5>
-                <p class="card-text">
-                    <strong>資料來源：</strong>@Model.CurrentRates.DataSource<br />
-                    <strong>最後更新：</strong>@BNICalculate.Helpers.DateTimeHelper.GetFullDateTimeString(Model.CurrentRates.LastFetchTime)
-                </p>
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h5 class="card-title">📊 當前匯率資訊</h5>
+                        <p class="card-text mb-0">
+                            <strong>資料來源：</strong>@Model.CurrentRates.DataSource<br />
+                            <strong>最後更新：</strong>@BNICalculate.Helpers.DateTimeHelper.GetFullDateTimeString(Model.CurrentRates.LastFetchTime)
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                        <form method="post" asp-page-handler="UpdateRates" class="d-inline">
+                            <button type="submit" class="btn btn-outline-primary" @(Model.IsUpdating ? "disabled" : "")>
+                                @if (Model.IsUpdating)
+                                {
+                                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                    <text>更新中...</text>
+                                }
+                                else
+                                {
+                                    <text>🔄 更新匯率</text>
+                                }
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     }

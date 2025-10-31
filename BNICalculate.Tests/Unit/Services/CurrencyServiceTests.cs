@@ -1,6 +1,7 @@
 using BNICalculate.Models;
 using BNICalculate.Services;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace BNICalculate.Tests.Unit.Services;
@@ -18,7 +19,14 @@ public class CurrencyServiceTests
     {
         _mockDataService = new Mock<ICurrencyDataService>();
         _cache = new MemoryCache(new MemoryCacheOptions());
-        _service = new CurrencyService(_mockDataService.Object, _cache);
+        var mockHttpClientFactory = new Mock<IHttpClientFactory>();
+        var mockLogger = new Mock<ILogger<CurrencyService>>();
+        _service = new CurrencyService(
+            _mockDataService.Object, 
+            _cache,
+            mockHttpClientFactory.Object,
+            mockLogger.Object
+        );
     }
 
     [Fact]
