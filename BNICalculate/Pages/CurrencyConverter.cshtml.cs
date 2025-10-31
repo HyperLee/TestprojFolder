@@ -118,6 +118,7 @@ public class CurrencyConverterModel : PageModel
     {
         // 清除不相關的欄位驗證錯誤
         ModelState.Remove(nameof(ForeignAmount));
+        ModelState.Remove(nameof(SourceCurrency));
         
         _logger.LogInformation("台幣轉外幣計算 - TwdAmount: {Amount}, SelectedCurrency: {Currency}", TwdAmount, SelectedCurrency);
         
@@ -170,6 +171,7 @@ public class CurrencyConverterModel : PageModel
     {
         // 清除不相關的欄位驗證錯誤
         ModelState.Remove(nameof(TwdAmount));
+        ModelState.Remove(nameof(SelectedCurrency));
         
         if (!ForeignAmount.HasValue || ForeignAmount.Value <= 0)
         {
