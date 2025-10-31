@@ -9,11 +9,11 @@
 
 ---
 
-## Format: `[ID] [P?] [Story] Description`
+## Format: `[ID] [Story] Description`
 
-- **[P]**: 可平行執行（不同檔案，無相依性）
 - **[Story]**: 任務所屬使用者故事（US1, US2, US3, US4, US5）
 - 描述包含明確檔案路徑
+- 所有任務依順序執行，不支援平行處理
 
 ---
 
@@ -34,7 +34,7 @@
 - [ ] T001 在 BNICalculate/Models/ 建立資料夾（若不存在）
 - [ ] T002 在 BNICalculate/Services/ 建立資料夾（若不存在）
 - [ ] T003 在 BNICalculate/App_Data/pomodoro/ 建立 JSON 資料儲存目錄
-- [ ] T004 [P] 在 BNICalculate/wwwroot/js/ 和 wwwroot/css/ 確認目錄存在
+- [ ] T004 在 BNICalculate/wwwroot/js/ 和 wwwroot/css/ 確認目錄存在
 - [ ] T005 在 BNICalculate/Pages/Shared/_Layout.cshtml 新增番茄鐘導覽連結
 
 ---
@@ -45,9 +45,9 @@
 
 **⚠️ CRITICAL**: 此階段必須完成後，所有使用者故事才能開始實作
 
-- [ ] T006 [P] 建立 UserSettings 模型在 BNICalculate/Models/UserSettings.cs（包含驗證 Annotations）
-- [ ] T007 [P] 建立 TimerSession 模型在 BNICalculate/Models/TimerSession.cs（工作/休息時段記錄）
-- [ ] T008 [P] 建立 PomodoroStatistics 模型在 BNICalculate/Models/PomodoroStatistics.cs（每日統計）
+- [ ] T006 建立 UserSettings 模型在 BNICalculate/Models/UserSettings.cs（包含驗證 Annotations）
+- [ ] T007 建立 TimerSession 模型在 BNICalculate/Models/TimerSession.cs（工作/休息時段記錄）
+- [ ] T008 建立 PomodoroStatistics 模型在 BNICalculate/Models/PomodoroStatistics.cs（每日統計）
 - [ ] T009 建立 PomodoroDataService 服務在 BNICalculate/Services/PomodoroDataService.cs（JSON 讀寫、IMemoryCache 快取、檔案 I/O）
 - [ ] T010 在 BNICalculate/Program.cs 註冊 PomodoroDataService 和 IMemoryCache
 - [ ] T011 建立基礎 Razor Page 在 BNICalculate/Pages/Pomodoro.cshtml（空白頁面含 @page 指令）
@@ -55,11 +55,11 @@
 
 **測試（OPTIONAL - 若測試環境有問題可跳過）**:
 
-- [ ] T013 [P] 建立 UserSettingsTests 在 BNICalculate.Tests/Unit/Models/UserSettingsTests.cs（驗證規則測試）
-- [ ] T014 [P] 建立 PomodoroDataServiceTests 在 BNICalculate.Tests/Unit/Services/PomodoroDataServiceTests.cs（JSON 序列化、檔案讀寫、預設值測試）
+- [ ] T013 建立 UserSettingsTests 在 BNICalculate.Tests/Unit/Models/UserSettingsTests.cs（驗證規則測試）
+- [ ] T014 建立 PomodoroDataServiceTests 在 BNICalculate.Tests/Unit/Services/PomodoroDataServiceTests.cs（JSON 序列化、檔案讀寫、預設值測試）
 - [ ] T015 執行基礎測試確認環境正常：`dotnet test --filter "FullyQualifiedName~PomodoroDataServiceTests"`（若失敗則標記測試為可選）
 
-**Checkpoint**: 基礎架構就緒 - 使用者故事可開始平行實作
+**Checkpoint**: 基礎架構就緒 - 使用者故事可開始依序實作
 
 ---
 
@@ -73,7 +73,7 @@
 
 ### JavaScript 客戶端實作（核心計時器）
 
-- [ ] T016 [P] [US1] 建立 pomodoro.js 在 BNICalculate/wwwroot/js/pomodoro.js（空檔案含註解結構）
+- [ ] T016 [US1] 建立 pomodoro.js 在 BNICalculate/wwwroot/js/pomodoro.js（空檔案含註解結構）
 - [ ] T017 [US1] 實作 PomodoroTimer 類別建構函式（options 參數、事件回呼）
 - [ ] T018 [US1] 實作 PomodoroTimer.startWork() 方法（記錄 startTimestamp、啟動 setInterval、更新 state）
 - [ ] T019 [US1] 實作 PomodoroTimer.startBreak() 方法（切換 sessionType、重置 totalDuration）
@@ -85,8 +85,8 @@
 ### UI 實作（Razor Page）
 
 - [ ] T024 [US1] 在 Pomodoro.cshtml 實作計時器顯示區域（MM:SS 格式、時段類型標籤）
-- [ ] T025 [P] [US1] 在 Pomodoro.cshtml 實作控制按鈕區（開始工作按鈕、HTML 結構）
-- [ ] T026 [P] [US1] 在 Pomodoro.cshtml 實作 Bootstrap Toast 通知容器（橫幅訊息 HTML）
+- [ ] T025 [US1] 在 Pomodoro.cshtml 實作控制按鈕區（開始工作按鈕、HTML 結構）
+- [ ] T026 [US1] 在 Pomodoro.cshtml 實作 Bootstrap Toast 通知容器（橫幅訊息 HTML）
 - [ ] T027 [US1] 在 pomodoro.js 實作 showNotification() 函式（Bootstrap Toast 顯示、4 秒自動消失）
 - [ ] T028 [US1] 在 pomodoro.js 實作 formatTime() 輔助函式（秒數轉 MM:SS）
 - [ ] T029 [US1] 在 pomodoro.js 綁定開始按鈕事件監聽器（呼叫 timer.startWork()）
@@ -101,8 +101,8 @@
 
 ### 樣式實作
 
-- [ ] T035 [P] [US1] 建立 pomodoro.css 在 BNICalculate/wwwroot/css/pomodoro.css（計時器顯示樣式、按鈕樣式）
-- [ ] T036 [P] [US1] 在 Pomodoro.cshtml 引入 pomodoro.css 和 pomodoro.js
+- [ ] T035 [US1] 建立 pomodoro.css 在 BNICalculate/wwwroot/css/pomodoro.css（計時器顯示樣式、按鈕樣式）
+- [ ] T036 [US1] 在 Pomodoro.cshtml 引入 pomodoro.css 和 pomodoro.js
 
 ### 後端整合
 
@@ -112,7 +112,7 @@
 
 ### 測試（OPTIONAL - 環境問題可跳過）
 
-- [ ] T040 [P] [US1] 建立 PomodoroPageTests 在 BNICalculate.Tests/Integration/Pages/PomodoroPageTests.cs（測試頁面載入、設定傳遞）
+- [ ] T040 [US1] 建立 PomodoroPageTests 在 BNICalculate.Tests/Integration/Pages/PomodoroPageTests.cs（測試頁面載入、設定傳遞）
 - [ ] T041 [US1] 執行整合測試：`dotnet test --filter "FullyQualifiedName~PomodoroPageTests"`（若失敗記錄問題但繼續）
 
 **Checkpoint**: User Story 1 完成 - 基本計時功能可獨立測試（手動測試：開啟頁面 → 點擊開始 → 觀察 25 分鐘倒數 → 驗證自動切換休息）
@@ -129,17 +129,17 @@
 
 ### JavaScript 實作
 
-- [ ] T042 [P] [US2] 實作 PomodoroTimer.pause() 方法（停止 setInterval、計算剩餘時間、更新 state）
-- [ ] T043 [P] [US2] 實作 PomodoroTimer.resume() 方法（從剩餘時間繼續計時）
-- [ ] T044 [P] [US2] 實作 PomodoroTimer.reset() 方法（停止計時器、清除 localStorage、重置 UI）
+- [ ] T042 [US2] 實作 PomodoroTimer.pause() 方法（停止 setInterval、計算剩餘時間、更新 state）
+- [ ] T043 [US2] 實作 PomodoroTimer.resume() 方法（從剩餘時間繼續計時）
+- [ ] T044 [US2] 實作 PomodoroTimer.reset() 方法（停止計時器、清除 localStorage、重置 UI）
 - [ ] T045 [US2] 實作按鈕狀態管理邏輯（根據 timer.state 動態顯示/隱藏按鈕）
 - [ ] T046 [US2] 實作 onStateChange 回呼（state 變更時觸發）
 
 ### UI 實作（US2 控制按鈕）
 
-- [ ] T047 [P] [US2] 在 Pomodoro.cshtml 新增暫停按鈕（HTML）
-- [ ] T048 [P] [US2] 在 Pomodoro.cshtml 新增繼續按鈕（HTML，初始隱藏）
-- [ ] T049 [P] [US2] 在 Pomodoro.cshtml 新增重置按鈕（HTML）
+- [ ] T047 [US2] 在 Pomodoro.cshtml 新增暫停按鈕（HTML）
+- [ ] T048 [US2] 在 Pomodoro.cshtml 新增繼續按鈕（HTML，初始隱藏）
+- [ ] T049 [US2] 在 Pomodoro.cshtml 新增重置按鈕（HTML）
 - [ ] T050 [US2] 在 pomodoro.js 綁定暫停按鈕事件（呼叫 timer.pause()）
 - [ ] T051 [US2] 在 pomodoro.js 綁定繼續按鈕事件（呼叫 timer.resume()）
 - [ ] T052 [US2] 在 pomodoro.js 綁定重置按鈕事件（呼叫 timer.reset()）
@@ -176,10 +176,10 @@
 
 ### UI 顯示（US3）
 
-- [ ] T062 [P] [US3] 在 Pomodoro.cshtml 新增統計顯示區域（今日番茄鐘計數、HTML）
+- [ ] T062 [US3] 在 Pomodoro.cshtml 新增統計顯示區域（今日番茄鐘計數、HTML）
 - [ ] T063 [US3] 在 Pomodoro.cshtml.cs OnGet() 傳遞 CompletedPomodoroCount 至頁面
 - [ ] T064 [US3] 在 pomodoro.js 實作 incrementPomodoroCount() 函式（更新顯示數字）
-- [ ] T065 [P] [US3] 在 pomodoro.css 新增統計區域樣式
+- [ ] T065 [US3] 在 pomodoro.css 新增統計區域樣式
 
 ### 多視窗衝突偵測（FR-025）
 
@@ -187,13 +187,13 @@
 - [ ] T067 [US3] 實作 MultiWindowGuard.tryAcquireLock() 方法（檢查 localStorage、心跳機制）
 - [ ] T068 [US3] 實作 MultiWindowGuard.startHeartbeat() 方法（每 2 秒更新 lastHeartbeat）
 - [ ] T069 [US3] 實作 MultiWindowGuard.releaseLock() 方法（頁面關閉時清除）
-- [ ] T070 [P] [US3] 在 Pomodoro.cshtml 新增多視窗警告橫幅（HTML，初始隱藏）
+- [ ] T070 [US3] 在 Pomodoro.cshtml 新增多視窗警告橫幅（HTML，初始隱藏）
 - [ ] T071 [US3] 在 pomodoro.js 頁面載入時執行 tryAcquireLock()（失敗則禁用功能）
 - [ ] T072 [US3] 在 window.beforeunload 綁定 releaseLock() 呼叫
 
 ### 測試（US3 - OPTIONAL）
 
-- [ ] T073 [P] [US3] 建立 PomodoroStatisticsTests 在 BNICalculate.Tests/Unit/Models/PomodoroStatisticsTests.cs（測試 IsToday()、RecordWorkSession()）
+- [ ] T073 [US3] 建立 PomodoroStatisticsTests 在 BNICalculate.Tests/Unit/Models/PomodoroStatisticsTests.cs（測試 IsToday()、RecordWorkSession()）
 - [ ] T074 [US3] 手動測試：完成 2 個番茄鐘 → 檢查統計顯示 2 → 關閉頁面 → 重新開啟 → 驗證顯示 2
 - [ ] T075 [US3] 手動測試多視窗：開啟第一個視窗 → 開啟第二個視窗 → 驗證第二個視窗顯示警告並禁用
 
@@ -218,11 +218,11 @@
 
 ### UI 實作（US4 設定表單）
 
-- [ ] T080 [P] [US4] 在 Pomodoro.cshtml 新增設定表單區域（工作時長輸入、休息時長輸入、儲存按鈕）
-- [ ] T081 [P] [US4] 在 Pomodoro.cshtml 新增 HTML5 驗證屬性（type="number", min, max, required）
-- [ ] T082 [P] [US4] 在 Pomodoro.cshtml 新增 asp-validation 標籤（顯示錯誤訊息）
+- [ ] T080 [US4] 在 Pomodoro.cshtml 新增設定表單區域（工作時長輸入、休息時長輸入、儲存按鈕）
+- [ ] T081 [US4] 在 Pomodoro.cshtml 新增 HTML5 驗證屬性（type="number", min, max, required）
+- [ ] T082 [US4] 在 Pomodoro.cshtml 新增 asp-validation 標籤（顯示錯誤訊息）
 - [ ] T083 [US4] 在 Pomodoro.cshtml 綁定表單 asp-page-handler="SaveSettings"
-- [ ] T084 [P] [US4] 在 pomodoro.css 新增設定表單樣式
+- [ ] T084 [US4] 在 pomodoro.css 新增設定表單樣式
 
 ### JavaScript 整合
 
@@ -232,7 +232,7 @@
 
 ### 測試（US4 - OPTIONAL）
 
-- [ ] T088 [P] [US4] 建立 UserSettingsValidationTests 在 BNICalculate.Tests/Unit/Models/UserSettingsTests.cs（測試 Range 驗證、IsValid()）
+- [ ] T088 [US4] 建立 UserSettingsValidationTests 在 BNICalculate.Tests/Unit/Models/UserSettingsTests.cs（測試 Range 驗證、IsValid()）
 - [ ] T089 [US4] 手動測試：設定工作 30 分鐘、休息 10 分鐘 → 儲存 → 開始工作 → 驗證顯示 30:00
 - [ ] T090 [US4] 手動測試：輸入無效值（0 分鐘）→ 驗證顯示錯誤訊息
 
@@ -250,12 +250,12 @@
 
 ### SVG 進度環實作
 
-- [ ] T091 [P] [US5] 在 Pomodoro.cshtml 新增 SVG 圓形進度環（HTML，包含 background 和 progress 圓圈）
-- [ ] T092 [P] [US5] 在 pomodoro.css 新增進度環樣式（stroke-dasharray、transition、顏色）
+- [ ] T091 [US5] 在 Pomodoro.cshtml 新增 SVG 圓形進度環（HTML，包含 background 和 progress 圓圈）
+- [ ] T092 [US5] 在 pomodoro.css 新增進度環樣式（stroke-dasharray、transition、顏色）
 - [ ] T093 [US5] 在 pomodoro.js 實作 updateProgressRing() 函式（計算 circumference、更新 stroke-dashoffset）
 - [ ] T094 [US5] 在 PomodoroTimer onTick 回呼中呼叫 updateProgressRing()（每秒更新進度）
 - [ ] T095 [US5] 實作工作/休息時段顏色切換（工作綠色、休息藍色，動態修改 class）
-- [ ] T096 [P] [US5] 在 pomodoro.css 新增進度環顏色類別（.work-phase、.break-phase）
+- [ ] T096 [US5] 在 pomodoro.css 新增進度環顏色類別（.work-phase、.break-phase）
 
 ### 測試（US5 - OPTIONAL）
 
@@ -272,27 +272,27 @@
 
 ### 文件與驗證
 
-- [ ] T099 [P] 更新 README.md 新增番茄鐘功能說明
-- [ ] T100 [P] 執行 quickstart.md 中的步驟驗證開發者指南正確性
+- [ ] T099 更新 README.md 新增番茄鐘功能說明
+- [ ] T100 執行 quickstart.md 中的步驟驗證開發者指南正確性
 - [ ] T101 執行完整手動測試流程（所有 5 個 User Story 的 Acceptance Scenarios）
 - [ ] T102 驗證所有 25 個功能需求（FR-001 到 FR-025）
 
 ### 錯誤處理與邊界案例
 
-- [ ] T103 [P] 實作 try-catch 錯誤處理在 PomodoroDataService（JSON 讀取失敗恢復預設值、顯示通知）
-- [ ] T104 [P] 實作 localStorage 存取失敗處理（隱私模式檢測、回退至記憶體狀態）
+- [ ] T103 實作 try-catch 錯誤處理在 PomodoroDataService（JSON 讀取失敗恢復預設值、顯示通知）
+- [ ] T104 實作 localStorage 存取失敗處理（隱私模式檢測、回退至記憶體狀態）
 - [ ] T105 實作極端輸入驗證（工作時長 >60、休息時長 >30，顯示友善錯誤訊息）
 
 ### 效能與最佳化
 
-- [ ] T106 [P] 驗證 IMemoryCache 正確快取 UserSettings（減少檔案 I/O）
-- [ ] T107 [P] 驗證頁面載入時間 <500ms（開啟瀏覽器 DevTools Performance 測試）
+- [ ] T106 驗證 IMemoryCache 正確快取 UserSettings（減少檔案 I/O）
+- [ ] T107 驗證頁面載入時間 <500ms（開啟瀏覽器 DevTools Performance 測試）
 - [ ] T108 驗證 setInterval 執行時間 <10ms（Chrome DevTools Performance 分析）
 
 ### 程式碼品質
 
-- [ ] T109 [P] 執行 `dotnet format` 格式化程式碼
-- [ ] T110 [P] 檢查所有 C# 檔案包含 XML 文件註解（繁體中文）
+- [ ] T109 執行 `dotnet format` 格式化程式碼
+- [ ] T110 檢查所有 C# 檔案包含 XML 文件註解（繁體中文）
 - [ ] T111 確認所有 JavaScript 函式包含 JSDoc 註解
 - [ ] T112 執行 Markdown linter 檢查所有文件格式正確
 
@@ -318,31 +318,25 @@
 - **Setup (Phase 1)**: 無依賴 - 可立即開始
 - **Foundational (Phase 2)**: 依賴 Setup 完成 - **阻塞所有使用者故事**
 - **User Stories (Phase 3-7)**: 全部依賴 Foundational 完成
-  - User Story 之間**可平行進行**（不同檔案、無相依性）
-  - 或按優先順序序列執行（P1 → P2 → P3）
+  - User Story 之間**依優先順序序列執行**（P1 → P2 → P3）
+  - 不支援平行處理
 - **Polish (Phase 8)**: 依賴所有期望的使用者故事完成
 
 ### User Story Dependencies
 
 - **User Story 1 (P1)**: Foundational 完成後可開始 - 無其他故事依賴
-- **User Story 2 (P2)**: Foundational 完成後可開始 - 擴充 US1 但可獨立測試
-- **User Story 3 (P2)**: Foundational 完成後可開始 - 需 US1 的計時完成事件，但可獨立測試
-- **User Story 4 (P3)**: Foundational 完成後可開始 - 擴充 US1 設定，但可獨立測試
-- **User Story 5 (P3)**: Foundational 完成後可開始 - 擴充 US1 視覺化，但可獨立測試
+- **User Story 2 (P2)**: User Story 1 完成後可開始 - 擴充 US1 控制功能
+- **User Story 3 (P2)**: User Story 2 完成後可開始 - 需 US1 的計時完成事件
+- **User Story 4 (P3)**: User Story 3 完成後可開始 - 擴充 US1 設定功能
+- **User Story 5 (P3)**: User Story 4 完成後可開始 - 擴充 US1 視覺化功能
 
 ### Within Each User Story
 
+- 所有任務依序執行，不支援平行處理
 - JavaScript 客戶端實作 → UI 實作 → 後端整合 → 測試
 - 模型 → 服務 → 端點/頁面 → 整合
 - 核心實作完成後才進行整合
 - 故事完成後才進入下一個優先級
-
-### Parallel Opportunities
-
-- **Phase 1 Setup**: T001-T005 全部可平行（不同目錄/檔案）
-- **Phase 2 Foundational**: T006-T008 模型可平行，T013-T014 測試可平行
-- **Phase 3+ User Stories**: 若團隊人力允許，所有 5 個使用者故事可平行進行
-- **Within Each Story**: 標記 [P] 的任務可平行（例如：T016, T035 不同檔案）
 
 ### Test Execution Strategy (若環境允許)
 
@@ -362,21 +356,6 @@ dotnet test --filter "FullyQualifiedName~UserSettingsTests"
 
 ---
 
-## Parallel Example: User Story 1
-
-```bash
-# 同時啟動多個平行任務（不同檔案，無相依性）：
-
-# 任務 T016: 建立 pomodoro.js
-# 任務 T035: 建立 pomodoro.css
-# 任務 T024-T026: 在 Pomodoro.cshtml 新增 HTML 結構（UI 區塊）
-
-# 等待所有平行任務完成後，進行整合任務：
-# 任務 T029-T030: 綁定事件監聽器和 UI 更新邏輯
-```
-
----
-
 ## Implementation Strategy
 
 ### MVP First (僅 User Story 1)
@@ -387,7 +366,7 @@ dotnet test --filter "FullyQualifiedName~UserSettingsTests"
 4. **STOP and VALIDATE**: 獨立測試 User Story 1（手動測試：開啟頁面 → 開始工作 → 驗證 25 分鐘倒數 → 自動切換休息 → 完成）
 5. **Deploy/Demo** if ready（MVP 可展示！）
 
-### Incremental Delivery（增量交付）
+### Sequential Delivery（順序交付）
 
 1. **Complete Setup + Foundational** → 基礎架構就緒
 2. **Add User Story 1** → 獨立測試 → Deploy/Demo（**MVP 完成！**）
@@ -395,18 +374,7 @@ dotnet test --filter "FullyQualifiedName~UserSettingsTests"
 4. **Add User Story 3** → 獨立測試 → Deploy/Demo（新增統計追蹤）
 5. **Add User Story 4** → 獨立測試 → Deploy/Demo（新增自訂設定）
 6. **Add User Story 5** → 獨立測試 → Deploy/Demo（新增視覺化進度）
-7. 每個故事增加價值且不破壞先前故事
-
-### Parallel Team Strategy（多人開發）
-
-若有多位開發者：
-
-1. **團隊共同完成 Setup + Foundational**（Phase 1 + 2）
-2. **Foundational 完成後分工**：
-   - Developer A: User Story 1（核心計時）
-   - Developer B: User Story 3（統計追蹤）
-   - Developer C: User Story 5（視覺化進度）
-3. 故事獨立完成並整合，不互相阻塞
+7. 每個故事依序完成，確保穩定性
 
 ---
 
@@ -414,9 +382,9 @@ dotnet test --filter "FullyQualifiedName~UserSettingsTests"
 
 ### 格式說明
 
-- **[P]** 任務 = 不同檔案，無相依性，可平行執行
 - **[Story]** 標籤將任務對應到特定使用者故事，便於追蹤
-- 每個使用者故事應可獨立完成和測試
+- 所有任務依序執行，不支援平行處理
+- 每個使用者故事應依序完成和測試
 - 若包含測試任務，先驗證測試失敗再實作功能
 
 ### 測試環境備案
@@ -456,10 +424,10 @@ dotnet test --filter "FullyQualifiedName~UserSettingsTests"
 - **Phase 7 (US5)**: 8 tasks（包含 2 個手動測試）
 - **Phase 8 (Polish)**: 21 tasks（包含 3 個 OPTIONAL 測試）
 
-**Parallel Opportunities**: 約 40 個任務標記 [P] 可平行執行
+**Execution Mode**: 所有任務依序執行，不支援平行處理
 
 **Independent Test Criteria**: 每個 User Story 包含明確的獨立測試標準
 
 **Suggested MVP Scope**: Phase 1 + 2 + 3（User Story 1 - 基本番茄鐘工作循環）
 
-**Format Validation**: ✅ 所有任務遵循 `- [ ] [TaskID] [P?] [Story?] Description with file path` 格式
+**Format Validation**: ✅ 所有任務遵循 `- [ ] [TaskID] [Story?] Description with file path` 格式
