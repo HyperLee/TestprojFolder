@@ -77,17 +77,17 @@ graph TD
 
 ### Setup Tasks
 
-- [ ] T001 安裝 CsvHelper 套件 (dotnet add package CsvHelper --version 30.0.1) 到 BNICalculate/BNICalculate.csproj
-- [ ] T002 安裝 System.Text.Encoding.CodePages 套件 (dotnet add package System.Text.Encoding.CodePages --version 8.0.0) 到 BNICalculate/BNICalculate.csproj
-- [ ] T003 安裝 Serilog.AspNetCore 套件 (dotnet add package Serilog.AspNetCore --version 8.0.0) 到 BNICalculate/BNICalculate.csproj
-- [ ] T004 安裝 Serilog.Sinks.Console 套件 (dotnet add package Serilog.Sinks.Console --version 5.0.1) 到 BNICalculate/BNICalculate.csproj
-- [ ] T005 安裝 Serilog.Sinks.File 套件 (dotnet add package Serilog.Sinks.File --version 5.0.0) 到 BNICalculate/BNICalculate.csproj
-- [ ] T006 建立 App_Data/currency 目錄結構
-- [ ] T007 在 BNICalculate/Program.cs 註冊 Serilog (包含 Console 和 File 輸出，7天滾動日誌)
-- [ ] T008 在 BNICalculate/Program.cs 註冊 Big5 編碼 (Encoding.RegisterProvider)
-- [ ] T009 在 BNICalculate/Program.cs 註冊 HttpClient (BaseAddress: rate.bot.com.tw, Timeout: 15秒)
-- [ ] T010 在 BNICalculate/Program.cs 註冊 IMemoryCache
-- [ ] T011 建立測試目錄結構 BNICalculate.Tests/Unit/Models/, BNICalculate.Tests/Unit/Services/, BNICalculate.Tests/Integration/Pages/
+- [x] T001 安裝 CsvHelper 套件 (dotnet add package CsvHelper --version 30.0.1) 到 BNICalculate/BNICalculate.csproj
+- [x] T002 安裝 System.Text.Encoding.CodePages 套件 (dotnet add package System.Text.Encoding.CodePages --version 8.0.0) 到 BNICalculate/BNICalculate.csproj
+- [x] T003 安裝 Serilog.AspNetCore 套件 (dotnet add package Serilog.AspNetCore --version 8.0.0) 到 BNICalculate/BNICalculate.csproj
+- [x] T004 安裝 Serilog.Sinks.Console 套件 (dotnet add package Serilog.Sinks.Console --version 5.0.1) 到 BNICalculate/BNICalculate.csproj
+- [x] T005 安裝 Serilog.Sinks.File 套件 (dotnet add package Serilog.Sinks.File --version 5.0.0) 到 BNICalculate/BNICalculate.csproj
+- [x] T006 建立 App_Data/currency 目錄結構
+- [x] T007 在 BNICalculate/Program.cs 註冊 Serilog (包含 Console 和 File 輸出，7天滾動日誌)
+- [x] T008 在 BNICalculate/Program.cs 註冊 Big5 編碼 (Encoding.RegisterProvider)
+- [x] T009 在 BNICalculate/Program.cs 註冊 HttpClient (BaseAddress: rate.bot.com.tw, Timeout: 15秒)
+- [x] T010 在 BNICalculate/Program.cs 註冊 IMemoryCache
+- [x] T011 建立測試目錄結構 BNICalculate.Tests/Unit/Models/, BNICalculate.Tests/Unit/Services/, BNICalculate.Tests/Integration/Pages/
 
 **Completion Criteria**: 所有套件安裝完成，Program.cs 設定就緒，目錄結構建立完成
 
@@ -103,49 +103,49 @@ graph TD
 
 ### ExchangeRate 模型 (TDD)
 
-- [ ] T012 建立 BNICalculate.Tests/Unit/Models/ExchangeRateTests.cs 測試類別
-- [ ] T013 撰寫 ExchangeRate 驗證測試 (CurrencyCode 必須3個大寫字母, CashBuyRate/CashSellRate >0, LastUpdated 必填)
-- [ ] T014 建立 BNICalculate/Models/ExchangeRate.cs 並實作 (包含 XML 註解、Data Annotations)
-- [ ] T015 執行測試確認 ExchangeRate 驗證規則正確
+- [x] T012 建立 BNICalculate.Tests/Unit/Models/ExchangeRateTests.cs 測試類別
+- [x] T013 撰寫 ExchangeRate 驗證測試 (CurrencyCode 必須3個大寫字母, CashBuyRate/CashSellRate >0, LastUpdated 必填)
+- [x] T014 建立 BNICalculate/Models/ExchangeRate.cs 並實作 (包含 XML 註解、Data Annotations)
+- [x] T015 執行測試確認 ExchangeRate 驗證規則正確
 
 ### ExchangeRateData 模型 (TDD)
 
-- [ ] T016 建立 BNICalculate.Tests/Unit/Models/ExchangeRateDataTests.cs 測試類別
-- [ ] T017 撰寫 ExchangeRateData 測試 (Rates 至少1筆, LastFetchTime 不可未來, IsStale() 方法測試)
-- [ ] T018 建立 BNICalculate/Models/ExchangeRateData.cs 並實作 (包含 IsStale() 業務邏輯方法)
-- [ ] T019 執行測試確認 ExchangeRateData 功能正確
+- [x] T016 建立 BNICalculate.Tests/Unit/Models/ExchangeRateDataTests.cs 測試類別
+- [x] T017 撰寫 ExchangeRateData 測試 (Rates 至少1筆, LastFetchTime 不可未來, IsStale() 方法測試)
+- [x] T018 建立 BNICalculate/Models/ExchangeRateData.cs 並實作 (包含 IsStale() 業務邏輯方法)
+- [x] T019 執行測試確認 ExchangeRateData 功能正確
 
 ### Currency 列舉
 
-- [ ] T020 建立 BNICalculate/Models/Currency.cs 列舉 (USD, JPY, CNY, EUR, GBP, HKD, AUD + Display 屬性)
+- [x] T020 建立 BNICalculate/Models/Currency.cs 列舉 (USD, JPY, CNY, EUR, GBP, HKD, AUD + Display 屬性)
 
 ### CalculationRequest 模型 (TDD)
 
-- [ ] T021 建立 BNICalculate.Tests/Unit/Models/CalculationRequestTests.cs 測試類別
-- [ ] T022 撰寫 CalculationRequest 驗證測試 (Amount >0, CurrencyCode 必填, IsValid() 方法測試)
-- [ ] T023 建立 BNICalculate/Models/CalculationRequest.cs 並實作
-- [ ] T024 執行測試確認 CalculationRequest 驗證正確
+- [x] T021 建立 BNICalculate.Tests/Unit/Models/CalculationRequestTests.cs 測試類別
+- [x] T022 撰寫 CalculationRequest 驗證測試 (Amount >0, CurrencyCode 必填, IsValid() 方法測試)
+- [x] T023 建立 BNICalculate/Models/CalculationRequest.cs 並實作
+- [x] T024 執行測試確認 CalculationRequest 驗證正確
 
 ### CalculationResult 模型 (TDD)
 
-- [ ] T025 建立 BNICalculate.Tests/Unit/Models/CalculationResultTests.cs 測試類別
-- [ ] T026 撰寫 CalculationResult 測試 (GetFormattedResult() 格式化輸出測試, 小數點6位測試)
-- [ ] T027 建立 BNICalculate/Models/CalculationResult.cs 並實作 (包含 GetFormattedResult() 方法)
-- [ ] T028 執行測試確認 CalculationResult 格式化正確
+- [x] T025 建立 BNICalculate.Tests/Unit/Models/CalculationResultTests.cs 測試類別
+- [x] T026 撰寫 CalculationResult 測試 (GetFormattedResult() 格式化輸出測試, 小數點6位測試)
+- [x] T027 建立 BNICalculate/Models/CalculationResult.cs 並實作 (包含 GetFormattedResult() 方法)
+- [x] T028 執行測試確認 CalculationResult 格式化正確
 
 ### 自訂例外類別
 
-- [ ] T029 建立 BNICalculate/Models/ExternalServiceException.cs (台銀 API 呼叫失敗)
-- [ ] T030 建立 BNICalculate/Models/DataFormatException.cs (CSV/JSON 格式錯誤)
+- [x] T029 建立 BNICalculate/Models/ExternalServiceException.cs (台銀 API 呼叫失敗)
+- [x] T030 建立 BNICalculate/Models/DataFormatException.cs (CSV/JSON 格式錯誤)
 
 ### 時區與日期格式驗證 (TDD)
 
-- [ ] T031 建立 BNICalculate.Tests/Unit/Helpers/DateTimeHelperTests.cs 測試類別
-- [ ] T032 撰寫 UTC+8 時區轉換測試 (DateTime.Now 必須使用台灣時區, 驗證 TimeZoneInfo.ConvertTime)
-- [ ] T033 撰寫中文日期格式化測試 (輸出格式："2025年11月1日 (五)", 包含星期轉換)
-- [ ] T034 撰寫24小時制時間顯示測試 (輸出格式："14:30:00", 無 AM/PM)
-- [ ] T035 建立 BNICalculate/Helpers/DateTimeHelper.cs 並實作格式化方法
-- [ ] T036 執行測試確認時區與格式化功能正確
+- [x] T031 建立 BNICalculate.Tests/Unit/Helpers/DateTimeHelperTests.cs 測試類別
+- [x] T032 撰寫 UTC+8 時區轉換測試 (DateTime.Now 必須使用台灣時區, 驗證 TimeZoneInfo.ConvertTime)
+- [x] T033 撰寫中文日期格式化測試 (輸出格式："2025年11月1日 (五)", 包含星期轉換)
+- [x] T034 撰寫24小時制時間顯示測試 (輸出格式："14:30:00", 無 AM/PM)
+- [x] T035 建立 BNICalculate/Helpers/DateTimeHelper.cs 並實作格式化方法
+- [x] T036 執行測試確認時區與格式化功能正確
 
 **Completion Criteria**: 所有模型建立完成，所有單元測試通過（100% 覆蓋率），時區與日期格式驗證通過
 
