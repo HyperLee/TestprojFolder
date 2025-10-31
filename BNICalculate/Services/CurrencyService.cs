@@ -291,6 +291,8 @@ public class CurrencyService : ICurrencyService
 
     /// <summary>
     /// 解析 CSV 內容
+    /// CSV 格式：幣別, 匯率(買入), 現金(買入), ..., 匯率(賣出), 現金(賣出), ...
+    /// 每個貨幣一行，買入和賣出匯率在同一行的不同欄位
     /// </summary>
     private List<ExchangeRate> ParseCsvContent(string csvContent)
     {
@@ -307,8 +309,8 @@ public class CurrencyService : ICurrencyService
             using var csv = new CsvReader(reader, config);
             
             var records = csv.GetRecords<TaiwanBankCsvRecord>().ToList();
-            var rates = new List<ExchangeRate>();
             var supportedCurrencies = new HashSet<string> { "USD", "JPY", "CNY", "EUR", "GBP", "HKD", "AUD" };
+            var rates = new List<ExchangeRate>();
 
             foreach (var record in records)
             {
@@ -318,7 +320,7 @@ public class CurrencyService : ICurrencyService
                     continue;
                 }
 
-                // 解析匯率（可能包含破折號 "-" 表示無資料）
+                // 解析現金匯率（可能包含破折號 "-" 或空字串表示無資料）
                 if (!decimal.TryParse(record.CashBuyRate, out var buyRate) || buyRate <= 0)
                 {
                     _logger.LogWarning("貨幣 {Currency} 的現金買入匯率無效: {Rate}", record.CurrencyCode, record.CashBuyRate);
@@ -331,10 +333,13 @@ public class CurrencyService : ICurrencyService
                     continue;
                 }
 
+                // 取得貨幣名稱（從支援的貨幣清單中）
+                var currencyName = GetCurrencyName(record.CurrencyCode);
+
                 rates.Add(new ExchangeRate
                 {
                     CurrencyCode = record.CurrencyCode,
-                    CurrencyName = record.CurrencyName,
+                    CurrencyName = currencyName,
                     CashBuyRate = buyRate,
                     CashSellRate = sellRate,
                     LastUpdated = DateTimeHelper.GetTaiwanTime()
@@ -346,6 +351,7 @@ public class CurrencyService : ICurrencyService
                 throw new DataFormatException("CSV 解析後沒有有效的匯率資料");
             }
 
+            _logger.LogInformation("成功解析 {Count} 種貨幣的匯率", rates.Count);
             return rates;
         }
         catch (Exception ex) when (ex is not DataFormatException)
@@ -353,5 +359,23 @@ public class CurrencyService : ICurrencyService
             _logger.LogError(ex, "CSV 解析失敗");
             throw new DataFormatException("CSV 格式錯誤", ex);
         }
+    }
+
+    /// <summary>
+    /// 取得貨幣名稱
+    /// </summary>
+    private static string GetCurrencyName(string currencyCode)
+    {
+        return currencyCode switch
+        {
+            "USD" => "美金",
+            "JPY" => "日圓",
+            "CNY" => "人民幣",
+            "EUR" => "歐元",
+            "GBP" => "英鎊",
+            "HKD" => "港幣",
+            "AUD" => "澳幣",
+            _ => currencyCode
+        };
     }
 }
