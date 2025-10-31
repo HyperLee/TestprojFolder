@@ -1,0 +1,146 @@
+@page
+@model BNICalculate.Pages.CurrencyConverterModel
+@{
+    ViewData["Title"] = "匯率計算器";
+}
+
+<div class="container mt-4">
+    <h1 class="mb-4">💱 匯率計算器</h1>
+
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="alert alert-danger" role="alert">
+            @Model.ErrorMessage
+        </div>
+    }
+
+    @if (Model.IsDataStale)
+    {
+        <div class="alert alert-warning" role="alert">
+            ⚠️ 匯率資料已超過 24 小時，建議更新以取得最新匯率。
+        </div>
+    }
+
+    @if (Model.CurrentRates != null)
+    {
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">📊 當前匯率資訊</h5>
+                <p class="card-text">
+                    <strong>資料來源：</strong>@Model.CurrentRates.DataSource<br />
+                    <strong>最後更新：</strong>@BNICalculate.Helpers.DateTimeHelper.GetFullDateTimeString(Model.CurrentRates.LastFetchTime)
+                </p>
+            </div>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">台幣轉外幣</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" asp-page-handler="CalculateTwdToForeign">
+                        <div class="mb-3">
+                            <label asp-for="TwdAmount" class="form-label">台幣金額 (TWD)</label>
+                            <input asp-for="TwdAmount" class="form-control" type="number" step="0.01" min="0.01" required />
+                            <span asp-validation-for="TwdAmount" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="SelectedCurrency" class="form-label">目標貨幣</label>
+                            <select asp-for="SelectedCurrency" class="form-select">
+                                <option value="USD">美元 (USD)</option>
+                                <option value="JPY">日圓 (JPY)</option>
+                                <option value="CNY">人民幣 (CNY)</option>
+                                <option value="EUR">歐元 (EUR)</option>
+                                <option value="GBP">英鎊 (GBP)</option>
+                                <option value="HKD">港幣 (HKD)</option>
+                                <option value="AUD">澳幣 (AUD)</option>
+                            </select>
+                        </div>
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <button type="submit" class="btn btn-primary w-100">💹 計算</button>
+                    </form>
+
+                    @if (Model.Result != null && Model.Result.SourceCurrency == "TWD")
+                    {
+                        <div class="alert alert-success mt-4" role="alert">
+                            <h6 class="alert-heading">計算結果</h6>
+                            <p class="mb-0">
+                                <strong>@Model.Result.GetFormattedResult()</strong>
+                            </p>
+                            <hr />
+                            <small class="text-muted">
+                                匯率：@Model.Result.ExchangeRate.ToString("N6")<br />
+                                計算時間：@BNICalculate.Helpers.DateTimeHelper.GetFullDateTimeString(Model.Result.CalculatedAt)
+                            </small>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">外幣轉台幣</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" asp-page-handler="CalculateForeignToTwd">
+                        <div class="mb-3">
+                            <label asp-for="ForeignAmount" class="form-label">外幣金額</label>
+                            <input asp-for="ForeignAmount" class="form-control" type="number" step="0.01" min="0.01" required />
+                            <span asp-validation-for="ForeignAmount" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="SourceCurrency" class="form-label">來源貨幣</label>
+                            <select asp-for="SourceCurrency" class="form-select">
+                                <option value="USD">美元 (USD)</option>
+                                <option value="JPY">日圓 (JPY)</option>
+                                <option value="CNY">人民幣 (CNY)</option>
+                                <option value="EUR">歐元 (EUR)</option>
+                                <option value="GBP">英鎊 (GBP)</option>
+                                <option value="HKD">港幣 (HKD)</option>
+                                <option value="AUD">澳幣 (AUD)</option>
+                            </select>
+                        </div>
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <button type="submit" class="btn btn-success w-100">💱 計算</button>
+                    </form>
+
+                    @if (Model.Result != null && Model.Result.TargetCurrency == "TWD")
+                    {
+                        <div class="alert alert-success mt-4" role="alert">
+                            <h6 class="alert-heading">計算結果</h6>
+                            <p class="mb-0">
+                                <strong>@Model.Result.GetFormattedResult()</strong>
+                            </p>
+                            <hr />
+                            <small class="text-muted">
+                                匯率：@Model.Result.ExchangeRate.ToString("N6")<br />
+                                計算時間：@BNICalculate.Helpers.DateTimeHelper.GetFullDateTimeString(Model.Result.CalculatedAt)
+                            </small>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <p class="text-muted small">
+            <strong>免責聲明：</strong>本匯率僅供參考，實際交易請以銀行公告為準。
+        </p>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

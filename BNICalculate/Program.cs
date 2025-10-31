@@ -44,6 +44,10 @@ public class Program
             // 註冊番茄鐘服務
             builder.Services.AddScoped<Services.PomodoroDataService>();
 
+            // 註冊匯率計算服務 (T149)
+            builder.Services.AddScoped<Services.ICurrencyDataService, Services.CurrencyDataService>();
+            builder.Services.AddScoped<Services.ICurrencyService, Services.CurrencyService>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

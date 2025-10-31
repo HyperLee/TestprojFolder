@@ -161,29 +161,29 @@ graph TD
 
 ### CurrencyDataService (資料存取層) - TDD
 
-- [ ] T037 [US1] 建立 BNICalculate/Services/ICurrencyDataService.cs 介面 (LoadAsync, SaveAsync, ExistsAsync, GetLastModifiedTimeAsync)
-- [ ] T146 [US1] 建立 BNICalculate.Tests/Unit/Services/CurrencyDataServiceTests.cs 測試類別
-- [ ] T147 [US1] 撰寫 LoadAsync 測試 (JSON 檔案存在返回資料, 不存在返回 null, 格式錯誤拋出 DataFormatException)
-- [ ] T148 [US1] 撰寫 SaveAsync 測試 (原子寫入測試, 目錄自動建立測試)
-- [ ] T149 [US1] 撰寫 ExistsAsync 和 GetLastModifiedTimeAsync 測試
-- [ ] T144 [US1] 實作 BNICalculate/Services/CurrencyDataService.cs (使用 System.Text.Json, 原子寫入 .tmp 檔案)
-- [ ] T145 [US1] 執行測試確認 CurrencyDataService 功能正確
+- [x] T037 [US1] 建立 BNICalculate/Services/ICurrencyDataService.cs 介面 (LoadAsync, SaveAsync, ExistsAsync, GetLastModifiedTimeAsync)
+- [x] T146 [US1] 建立 BNICalculate.Tests/Unit/Services/CurrencyDataServiceTests.cs 測試類別
+- [x] T147 [US1] 撰寫 LoadAsync 測試 (JSON 檔案存在返回資料, 不存在返回 null, 格式錯誤拋出 DataFormatException)
+- [x] T148 [US1] 撰寫 SaveAsync 測試 (原子寫入測試, 目錄自動建立測試)
+- [x] T149 [US1] 撰寫 ExistsAsync 和 GetLastModifiedTimeAsync 測試
+- [x] T144 [US1] 實作 BNICalculate/Services/CurrencyDataService.cs (使用 System.Text.Json, 原子寫入 .tmp 檔案)
+- [x] T145 [US1] 執行測試確認 CurrencyDataService 功能正確
 
 ### CurrencyService (業務邏輯層) - TDD
 
-- [ ] T146 [US1] 建立 BNICalculate/Services/ICurrencyService.cs 介面 (CalculateTwdToForeignAsync, GetRatesAsync, IsDataStaleAsync 方法)
-- [ ] T147 [US1] 建立 BNICalculate.Tests/Unit/Services/CurrencyServiceTests.cs 測試類別
-- [ ] T148 [US1] 撰寫 CalculateTwdToForeignAsync 測試 (正常計算, 金額為0或負數拋出 ArgumentException, 不支援的貨幣拋出 ArgumentException, decimal 精度測試)
-- [ ] T149 [US1] 撰寫 GetRatesAsync 測試 (快取命中, 快取未命中從檔案載入, 無資料返回 null)
-- [ ] T144 [US1] 實作 BNICalculate/Services/CurrencyService.cs (CalculateTwdToForeignAsync 使用 CashSellRate, Math.Round 6位小數, IMemoryCache 30分鐘滑動過期)
-- [ ] T145 [US1] 執行測試確認 CalculateTwdToForeignAsync 計算正確 (包含精度測試)
+- [x] T146 [US1] 建立 BNICalculate/Services/ICurrencyService.cs 介面 (CalculateTwdToForeignAsync, GetRatesAsync, IsDataStaleAsync 方法)
+- [x] T147 [US1] 建立 BNICalculate.Tests/Unit/Services/CurrencyServiceTests.cs 測試類別
+- [x] T148 [US1] 撰寫 CalculateTwdToForeignAsync 測試 (正常計算, 金額為0或負數拋出 ArgumentException, 不支援的貨幣拋出 ArgumentException, decimal 精度測試)
+- [x] T149 [US1] 撰寫 GetRatesAsync 測試 (快取命中, 快取未命中從檔案載入, 無資料返回 null)
+- [x] T144 [US1] 實作 BNICalculate/Services/CurrencyService.cs (CalculateTwdToForeignAsync 使用 CashSellRate, Math.Round 6位小數, IMemoryCache 30分鐘滑動過期)
+- [x] T145 [US1] 執行測試確認 CalculateTwdToForeignAsync 計算正確 (包含精度測試)
 
 ### Razor Page (展示層) - TDD
 
-- [ ] T146 [US1] 建立 BNICalculate/Pages/CurrencyConverter.cshtml.cs PageModel (OnGet, OnPostCalculateTwdToForeignAsync 方法)
-- [ ] T147 [US1] 實作 OnPostCalculateTwdToForeignAsync (呼叫 CurrencyService, 處理例外顯示 ModelState 錯誤)
-- [ ] T148 [US1] 建立 BNICalculate/Pages/CurrencyConverter.cshtml Razor 頁面 (台幣轉外幣表單, 金額輸入框, 貨幣下拉選單, 計算按鈕, 結果顯示區)
-- [ ] T149 [US1] 在 BNICalculate/Program.cs 註冊 ICurrencyService 和 ICurrencyDataService (Scoped 生命週期)
+- [x] T146 [US1] 建立 BNICalculate/Pages/CurrencyConverter.cshtml.cs PageModel (OnGet, OnPostCalculateTwdToForeignAsync 方法)
+- [x] T147 [US1] 實作 OnPostCalculateTwdToForeignAsync (呼叫 CurrencyService, 處理例外顯示 ModelState 錯誤)
+- [x] T148 [US1] 建立 BNICalculate/Pages/CurrencyConverter.cshtml Razor 頁面 (台幣轉外幣表單, 金額輸入框, 貨幣下拉選單, 計算按鈕, 結果顯示區)
+- [x] T149 [US1] 在 BNICalculate/Program.cs 註冊 ICurrencyService 和 ICurrencyDataService (Scoped 生命週期)
 - [ ] T144 [US1] 建立 BNICalculate.Tests/Integration/Pages/CurrencyConverterPageTests.cs 整合測試
 - [ ] T145 [US1] 撰寫頁面載入測試 (GET /CurrencyConverter 返回 200, 包含表單元素)
 - [ ] T146 [US1] 撰寫台幣轉外幣 POST 測試 (模擬表單提交, 驗證計算結果顯示)
@@ -191,9 +191,9 @@ graph TD
 
 ### 樣式與客戶端驗證
 
-- [ ] T148 [US1] 建立 BNICalculate/wwwroot/css/currency-converter.css (Bootstrap 5 基礎樣式, 表單佈局, 結果顯示卡片)
-- [ ] T149 [US1] 建立 BNICalculate/wwwroot/js/currency-converter.js (jQuery Validation 客戶端驗證, 金額輸入格式化)
-- [ ] T144 [US1] 在 BNICalculate/Pages/Shared/_Layout.cshtml 新增導覽連結到 /CurrencyConverter
+- [x] T148 [US1] 建立 BNICalculate/wwwroot/css/currency-converter.css (Bootstrap 5 基礎樣式, 表單佈局, 結果顯示卡片)
+- [x] T149 [US1] 建立 BNICalculate/wwwroot/js/currency-converter.js (jQuery Validation 客戶端驗證, 金額輸入格式化)
+- [x] T144 [US1] 在 BNICalculate/Pages/Shared/_Layout.cshtml 新增導覽連結到 /CurrencyConverter
 
 **Completion Criteria**:
 
