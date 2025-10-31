@@ -325,6 +325,141 @@ function showClockContent() {
 }
 
 /**
+ * 檢查瀏覽器支援
+ * @returns {object} - { supported: boolean, message: string }
+ */
+function checkBrowserSupport() {
+    // 檢查 Intl.DateTimeFormat 支援
+    if (typeof Intl === 'undefined' || typeof Intl.DateTimeFormat === 'undefined') {
+        return {
+            supported: false,
+            message: '您的瀏覽器不支援國際化 API（Intl.DateTimeFormat）'
+        };
+    }
+    
+    // 檢查瀏覽器版本（透過 User Agent）
+    const ua = navigator.userAgent;
+    let browserInfo = { name: 'Unknown', version: 0 };
+    
+    // Chrome/Edge (Chromium)
+    if (ua.indexOf('Chrome') > -1 || ua.indexOf('Edg') > -1) {
+        const match = ua.match(/(?:Chrome|Edg)\/(\d+)/);
+        if (match) {
+            browserInfo = { name: 'Chrome/Edge', version: parseInt(match[1]) };
+        }
+    }
+    // Firefox
+    else if (ua.indexOf('Firefox') > -1) {
+        const match = ua.match(/Firefox\/(\d+)/);
+        if (match) {
+            browserInfo = { name: 'Firefox', version: parseInt(match[1]) };
+        }
+    }
+    // Safari
+    else if (ua.indexOf('Safari') > -1 && ua.indexOf('Chrome') === -1) {
+        const match = ua.match(/Version\/(\d+)/);
+        if (match) {
+            browserInfo = { name: 'Safari', version: parseInt(match[1]) };
+        }
+    }
+    
+    // 檢查最低版本要求
+    const isVersionSupported = 
+        (browserInfo.name === 'Chrome/Edge' && browserInfo.version >= 90) ||
+        (browserInfo.name === 'Firefox' && browserInfo.version >= 88) ||
+        (browserInfo.name === 'Safari' && browserInfo.version >= 14) ||
+        browserInfo.name === 'Unknown'; // 未知瀏覽器假設支援
+    
+    if (!isVersionSupported) {
+        return {
+            supported: false,
+            message: `您的瀏覽器版本過舊（${browserInfo.name} ${browserInfo.version}），可能無法正確顯示時間。請升級至 Chrome 90+、Firefox 88+ 或 Safari 14+`
+        };
+    }
+    
+    return { supported: true, message: '' };
+}
+
+/**
+ * 顯示瀏覽器升級訊息
+ * @param {string} message - 訊息內容
+ */
+function showBrowserUpgradeMessage(message) {
+    const upgradeElement = document.getElementById('browser-upgrade-message');
+    if (upgradeElement) {
+        const messageText = upgradeElement.querySelector('p');
+        if (messageText && message) {
+            messageText.textContent = message;
+        }
+        upgradeElement.classList.remove('d-none');
+    }
+}
+
+/**
+ * 切換主要城市顯示
+ * @param {string} cityId - 要切換的城市 ID
+ */
+function switchMainCity(cityId) {
+    try {
+        // 找到被點選的城市
+        const selectedCityIndex = clockState.secondaryCities.findIndex(city => city.id === cityId);
+        
+        if (selectedCityIndex === -1) {
+            console.error(`找不到城市：${cityId}`);
+            return;
+        }
+        
+        const selectedCity = clockState.secondaryCities[selectedCityIndex];
+        const oldMainCity = clockState.mainCity;
+        
+        // 交換主要城市和被點選的城市
+        clockState.mainCity = selectedCity;
+        clockState.secondaryCities[selectedCityIndex] = oldMainCity;
+        
+        // 立即更新顯示（包含日期）
+        updateAllClocks();
+        
+        // 更新 ARIA live region 以通知螢幕閱讀器
+        const mainClockElement = document.getElementById('main-clock');
+        if (mainClockElement) {
+            mainClockElement.setAttribute('aria-label', `主要時間已切換至${selectedCity.name}`);
+        }
+        
+        console.log(`主要城市已切換至：${selectedCity.name}`);
+    } catch (error) {
+        console.error('切換城市時發生錯誤', error);
+    }
+}
+
+/**
+ * 為所有城市卡片新增點選事件監聽器
+ */
+function attachCityCardListeners() {
+    const cityCards = document.querySelectorAll('.city-card');
+    
+    cityCards.forEach(card => {
+        const cityId = card.getAttribute('data-city-id');
+        
+        if (cityId) {
+            // 滑鼠點選事件
+            card.addEventListener('click', function() {
+                switchMainCity(cityId);
+            });
+            
+            // 鍵盤導覽支援（Enter 和 Space 鍵）
+            card.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault(); // 防止 Space 鍵滾動頁面
+                    switchMainCity(cityId);
+                }
+            });
+            
+            console.log(`已為城市卡片新增點選監聽器：${cityId}`);
+        }
+    });
+}
+
+/**
  * 初始化時鐘
  */
 function initializeClock() {
@@ -332,11 +467,13 @@ function initializeClock() {
         console.log('初始化世界時鐘...');
         
         // 檢查瀏覽器支援
-        if (typeof Intl === 'undefined' || typeof Intl.DateTimeFormat === 'undefined') {
-            throw new Error('瀏覽器不支援 Intl.DateTimeFormat API');
+        const browserCheck = checkBrowserSupport();
+        if (!browserCheck.supported) {
+            showBrowserUpgradeMessage(browserCheck.message);
+            // 即使不支援也嘗試繼續執行，可能部分功能仍可運作
         }
         
-        // 測試建立 formatter（驗證時區支援）
+        // 測試建立 formatter（驗證時區支援，自動處理 DST）
         cityConfigs.forEach(city => {
             createFormatter(city.timeZone);
         });
@@ -345,6 +482,7 @@ function initializeClock() {
         showClockContent();
         startClock();
         startHeartbeatMonitor(); // 啟動心跳檢測
+        attachCityCardListeners(); // 新增城市卡片點選監聽器
         
         console.log('世界時鐘初始化完成');
     } catch (error) {

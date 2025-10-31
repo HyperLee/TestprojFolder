@@ -143,6 +143,33 @@
     display: block;
 }
 
+/* ==================== 城市卡片互動效果 ==================== */
+/* Hover 效果 (FR-013) */
+.city-card:hover {
+    background-color: var(--hover-bg);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Active 效果 (FR-014) */
+.city-card:active {
+    border-color: var(--active-border);
+    transform: translateY(0);
+}
+
+/* Focus 效果 - 鍵盤導覽 */
+.city-card:focus {
+    outline: 2px solid var(--active-border);
+    outline-offset: 2px;
+    border-color: var(--active-border);
+}
+
+/* 確保游標顯示為可點選 */
+.city-card {
+    cursor: pointer;
+    user-select: none;
+}
+
 /* ==================== 錯誤訊息樣式 ==================== */
 #error-message {
     margin-top: var(--spacing-lg);
