@@ -1,0 +1,395 @@
+# 任務清單：世界時鐘 (World Clock)
+
+**輸入來源**: 設計文件來自 `/specs/003-world-clock/`  
+**前置需求**: plan.md, spec.md, research.md, data-model.md, contracts/  
+**產生日期**: 2025-11-01
+
+**測試策略**: 
+- 整合測試優先使用手動驗證（開啟瀏覽器測試）
+- 自動化測試為選用項目（如環境問題可跳過）
+- 每個使用者故事都可獨立驗證功能
+
+**組織方式**: 任務依使用者故事分組，每個故事都可獨立實作和測試
+
+## 格式說明：`[ID] [Story] 描述`
+
+- **[Story]**: 此任務屬於哪個使用者故事（例如：US1, US2, US3）
+- 所有任務描述都包含明確的檔案路徑
+
+---
+
+## 階段 1：設定（共用基礎設施）
+
+**目的**: 建立基本檔案結構和專案配置
+
+- [ ] T001 在 BNICalculate/Pages/WorldClock.cshtml.cs 建立空白的 WorldClock PageModel
+- [ ] T002 在 BNICalculate/Pages/WorldClock.cshtml 建立空白的 WorldClock Razor 視圖
+- [ ] T003 在 BNICalculate/wwwroot/css/worldclock.css 建立空白的樣式表
+- [ ] T004 在 BNICalculate/wwwroot/js/worldclock.js 建立空白的 JavaScript 腳本
+- [ ] T005 在 BNICalculate/Pages/Shared/_Layout.cshtml 新增世界時鐘頁面的導覽連結
+
+---
+
+## 階段 2：基礎建設（阻擋性前置需求）
+
+**目的**: 建立使用者故事將依賴的基本頁面結構
+
+**⚠️ 重要**: 在此階段完成前，所有使用者故事的工作都無法開始
+
+- [ ] T006 在 BNICalculate/Pages/WorldClock.cshtml.cs 實作基本的 WorldClockModel 類別並加上 XML 文件註解
+- [ ] T007 在 BNICalculate/Pages/WorldClock.cshtml 建立基本的 HTML 結構（使用 Bootstrap 容器）
+- [ ] T008 在 WorldClock.cshtml 中使用 script/link 標籤連結 CSS 和 JS 檔案
+
+**檢查點**: 基礎就緒 - 使用者故事實作現在可以開始
+
+---
+
+## 階段 3：使用者故事 1 - 查看多個城市時間（優先級：P1）🎯 MVP
+
+**目標**: 使用者可以同時查看 10 個城市的即時時間，包括主要顯示（台北）和 9 個次要城市，每秒自動更新
+
+**獨立測試**: 載入頁面並驗證顯示所有 10 個城市（台北、東京、倫敦、紐約、洛杉磯、巴黎、柏林、莫斯科、新加坡、悉尼）的正確時間，格式為 HH:mm:ss
+
+### 使用者故事 1 的測試
+
+**注意**: 整合測試為選用項目。如果測試環境有問題（例如：建置失敗、相依性問題、執行超時），請使用以下替代方案：
+
+**主要測試方式（手動驗證）**:
+- 開啟瀏覽器訪問 `/WorldClock` 頁面
+- 驗證顯示 10 個城市（1 個主要 + 9 個次要）
+- 驗證時間格式為 HH:mm:ss
+- 驗證時間每秒更新
+
+**選用測試方式（自動化測試）**:
+- [ ] T009 [US1] 在 BNICalculate.Tests/Integration/Pages/WorldClockPageTests.cs 建立 WorldClockPageTests.cs 並加上頁面載入測試（如環境問題可跳過）
+- [ ] T010 [US1] 在 WorldClockPageTests.cs 新增測試驗證 10 個城市顯示（如環境問題可跳過）
+- [ ] T011 [US1] 在 WorldClockPageTests.cs 新增測試驗證正確的 HTML 結構（主要 + 9 張卡片）（如環境問題可跳過）
+
+**備註**: 如果執行 `dotnet test` 時遇到以下問題：
+- 建置錯誤：跳過自動化測試，使用手動驗證
+- 執行超時：跳過自動化測試，使用手動驗證
+- 相依性問題：跳過自動化測試，使用手動驗證
+
+### 使用者故事 1 的實作
+
+#### HTML Structure (WorldClock.cshtml)
+
+- [ ] T012 [US1] Add loading indicator HTML (spinner + "載入中...") in BNICalculate/Pages/WorldClock.cshtml
+- [ ] T013 [US1] Create main clock display area with ARIA live region in BNICalculate/Pages/WorldClock.cshtml
+- [ ] T014 [US1] Add main time display elements (city name, timezone, time, date) in BNICalculate/Pages/WorldClock.cshtml
+- [ ] T015 [US1] Create grid container for 9 secondary city cards in BNICalculate/Pages/WorldClock.cshtml
+- [ ] T016 [US1] Add 9 city card templates with data attributes in BNICalculate/Pages/WorldClock.cshtml
+- [ ] T017 [US1] Add error message container for timezone API failures in BNICalculate/Pages/WorldClock.cshtml
+
+#### CSS Styling (worldclock.css)
+
+- [ ] T018 [P] [US1] Define CSS variables for colors (per FR-025) in BNICalculate/wwwroot/css/worldclock.css
+- [ ] T019 [P] [US1] Style loading indicator (centered, spinner animation) in BNICalculate/wwwroot/css/worldclock.css
+- [ ] T020 [P] [US1] Style main clock display area (white background, shadow, centered) in BNICalculate/wwwroot/css/worldclock.css
+- [ ] T021 [P] [US1] Define typography styles (per FR-026: 48px main, 24px cards, monospace) in BNICalculate/wwwroot/css/worldclock.css
+- [ ] T022 [P] [US1] Create CSS Grid layout for 9 city cards (responsive: 3x3 desktop, 2 cols tablet, 1 col mobile) in BNICalculate/wwwroot/css/worldclock.css
+- [ ] T023 [P] [US1] Style city cards (white background, border, padding) in BNICalculate/wwwroot/css/worldclock.css
+- [ ] T024 [P] [US1] Style error message container in BNICalculate/wwwroot/css/worldclock.css
+
+#### JavaScript Core Logic (worldclock.js)
+
+- [ ] T025 [US1] Define 10 CityTimezone configuration objects per contracts/world-clock-data.md in BNICalculate/wwwroot/js/worldclock.js
+- [ ] T026 [US1] Create ClockState object to manage main/secondary cities and timer in BNICalculate/wwwroot/js/worldclock.js
+- [ ] T027 [US1] Implement createFormatter() to create Intl.DateTimeFormat instances in BNICalculate/wwwroot/js/worldclock.js
+- [ ] T028 [US1] Implement formatTime() to format time for a city using Intl API in BNICalculate/wwwroot/js/worldclock.js
+- [ ] T029 [US1] Implement formatDate() to format date for a timezone in BNICalculate/wwwroot/js/worldclock.js
+- [ ] T030 [US1] Implement updateMainClock() to update main display DOM in BNICalculate/wwwroot/js/worldclock.js
+- [ ] T031 [US1] Implement updateSecondaryClock() to update a city card DOM in BNICalculate/wwwroot/js/worldclock.js
+- [ ] T032 [US1] Implement updateAllClocks() to update all 10 clocks in BNICalculate/wwwroot/js/worldclock.js
+- [ ] T033 [US1] Implement startClock() with setInterval (1000ms) in BNICalculate/wwwroot/js/worldclock.js
+- [ ] T034 [US1] Implement stopClock() to clear interval and prevent memory leak in BNICalculate/wwwroot/js/worldclock.js
+- [ ] T035 [US1] Add try-catch error handling for Intl API failures per FR-022 in BNICalculate/wwwroot/js/worldclock.js
+- [ ] T036 [US1] Implement showError() to display error message with refresh button in BNICalculate/wwwroot/js/worldclock.js
+- [ ] T037 [US1] Implement hideLoading() to hide loading indicator in BNICalculate/wwwroot/js/worldclock.js
+- [ ] T038 [US1] Add DOMContentLoaded event listener to initialize clock in BNICalculate/wwwroot/js/worldclock.js
+- [ ] T039 [US1] Add beforeunload event listener to call stopClock() in BNICalculate/wwwroot/js/worldclock.js
+
+#### Heartbeat Detection (FR-009)
+
+- [ ] T040 [US1] Implement heartbeat detection: track lastUpdateTime in ClockState in BNICalculate/wwwroot/js/worldclock.js
+- [ ] T041 [US1] Add checkHeartbeat() function to verify updates within 5 seconds in BNICalculate/wwwroot/js/worldclock.js
+- [ ] T042 [US1] Create heartbeat timer (setInterval 60000ms) to call checkHeartbeat() in BNICalculate/wwwroot/js/worldclock.js
+- [ ] T043 [US1] Implement auto-restart logic when heartbeat fails in BNICalculate/wwwroot/js/worldclock.js
+- [ ] T044 [US1] Add console.error logging when heartbeat triggers restart in BNICalculate/wwwroot/js/worldclock.js
+
+**Checkpoint**: At this point, User Story 1 should be fully functional - page loads, displays 10 cities, updates every second, handles errors, and auto-recovers from stalls
+
+---
+
+## Phase 4: User Story 2 - 切換主要顯示時間 (Priority: P2)
+
+**Goal**: 使用者可以點選任一城市時間卡片，將該城市設為主要顯示，並看到視覺回饋（hover、active 效果）
+
+**Independent Test**: 點選任一城市卡片，驗證該時間移至正中央成為主要顯示，且原主要時間移至城市列表中
+
+### Tests for User Story 2
+
+- [ ] T045 [P] [US2] Add test for city card click interaction in WorldClockPageTests.cs (may require Selenium/Playwright)
+- [ ] T046 [P] [US2] Add test for main/secondary city swap in WorldClockPageTests.cs
+
+### Implementation for User Story 2
+
+#### Interactive Features (worldclock.js)
+
+- [ ] T047 [US2] Implement switchMainCity(cityId) to swap main and secondary cities in BNICalculate/wwwroot/js/worldclock.js
+- [ ] T048 [US2] Add click event listeners to all 9 city cards in BNICalculate/wwwroot/js/worldclock.js
+- [ ] T049 [US2] Update date display when main city changes in switchMainCity() in BNICalculate/wwwroot/js/worldclock.js
+- [ ] T050 [US2] Implement smooth transition animation for city swap in BNICalculate/wwwroot/js/worldclock.js
+
+#### Visual Feedback (worldclock.css)
+
+- [ ] T051 [P] [US2] Add :hover style for city cards (background #e9ecef per FR-013) in BNICalculate/wwwroot/css/worldclock.css
+- [ ] T052 [P] [US2] Add :active style for city cards (border #007bff per FR-014) in BNICalculate/wwwroot/css/worldclock.css
+- [ ] T053 [P] [US2] Add cursor:pointer to city cards in BNICalculate/wwwroot/css/worldclock.css
+- [ ] T054 [P] [US2] Add transition effects for smooth hover/active feedback (<50ms per SC-005) in BNICalculate/wwwroot/css/worldclock.css
+
+#### Accessibility (FR-015 to FR-018)
+
+- [ ] T055 [US2] Add tabindex="0" to all city cards for keyboard navigation in BNICalculate/Pages/WorldClock.cshtml
+- [ ] T056 [US2] Add role="button" to city cards in BNICalculate/Pages/WorldClock.cshtml
+- [ ] T057 [US2] Add aria-label with city name and time to each card in BNICalculate/wwwroot/js/worldclock.js
+- [ ] T058 [US2] Implement Enter key handler for city card selection in BNICalculate/wwwroot/js/worldclock.js
+- [ ] T059 [US2] Add :focus style with blue outline (2px #007bff per FR-025) in BNICalculate/wwwroot/css/worldclock.css
+- [ ] T060 [US2] Update aria-live region when main city changes in BNICalculate/wwwroot/js/worldclock.js
+
+**Checkpoint**: At this point, User Stories 1 AND 2 should both work - users can click/keyboard navigate to switch main city with visual feedback
+
+---
+
+## Phase 5: User Story 3 - 自動處理時區變化 (Priority: P3)
+
+**Goal**: 系統自動處理夏令時間轉換和日期變更，確保時間顯示的準確性
+
+**Independent Test**: 模擬夏令時間轉換期間和跨日期時段，驗證系統自動調整時區標示和日期
+
+### Tests for User Story 3
+
+- [ ] T061 [P] [US3] Add test for DST handling (mock DST transition date) in WorldClockPageTests.cs
+- [ ] T062 [P] [US3] Add test for date change at midnight in WorldClockPageTests.cs
+- [ ] T063 [P] [US3] Add test for cross-timezone date differences in WorldClockPageTests.cs
+
+### Implementation for User Story 3
+
+#### DST Handling (Automatic via Intl API)
+
+- [ ] T064 [US3] Verify Intl.DateTimeFormat automatically handles DST for all 6 DST cities in BNICalculate/wwwroot/js/worldclock.js
+- [ ] T065 [US3] Add unit test to verify DST offset changes (London GMT+0/+1, New York GMT-5/-4) in worldclock.js
+- [ ] T066 [US3] Update offsetLabel display to show current DST state in updateMainClock() in BNICalculate/wwwroot/js/worldclock.js
+
+#### Date Change Handling (FR-020)
+
+- [ ] T067 [US3] Implement date update logic in updateAllClocks() to check for date changes in BNICalculate/wwwroot/js/worldclock.js
+- [ ] T068 [US3] Ensure date follows main city timezone (not local timezone) in BNICalculate/wwwroot/js/worldclock.js
+- [ ] T069 [US3] Add test case for date display when main city is in different day than local in worldclock.js
+
+#### Browser Compatibility (FR-023, FR-024)
+
+- [ ] T070 [US3] Implement checkBrowserSupport() to detect Intl.DateTimeFormat support in BNICalculate/wwwroot/js/worldclock.js
+- [ ] T071 [US3] Add browser version detection for Chrome/Edge 90+, Firefox 88+, Safari 14+ in BNICalculate/wwwroot/js/worldclock.js
+- [ ] T072 [US3] Display browser upgrade message if unsupported browser detected in BNICalculate/wwwroot/js/worldclock.js
+- [ ] T073 [US3] Add upgrade message HTML container in BNICalculate/Pages/WorldClock.cshtml
+- [ ] T074 [P] [US3] Style browser upgrade message in BNICalculate/wwwroot/css/worldclock.css
+
+**Checkpoint**: All user stories should now be independently functional with DST handling, date changes, and browser compatibility
+
+---
+
+## Phase 6: Polish & Cross-Cutting Concerns
+
+**Purpose**: Improvements that affect multiple user stories and final quality assurance
+
+- [ ] T075 [P] Add XML documentation comments to WorldClockModel class in BNICalculate/Pages/WorldClock.cshtml.cs
+- [ ] T076 [P] Add JSDoc comments to all JavaScript functions in BNICalculate/wwwroot/js/worldclock.js
+- [ ] T077 [P] Optimize formatter instance reuse (cache formatters per research.md) in BNICalculate/wwwroot/js/worldclock.js
+- [ ] T078 [P] Add Page Visibility API to pause clock when tab hidden in BNICalculate/wwwroot/js/worldclock.js
+- [ ] T079 Test page performance: load time <2s (SC-001), update latency <100ms (SC-002) using browser DevTools
+- [ ] T080 Test 24-hour runtime: leave page open, verify no memory leaks or cumulative errors (SC-006)
+- [ ] T081 [P] Run cross-browser testing (Chrome, Firefox, Safari, Edge) per FR-023
+- [ ] T082 [P] Validate WCAG 2.1 Level AA compliance using axe DevTools
+- [ ] T083 Review and update README.md with WorldClock feature description
+- [ ] T084 Run validation per quickstart.md: verify all acceptance scenarios pass
+- [ ] T085 Code review: check for security issues, console.log removal, error handling completeness
+
+---
+
+## Dependencies & Execution Order
+
+### Phase Dependencies
+
+- **Setup (Phase 1)**: No dependencies - can start immediately
+- **Foundational (Phase 2)**: Depends on Setup completion (T001-T005) - BLOCKS all user stories
+- **User Stories (Phase 3+)**: All depend on Foundational phase completion (T006-T008)
+  - User Story 1 (Phase 3): Can start after Foundational
+  - User Story 2 (Phase 4): Depends on User Story 1 complete (T009-T044) - builds on existing clock display
+  - User Story 3 (Phase 5): Depends on User Stories 1 & 2 complete (T009-T060) - validates existing functionality
+- **Polish (Phase 6)**: Depends on all user stories being complete
+
+### User Story Dependencies
+
+- **User Story 1 (P1)**: Can start after Foundational (Phase 2) - No dependencies on other stories
+  - Delivers: Basic clock display, 10 cities, real-time updates, error handling, heartbeat
+- **User Story 2 (P2)**: Depends on User Story 1 complete - Adds interactivity to existing display
+  - Delivers: City switching, visual feedback, keyboard navigation, accessibility
+- **User Story 3 (P3)**: Depends on User Stories 1 & 2 complete - Validates and enhances existing functionality
+  - Delivers: DST verification, date handling, browser compatibility checks
+
+### Within Each User Story
+
+**User Story 1**:
+1. Tests first (T009-T011) - write and ensure they FAIL
+2. HTML structure (T012-T017) - can do in parallel with CSS
+3. CSS styling (T018-T024) - can do in parallel with HTML
+4. JavaScript core (T025-T039) - depends on HTML/CSS structure existing
+5. Heartbeat detection (T040-T044) - depends on core clock logic
+
+**User Story 2**:
+1. Tests first (T045-T046) - write and ensure they FAIL
+2. Interactive JS (T047-T050) - core switching logic
+3. Visual feedback CSS (T051-T054) - can do in parallel with JS
+4. Accessibility (T055-T060) - depends on interactive JS complete
+
+**User Story 3**:
+1. Tests first (T061-T063) - write and ensure they FAIL
+2. DST handling (T064-T066) - verify existing implementation
+3. Date handling (T067-T069) - enhance existing logic
+4. Browser compatibility (T070-T074) - can do in parallel with DST/date work
+
+### Parallel Opportunities
+
+**Phase 1 (Setup)**: T003, T004 can run in parallel
+
+**Phase 2 (Foundational)**: All sequential (small phase)
+
+**Phase 3 (User Story 1)**:
+- Tests T009, T010, T011 can all run in parallel
+- HTML (T012-T017) and CSS (T018-T024) can run in parallel
+- Within CSS: T018, T019, T020, T021, T022, T023, T024 can all run in parallel (different selectors)
+
+**Phase 4 (User Story 2)**:
+- Tests T045, T046 can run in parallel
+- CSS tasks T051, T052, T053, T054 can all run in parallel
+
+**Phase 5 (User Story 3)**:
+- Tests T061, T062, T063 can all run in parallel
+- CSS task T074 can run in parallel with JS tasks T070-T072
+
+**Phase 6 (Polish)**:
+- T075, T076, T077, T078, T081, T082, T083 can all run in parallel
+- T079, T080 must run after implementation complete
+- T084, T085 must run at the end
+
+---
+
+## Parallel Example: User Story 1
+
+Assuming 3 developers working in parallel after Foundational phase completes:
+
+```bash
+# Developer 1: HTML Structure
+git checkout 003-world-clock
+# Work on T012-T017 (HTML in WorldClock.cshtml)
+
+# Developer 2: CSS Styling
+git checkout 003-world-clock
+# Work on T018-T024 (CSS in worldclock.css)
+
+# Developer 3: Tests
+git checkout 003-world-clock
+# Work on T009-T011 (Tests in WorldClockPageTests.cs)
+
+# All merge, then move to JavaScript tasks T025-T039 (sequential or split by function groups)
+```
+
+---
+
+## Implementation Strategy
+
+### MVP Scope (Minimum Viable Product)
+
+**Recommended MVP**: User Story 1 only (Phase 3)
+
+This delivers core value:
+- ✅ Display 10 cities with real-time updates
+- ✅ Loading indicator
+- ✅ Error handling
+- ✅ Heartbeat detection for reliability
+- ✅ 24-hour runtime guarantee
+
+**Can ship after**: T009-T044 complete (35 tasks)
+
+### Incremental Delivery
+
+1. **Sprint 1**: Setup + Foundational + User Story 1 (T001-T044)
+   - Deliverable: Working clock display with 10 cities
+   - User value: Can view multiple timezones simultaneously
+   
+2. **Sprint 2**: User Story 2 (T045-T060)
+   - Deliverable: Interactive city switching with accessibility
+   - User value: Can focus on specific timezone of interest
+   
+3. **Sprint 3**: User Story 3 + Polish (T061-T085)
+   - Deliverable: Full feature with DST handling, browser compatibility, optimizations
+   - User value: Production-ready with all edge cases handled
+
+### Testing Strategy
+
+- **TDD Approach**: Write tests first for each user story (T009-T011, T045-T046, T061-T063)
+- **Integration Tests**: Verify page loads, HTML structure, basic functionality
+- **Manual Testing**: Interactive features (clicks, keyboard), visual feedback, long-running stability
+- **Cross-browser Testing**: Validate on Chrome, Firefox, Safari, Edge (T081)
+- **Accessibility Testing**: Use axe DevTools to verify WCAG compliance (T082)
+- **Performance Testing**: Measure load time, update latency, 24-hour runtime (T079, T080)
+
+---
+
+## Task Summary
+
+- **Total Tasks**: 85
+- **Setup Phase**: 5 tasks
+- **Foundational Phase**: 3 tasks
+- **User Story 1 (P1)**: 36 tasks (includes tests, HTML, CSS, JS, heartbeat)
+- **User Story 2 (P2)**: 16 tasks (includes tests, interactivity, accessibility)
+- **User Story 3 (P3)**: 14 tasks (includes tests, DST, browser compatibility)
+- **Polish Phase**: 11 tasks
+
+**Parallel Opportunities**: ~30 tasks can run in parallel (marked with [P])
+
+**Estimated Timeline** (single developer):
+- Setup + Foundational: 0.5 day
+- User Story 1: 3-4 days
+- User Story 2: 1-2 days
+- User Story 3: 1-2 days
+- Polish: 1 day
+- **Total**: ~7-10 days
+
+**With 3 developers in parallel**: ~3-5 days
+
+---
+
+## Validation Checklist
+
+Before marking the feature complete, ensure:
+
+- [ ] All 85 tasks completed and checked off
+- [ ] All tests pass (T009-T011, T045-T046, T061-T063)
+- [ ] All acceptance scenarios from spec.md verified
+- [ ] All success criteria met (SC-001 to SC-007)
+- [ ] All functional requirements implemented (FR-001 to FR-026)
+- [ ] Cross-browser testing complete (Chrome, Firefox, Safari, Edge)
+- [ ] Accessibility validation passed (WCAG 2.1 Level AA)
+- [ ] Performance targets met (load <2s, update <100ms, 24h runtime)
+- [ ] Code reviewed and approved
+- [ ] Documentation updated (README.md, XML comments, JSDoc)
+- [ ] No console errors or warnings in browser
+- [ ] Memory leak testing passed (24-hour runtime test)
+- [ ] quickstart.md validation steps all pass
+
+---
+
+**Generated**: 2025-11-01  
+**Next Step**: Begin with Phase 1 Setup tasks (T001-T005)
