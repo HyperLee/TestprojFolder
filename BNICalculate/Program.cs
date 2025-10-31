@@ -7,6 +7,9 @@ public class Program
 {
     public static void Main(string[] args)
     {
+        // 註冊 Big5 編碼提供者（台銀 API 使用 Big5 編碼）
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
         // 設定 Serilog (T007)
         Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Information()

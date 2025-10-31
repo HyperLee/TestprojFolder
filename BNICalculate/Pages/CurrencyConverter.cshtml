@@ -32,41 +32,48 @@
         </div>
     }
 
-    @if (Model.CurrentRates != null)
-    {
-        <div class="card mb-4">
-            <div class="card-body">
-                <div class="row align-items-center">
-                    <div class="col-md-8">
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    @if (Model.CurrentRates != null)
+                    {
                         <h5 class="card-title">📊 當前匯率資訊</h5>
                         <p class="card-text mb-0">
                             <strong>資料來源：</strong>@Model.CurrentRates.DataSource<br />
                             <strong>最後更新：</strong>@BNICalculate.Helpers.DateTimeHelper.GetFullDateTimeString(Model.CurrentRates.LastFetchTime)
                         </p>
-                    </div>
-                    <div class="col-md-4 text-md-end mt-3 mt-md-0">
-                        <form method="post" asp-page-handler="UpdateRates" class="d-inline" aria-label="更新匯率資料表單">
-                            <button type="submit" 
-                                    class="btn btn-outline-primary" 
-                                    @(Model.IsUpdating ? "disabled" : "")
-                                    aria-label="更新匯率資料"
-                                    aria-busy="@(Model.IsUpdating ? "true" : "false")">
-                                @if (Model.IsUpdating)
-                                {
-                                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                                    <span>更新中...</span>
-                                }
-                                else
-                                {
-                                    <span>🔄 更新匯率</span>
-                                }
-                            </button>
-                        </form>
-                    </div>
+                    }
+                    else
+                    {
+                        <h5 class="card-title">📊 匯率資訊</h5>
+                        <p class="card-text mb-0 text-muted">
+                            目前尚無匯率資料，請點擊右側按鈕取得最新匯率。
+                        </p>
+                    }
+                </div>
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                    <form method="post" asp-page-handler="UpdateRates" class="d-inline" aria-label="更新匯率資料表單">
+                        <button type="submit" 
+                                class="btn btn-outline-primary" 
+                                @(Model.IsUpdating ? "disabled" : "")
+                                aria-label="更新匯率資料"
+                                aria-busy="@(Model.IsUpdating ? "true" : "false")">
+                            @if (Model.IsUpdating)
+                            {
+                                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                <span>更新中...</span>
+                            }
+                            else
+                            {
+                                <span>🔄 更新匯率</span>
+                            }
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
-    }
+    </div>
 
     <div class="row">
         <div class="col-md-6 mb-4">

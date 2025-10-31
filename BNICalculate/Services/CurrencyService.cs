@@ -182,6 +182,8 @@ public class CurrencyService : ICurrencyService
     /// <exception cref="DataFormatException">資料格式錯誤時拋出</exception>
     public async Task<ExchangeRateData> FetchAndUpdateRatesAsync()
     {
+        var totalStopwatch = System.Diagnostics.Stopwatch.StartNew();
+        
         try
         {
             _logger.LogInformation("開始從台銀 API 取得匯率資料");
@@ -190,20 +192,49 @@ public class CurrencyService : ICurrencyService
             var httpClient = _httpClientFactory.CreateClient("TaiwanBankApi");
             
             // 呼叫台銀 CSV API
+            _logger.LogInformation("正在呼叫台銀 API: {Url}", "https://rate.bot.com.tw/xrt/flcsv/0/day");
+            var apiStopwatch = System.Diagnostics.Stopwatch.StartNew();
+            
             var response = await httpClient.GetAsync("/xrt/flcsv/0/day");
+            apiStopwatch.Stop();
+            
+            _logger.LogInformation("API 回應耗時: {ElapsedMs} ms, 狀態碼: {StatusCode}", 
+                apiStopwatch.ElapsedMilliseconds, response.StatusCode);
             
             if (!response.IsSuccessStatusCode)
             {
                 throw new ExternalServiceException($"台銀 API 呼叫失敗: HTTP {response.StatusCode}");
             }
 
-            // 讀取 CSV 內容（Big5 編碼）
+            // 讀取 CSV 內容
             var bytes = await response.Content.ReadAsByteArrayAsync();
-            var encoding = Encoding.GetEncoding("Big5");
-            var csvContent = encoding.GetString(bytes);
+            _logger.LogInformation("接收資料大小: {Bytes} bytes", bytes.Length);
+            
+            // 台銀 API 實際回傳 UTF-8 編碼（帶 BOM）
+            var encoding = Encoding.UTF8;
+            var bomLength = 0;
+            
+            // 檢查並移除 UTF-8 BOM (EF BB BF)
+            if (bytes.Length >= 3 && bytes[0] == 0xEF && bytes[1] == 0xBB && bytes[2] == 0xBF)
+            {
+                bomLength = 3;
+                _logger.LogInformation("偵測到 UTF-8 BOM，將移除");
+            }
+            
+            // 解碼（跳過 BOM）
+            var csvContent = encoding.GetString(bytes, bomLength, bytes.Length - bomLength);
+            
+            // 記錄前 200 個字元用於偵錯
+            var preview = csvContent.Substring(0, Math.Min(200, csvContent.Length));
+            _logger.LogInformation("CSV 內容預覽（前 200 字元）: {Preview}", preview);
 
             // 解析 CSV
+            var parseStopwatch = System.Diagnostics.Stopwatch.StartNew();
             var rates = ParseCsvContent(csvContent);
+            parseStopwatch.Stop();
+            
+            _logger.LogInformation("CSV 解析耗時: {ElapsedMs} ms, 取得 {Count} 筆匯率", 
+                parseStopwatch.ElapsedMilliseconds, rates.Count);
 
             // 建立匯率資料物件
             var ratesData = new ExchangeRateData
@@ -214,32 +245,46 @@ public class CurrencyService : ICurrencyService
             };
 
             // 儲存到檔案
+            var saveStopwatch = System.Diagnostics.Stopwatch.StartNew();
             await _dataService.SaveAsync(ratesData);
+            saveStopwatch.Stop();
+            
+            _logger.LogInformation("檔案儲存耗時: {ElapsedMs} ms", saveStopwatch.ElapsedMilliseconds);
 
             // 清除快取，強制重新載入
             _cache.Remove(CacheKey);
 
-            _logger.LogInformation("成功從台銀 API 取得並儲存 {Count} 筆匯率資料", rates.Count);
+            totalStopwatch.Stop();
+            _logger.LogInformation("✅ 匯率更新完成！總耗時: {ElapsedMs} ms (API: {ApiMs} ms, 解析: {ParseMs} ms, 儲存: {SaveMs} ms)", 
+                totalStopwatch.ElapsedMilliseconds,
+                apiStopwatch.ElapsedMilliseconds,
+                parseStopwatch.ElapsedMilliseconds,
+                saveStopwatch.ElapsedMilliseconds);
 
             return ratesData;
         }
         catch (HttpRequestException ex)
         {
-            _logger.LogError(ex, "HTTP 請求失敗");
+            totalStopwatch.Stop();
+            _logger.LogError(ex, "❌ HTTP 請求失敗 (耗時: {ElapsedMs} ms)", totalStopwatch.ElapsedMilliseconds);
             throw new ExternalServiceException("無法連線到台銀 API", ex);
         }
         catch (TaskCanceledException ex)
         {
-            _logger.LogError(ex, "請求逾時");
+            totalStopwatch.Stop();
+            _logger.LogError(ex, "❌ 請求逾時 (耗時: {ElapsedMs} ms)", totalStopwatch.ElapsedMilliseconds);
             throw new ExternalServiceException("台銀 API 請求逾時", ex);
         }
         catch (DataFormatException)
         {
+            totalStopwatch.Stop();
+            _logger.LogError("❌ 資料格式錯誤 (耗時: {ElapsedMs} ms)", totalStopwatch.ElapsedMilliseconds);
             throw;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "取得匯率資料時發生未預期的錯誤");
+            totalStopwatch.Stop();
+            _logger.LogError(ex, "❌ 取得匯率資料時發生未預期的錯誤 (耗時: {ElapsedMs} ms)", totalStopwatch.ElapsedMilliseconds);
             throw new ExternalServiceException("取得匯率資料失敗", ex);
         }
     }
