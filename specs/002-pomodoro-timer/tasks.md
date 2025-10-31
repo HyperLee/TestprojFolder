@@ -31,11 +31,11 @@
 
 **Purpose**: 建立基礎檔案結構和資料目錄
 
-- [ ] T001 在 BNICalculate/Models/ 建立資料夾（若不存在）
-- [ ] T002 在 BNICalculate/Services/ 建立資料夾（若不存在）
-- [ ] T003 在 BNICalculate/App_Data/pomodoro/ 建立 JSON 資料儲存目錄
-- [ ] T004 在 BNICalculate/wwwroot/js/ 和 wwwroot/css/ 確認目錄存在
-- [ ] T005 在 BNICalculate/Pages/Shared/_Layout.cshtml 新增番茄鐘導覽連結
+- [X] T001 在 BNICalculate/Models/ 建立資料夾（若不存在）
+- [X] T002 在 BNICalculate/Services/ 建立資料夾（若不存在）
+- [X] T003 在 BNICalculate/App_Data/pomodoro/ 建立 JSON 資料儲存目錄
+- [X] T004 在 BNICalculate/wwwroot/js/ 和 wwwroot/css/ 確認目錄存在
+- [X] T005 在 BNICalculate/Pages/Shared/_Layout.cshtml 新增番茄鐘導覽連結
 
 ---
 
@@ -45,13 +45,13 @@
 
 **⚠️ CRITICAL**: 此階段必須完成後，所有使用者故事才能開始實作
 
-- [ ] T006 建立 UserSettings 模型在 BNICalculate/Models/UserSettings.cs（包含驗證 Annotations）
-- [ ] T007 建立 TimerSession 模型在 BNICalculate/Models/TimerSession.cs（工作/休息時段記錄）
-- [ ] T008 建立 PomodoroStatistics 模型在 BNICalculate/Models/PomodoroStatistics.cs（每日統計）
-- [ ] T009 建立 PomodoroDataService 服務在 BNICalculate/Services/PomodoroDataService.cs（JSON 讀寫、IMemoryCache 快取、檔案 I/O）
-- [ ] T010 在 BNICalculate/Program.cs 註冊 PomodoroDataService 和 IMemoryCache
-- [ ] T011 建立基礎 Razor Page 在 BNICalculate/Pages/Pomodoro.cshtml（空白頁面含 @page 指令）
-- [ ] T012 建立 PageModel 在 BNICalculate/Pages/Pomodoro.cshtml.cs（載入設定和統計）
+- [X] T006 建立 UserSettings 模型在 BNICalculate/Models/UserSettings.cs（包含驗證 Annotations）
+- [X] T007 建立 TimerSession 模型在 BNICalculate/Models/TimerSession.cs（工作/休息時段記錄）
+- [X] T008 建立 PomodoroStatistics 模型在 BNICalculate/Models/PomodoroStatistics.cs（每日統計）
+- [X] T009 建立 PomodoroDataService 服務在 BNICalculate/Services/PomodoroDataService.cs（JSON 讀寫、IMemoryCache 快取、檔案 I/O）
+- [X] T010 在 BNICalculate/Program.cs 註冊 PomodoroDataService 和 IMemoryCache
+- [X] T011 建立基礎 Razor Page 在 BNICalculate/Pages/Pomodoro.cshtml（空白頁面含 @page 指令）
+- [X] T012 建立 PageModel 在 BNICalculate/Pages/Pomodoro.cshtml.cs（載入設定和統計）
 
 **測試（⚠️ OPTIONAL - 若測試環境有問題可跳過）**:
 
@@ -73,42 +73,42 @@
 
 ### JavaScript 客戶端實作（核心計時器）
 
-- [ ] T016 [US1] 建立 pomodoro.js 在 BNICalculate/wwwroot/js/pomodoro.js（空檔案含註解結構）
-- [ ] T017 [US1] 實作 PomodoroTimer 類別建構函式（options 參數、事件回呼）
-- [ ] T018 [US1] 實作 PomodoroTimer.startWork() 方法（記錄 startTimestamp、啟動 setInterval、更新 state）
-- [ ] T019 [US1] 實作 PomodoroTimer.startBreak() 方法（切換 sessionType、重置 totalDuration）
-- [ ] T020 [US1] 實作 Date.now() 時間校準機制（每次 tick 重新計算 remainingSeconds）
-- [ ] T021 [US1] 實作 onTick 回呼觸發（每秒更新剩餘時間）
-- [ ] T022 [US1] 實作 onWorkComplete 回呼觸發（工作時段結束自動切換休息）
-- [ ] T023 [US1] 實作 onBreakComplete 回呼觸發（休息結束增加番茄鐘計數）
+- [X] T016 [US1] 建立 pomodoro.js 在 BNICalculate/wwwroot/js/pomodoro.js（空檔案含註解結構）
+- [X] T017 [US1] 實作 PomodoroTimer 類別建構函式（options 參數、事件回呼）
+- [X] T018 [US1] 實作 PomodoroTimer.startWork() 方法（記錄 startTimestamp、啟動 setInterval、更新 state）
+- [X] T019 [US1] 實作 PomodoroTimer.startBreak() 方法（切換 sessionType、重置 totalDuration）
+- [X] T020 [US1] 實作 Date.now() 時間校準機制（每次 tick 重新計算 remainingSeconds）
+- [X] T021 [US1] 實作 onTick 回呼觸發（每秒更新剩餘時間）
+- [X] T022 [US1] 實作 onWorkComplete 回呼觸發（工作時段結束自動切換休息）
+- [X] T023 [US1] 實作 onBreakComplete 回呼觸發（休息結束增加番茄鐘計數）
 
 ### UI 實作（Razor Page）
 
-- [ ] T024 [US1] 在 Pomodoro.cshtml 實作計時器顯示區域（MM:SS 格式、時段類型標籤）
-- [ ] T025 [US1] 在 Pomodoro.cshtml 實作控制按鈕區（開始工作按鈕、HTML 結構）
-- [ ] T026 [US1] 在 Pomodoro.cshtml 實作 Bootstrap Toast 通知容器（橫幅訊息 HTML）
-- [ ] T027 [US1] 在 pomodoro.js 實作 showNotification() 函式（Bootstrap Toast 顯示、4 秒自動消失）
-- [ ] T028 [US1] 在 pomodoro.js 實作 formatTime() 輔助函式（秒數轉 MM:SS）
-- [ ] T029 [US1] 在 pomodoro.js 綁定開始按鈕事件監聽器（呼叫 timer.startWork()）
-- [ ] T030 [US1] 在 pomodoro.js 實作 UI 更新邏輯（onTick 更新顯示、onComplete 顯示通知）
+- [X] T024 [US1] 在 Pomodoro.cshtml 實作計時器顯示區域（MM:SS 格式、時段類型標籤）
+- [X] T025 [US1] 在 Pomodoro.cshtml 實作控制按鈕區（開始工作按鈕、HTML 結構）
+- [X] T026 [US1] 在 Pomodoro.cshtml 實作 Bootstrap Toast 通知容器（橫幅訊息 HTML）
+- [X] T027 [US1] 在 pomodoro.js 實作 showNotification() 函式（Bootstrap Toast 顯示、4 秒自動消失）
+- [X] T028 [US1] 在 pomodoro.js 實作 formatTime() 輔助函式（秒數轉 MM:SS）
+- [X] T029 [US1] 在 pomodoro.js 綁定開始按鈕事件監聽器（呼叫 timer.startWork()）
+- [X] T030 [US1] 在 pomodoro.js 實作 UI 更新邏輯（onTick 更新顯示、onComplete 顯示通知）
 
 ### 頁面狀態恢復（localStorage）
 
-- [ ] T031 [US1] 實作 PomodoroTimer.saveState() 方法（儲存至 localStorage）
-- [ ] T032 [US1] 實作 PomodoroTimer.loadState() 方法（頁面載入時恢復狀態、計算經過時間）
-- [ ] T033 [US1] 在 window.DOMContentLoaded 事件綁定 loadState() 呼叫
-- [ ] T034 [US1] 在 window.beforeunload 事件綁定 saveState() 呼叫
+- [X] T031 [US1] 實作 PomodoroTimer.saveState() 方法（儲存至 localStorage）
+- [X] T032 [US1] 實作 PomodoroTimer.loadState() 方法（頁面載入時恢復狀態、計算經過時間）
+- [X] T033 [US1] 在 window.DOMContentLoaded 事件綁定 loadState() 呼叫
+- [X] T034 [US1] 在 window.beforeunload 事件綁定 saveState() 呼叫
 
 ### 樣式實作
 
-- [ ] T035 [US1] 建立 pomodoro.css 在 BNICalculate/wwwroot/css/pomodoro.css（計時器顯示樣式、按鈕樣式）
-- [ ] T036 [US1] 在 Pomodoro.cshtml 引入 pomodoro.css 和 pomodoro.js
+- [X] T035 [US1] 建立 pomodoro.css 在 BNICalculate/wwwroot/css/pomodoro.css（計時器顯示樣式、按鈕樣式）
+- [X] T036 [US1] 在 Pomodoro.cshtml 引入 pomodoro.css 和 pomodoro.js
 
 ### 後端整合
 
-- [ ] T037 [US1] 在 Pomodoro.cshtml.cs OnGet() 載入 UserSettings（呼叫 PomodoroDataService）
-- [ ] T038 [US1] 在 Pomodoro.cshtml.cs OnGet() 載入 PomodoroStatistics（呼叫 PomodoroDataService）
-- [ ] T039 [US1] 在 Pomodoro.cshtml 將設定資料傳遞給 JavaScript（隱藏欄位或 data 屬性）
+- [X] T037 [US1] 在 Pomodoro.cshtml.cs OnGet() 載入 UserSettings（呼叫 PomodoroDataService）
+- [X] T038 [US1] 在 Pomodoro.cshtml.cs OnGet() 載入 PomodoroStatistics（呼叫 PomodoroDataService）
+- [X] T039 [US1] 在 Pomodoro.cshtml 將設定資料傳遞給 JavaScript（隱藏欄位或 data 屬性）
 
 ### 測試（⚠️ OPTIONAL - 環境問題可跳過）
 
