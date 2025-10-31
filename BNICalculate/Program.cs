@@ -1,4 +1,4 @@
-namespace BNICalculate;
+﻿namespace BNICalculate;
 
 public class Program
 {

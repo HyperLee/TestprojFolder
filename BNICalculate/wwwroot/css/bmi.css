@@ -1,0 +1,87 @@
+/* BMI 計算器樣式 */
+
+.bmi-container {
+    max-width: 500px;
+    margin: 2rem auto;
+    padding: 2rem;
+}
+
+.bmi-container h1 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #555;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+.button-group {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.button-group button {
+    flex: 1;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    border: 1px solid #333;
+    background-color: #fff;
+    color: #333;
+}
+
+.button-group button:hover {
+    background-color: #f0f0f0;
+}
+
+.button-group button:active {
+    background-color: #e0e0e0;
+}
+
+.error-message {
+    display: block;
+    color: #d9534f;
+    font-size: 0.9em;
+    margin-top: 0.25rem;
+}
+
+#result-container {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    border: 2px solid #28a745;
+    background-color: #f8f9fa;
+}
+
+#bmi-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+#bmi-category {
+    font-size: 1.2rem;
+    color: #555;
+}
