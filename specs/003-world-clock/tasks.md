@@ -25,11 +25,11 @@
 
 **目的**: 建立基本檔案結構和專案配置
 
-- [ ] T001 在 BNICalculate/Pages/WorldClock.cshtml.cs 建立空白的 WorldClock PageModel
-- [ ] T002 在 BNICalculate/Pages/WorldClock.cshtml 建立空白的 WorldClock Razor 視圖
-- [ ] T003 在 BNICalculate/wwwroot/css/worldclock.css 建立空白的樣式表
-- [ ] T004 在 BNICalculate/wwwroot/js/worldclock.js 建立空白的 JavaScript 腳本
-- [ ] T005 在 BNICalculate/Pages/Shared/_Layout.cshtml 新增世界時鐘頁面的導覽連結
+- [X] T001 在 BNICalculate/Pages/WorldClock.cshtml.cs 建立空白的 WorldClock PageModel
+- [X] T002 在 BNICalculate/Pages/WorldClock.cshtml 建立空白的 WorldClock Razor 視圖
+- [X] T003 在 BNICalculate/wwwroot/css/worldclock.css 建立空白的樣式表
+- [X] T004 在 BNICalculate/wwwroot/js/worldclock.js 建立空白的 JavaScript 腳本
+- [X] T005 在 BNICalculate/Pages/Shared/_Layout.cshtml 新增世界時鐘頁面的導覽連結
 
 ---
 
@@ -39,9 +39,9 @@
 
 **⚠️ 重要**: 在此階段完成前，所有使用者故事的工作都無法開始
 
-- [ ] T006 在 BNICalculate/Pages/WorldClock.cshtml.cs 實作基本的 WorldClockModel 類別並加上 XML 文件註解
-- [ ] T007 在 BNICalculate/Pages/WorldClock.cshtml 建立基本的 HTML 結構（使用 Bootstrap 容器）
-- [ ] T008 在 WorldClock.cshtml 中使用 script/link 標籤連結 CSS 和 JS 檔案
+- [X] T006 在 BNICalculate/Pages/WorldClock.cshtml.cs 實作基本的 WorldClockModel 類別並加上 XML 文件註解
+- [X] T007 在 BNICalculate/Pages/WorldClock.cshtml 建立基本的 HTML 結構（使用 Bootstrap 容器）
+- [X] T008 在 WorldClock.cshtml 中使用 script/link 標籤連結 CSS 和 JS 檔案
 
 **檢查點**: 基礎就緒 - 使用者故事實作現在可以開始
 
@@ -70,56 +70,56 @@
 
 **自動化測試任務**:
 
-- [ ] T009 [US1] 在 BNICalculate.Tests/Integration/Pages/WorldClockPageTests.cs 建立 WorldClockPageTests.cs 並加上頁面載入測試
-- [ ] T010 [US1] 在 WorldClockPageTests.cs 新增測試驗證 10 個城市顯示
-- [ ] T011 [US1] 在 WorldClockPageTests.cs 新增測試驗證正確的 HTML 結構（主要 + 9 張卡片）並驗證日期格式為 YYYY-MM-DD
+- [X] T009 [US1] 在 BNICalculate.Tests/Integration/Pages/WorldClockPageTests.cs 建立 WorldClockPageTests.cs 並加上頁面載入測試
+- [X] T010 [US1] 在 WorldClockPageTests.cs 新增測試驗證 10 個城市顯示
+- [X] T011 [US1] 在 WorldClockPageTests.cs 新增測試驗證正確的 HTML 結構（主要 + 9 張卡片）並驗證日期格式為 YYYY-MM-DD
 
 ### 使用者故事 1 的實作
 
 #### HTML 結構（WorldClock.cshtml）
 
-- [ ] T012 [US1] 在 BNICalculate/Pages/WorldClock.cshtml 新增載入指示器 HTML（旋轉圖示 + "載入中..."）
-- [ ] T013 [US1] 在 BNICalculate/Pages/WorldClock.cshtml 建立主要時鐘顯示區域並加上 ARIA live region
-- [ ] T014 [US1] 在 BNICalculate/Pages/WorldClock.cshtml 新增主要時間顯示元素（城市名稱、時區、時間、日期）
-- [ ] T015 [US1] 在 BNICalculate/Pages/WorldClock.cshtml 建立 9 個次要城市卡片的網格容器
-- [ ] T016 [US1] 在 BNICalculate/Pages/WorldClock.cshtml 新增 9 個城市卡片範本並加上 data 屬性
-- [ ] T017 [US1] 在 BNICalculate/Pages/WorldClock.cshtml 新增時區 API 失敗時的錯誤訊息容器
+- [X] T012 [US1] 在 BNICalculate/Pages/WorldClock.cshtml 新增載入指示器 HTML（旋轉圖示 + "載入中..."）
+- [X] T013 [US1] 在 BNICalculate/Pages/WorldClock.cshtml 建立主要時鐘顯示區域並加上 ARIA live region
+- [X] T014 [US1] 在 BNICalculate/Pages/WorldClock.cshtml 新增主要時間顯示元素（城市名稱、時區、時間、日期）
+- [X] T015 [US1] 在 BNICalculate/Pages/WorldClock.cshtml 建立 9 個次要城市卡片的網格容器
+- [X] T016 [US1] 在 BNICalculate/Pages/WorldClock.cshtml 新增 9 個城市卡片範本並加上 data 屬性
+- [X] T017 [US1] 在 BNICalculate/Pages/WorldClock.cshtml 新增時區 API 失敗時的錯誤訊息容器
 
 #### CSS 樣式（worldclock.css）
 
-- [ ] T018 [US1] 在 BNICalculate/wwwroot/css/worldclock.css 定義色彩的 CSS 變數（依照 FR-025）
-- [ ] T019 [US1] 在 BNICalculate/wwwroot/css/worldclock.css 設定載入指示器樣式（置中、旋轉動畫）
-- [ ] T020 [US1] 在 BNICalculate/wwwroot/css/worldclock.css 設定主要時鐘顯示區域樣式（白色背景、陰影、置中）
-- [ ] T021 [US1] 在 BNICalculate/wwwroot/css/worldclock.css 定義字體樣式（依照 FR-026：主要 48px、卡片 24px、等寬字體）
-- [ ] T022 [US1] 在 BNICalculate/wwwroot/css/worldclock.css 建立 9 個城市卡片的 CSS Grid 佈局（響應式：桌面 3x3、平板 2 欄、手機 1 欄）
-- [ ] T023 [US1] 在 BNICalculate/wwwroot/css/worldclock.css 設定城市卡片樣式（白色背景、邊框、內距）
-- [ ] T024 [US1] 在 BNICalculate/wwwroot/css/worldclock.css 設定錯誤訊息容器樣式
+- [X] T018 [US1] 在 BNICalculate/wwwroot/css/worldclock.css 定義色彩的 CSS 變數（依照 FR-025）
+- [X] T019 [US1] 在 BNICalculate/wwwroot/css/worldclock.css 設定載入指示器樣式（置中、旋轉動畫）
+- [X] T020 [US1] 在 BNICalculate/wwwroot/css/worldclock.css 設定主要時鐘顯示區域樣式（白色背景、陰影、置中）
+- [X] T021 [US1] 在 BNICalculate/wwwroot/css/worldclock.css 定義字體樣式（依照 FR-026：主要 48px、卡片 24px、等寬字體）
+- [X] T022 [US1] 在 BNICalculate/wwwroot/css/worldclock.css 建立 9 個城市卡片的 CSS Grid 佈局（響應式：桌面 3x3、平板 2 欄、手機 1 欄）
+- [X] T023 [US1] 在 BNICalculate/wwwroot/css/worldclock.css 設定城市卡片樣式（白色背景、邊框、內距）
+- [X] T024 [US1] 在 BNICalculate/wwwroot/css/worldclock.css 設定錯誤訊息容器樣式
 
 #### JavaScript 核心邏輯（worldclock.js）
 
-- [ ] T025 [US1] 在 BNICalculate/wwwroot/js/worldclock.js 依照 contracts/world-clock-data.md 定義 10 個 CityTimezone 配置物件
-- [ ] T026 [US1] 在 BNICalculate/wwwroot/js/worldclock.js 建立 ClockState 物件來管理主要/次要城市和計時器
-- [ ] T027 [US1] 在 BNICalculate/wwwroot/js/worldclock.js 實作 createFormatter() 函式來建立 Intl.DateTimeFormat 實例
-- [ ] T028 [US1] 在 BNICalculate/wwwroot/js/worldclock.js 實作 formatTime() 函式使用 Intl API 格式化城市時間
-- [ ] T029 [US1] 在 BNICalculate/wwwroot/js/worldclock.js 實作 formatDate() 函式來格式化時區的日期
-- [ ] T030 [US1] 在 BNICalculate/wwwroot/js/worldclock.js 實作 updateMainClock() 函式來更新主要顯示的 DOM
-- [ ] T031 [US1] 在 BNICalculate/wwwroot/js/worldclock.js 實作 updateSecondaryClock() 函式來更新城市卡片 DOM
-- [ ] T032 [US1] 在 BNICalculate/wwwroot/js/worldclock.js 實作 updateAllClocks() 函式來更新所有 10 個時鐘
-- [ ] T033 [US1] 在 BNICalculate/wwwroot/js/worldclock.js 實作 startClock() 函式並使用 setInterval（1000ms）
-- [ ] T034 [US1] 在 BNICalculate/wwwroot/js/worldclock.js 實作 stopClock() 函式來清除 interval 並防止記憶體洩漏
-- [ ] T035 [US1] 在 BNICalculate/wwwroot/js/worldclock.js 依照 FR-022 為 Intl API 失敗加上 try-catch 錯誤處理
-- [ ] T036 [US1] 在 BNICalculate/wwwroot/js/worldclock.js 實作 showError() 函式來顯示錯誤訊息和重新整理按鈕
-- [ ] T037 [US1] 在 BNICalculate/wwwroot/js/worldclock.js 實作 hideLoading() 函式來隱藏載入指示器
-- [ ] T038 [US1] 在 BNICalculate/wwwroot/js/worldclock.js 新增 DOMContentLoaded 事件監聽器來初始化時鐘
-- [ ] T039 [US1] 在 BNICalculate/wwwroot/js/worldclock.js 新增 beforeunload 事件監聽器來呼叫 stopClock()
+- [X] T025 [US1] 在 BNICalculate/wwwroot/js/worldclock.js 依照 contracts/world-clock-data.md 定義 10 個 CityTimezone 配置物件
+- [X] T026 [US1] 在 BNICalculate/wwwroot/js/worldclock.js 建立 ClockState 物件來管理主要/次要城市和計時器
+- [X] T027 [US1] 在 BNICalculate/wwwroot/js/worldclock.js 實作 createFormatter() 函式來建立 Intl.DateTimeFormat 實例
+- [X] T028 [US1] 在 BNICalculate/wwwroot/js/worldclock.js 實作 formatTime() 函式使用 Intl API 格式化城市時間
+- [X] T029 [US1] 在 BNICalculate/wwwroot/js/worldclock.js 實作 formatDate() 函式來格式化時區的日期
+- [X] T030 [US1] 在 BNICalculate/wwwroot/js/worldclock.js 實作 updateMainClock() 函式來更新主要顯示的 DOM
+- [X] T031 [US1] 在 BNICalculate/wwwroot/js/worldclock.js 實作 updateSecondaryClock() 函式來更新城市卡片 DOM
+- [X] T032 [US1] 在 BNICalculate/wwwroot/js/worldclock.js 實作 updateAllClocks() 函式來更新所有 10 個時鐘
+- [X] T033 [US1] 在 BNICalculate/wwwroot/js/worldclock.js 實作 startClock() 函式並使用 setInterval（1000ms）
+- [X] T034 [US1] 在 BNICalculate/wwwroot/js/worldclock.js 實作 stopClock() 函式來清除 interval 並防止記憶體洩漏
+- [X] T035 [US1] 在 BNICalculate/wwwroot/js/worldclock.js 依照 FR-022 為 Intl API 失敗加上 try-catch 錯誤處理
+- [X] T036 [US1] 在 BNICalculate/wwwroot/js/worldclock.js 實作 showError() 函式來顯示錯誤訊息和重新整理按鈕
+- [X] T037 [US1] 在 BNICalculate/wwwroot/js/worldclock.js 實作 hideLoading() 函式來隱藏載入指示器
+- [X] T038 [US1] 在 BNICalculate/wwwroot/js/worldclock.js 新增 DOMContentLoaded 事件監聽器來初始化時鐘
+- [X] T039 [US1] 在 BNICalculate/wwwroot/js/worldclock.js 新增 beforeunload 事件監聽器來呼叫 stopClock()
 
 #### 心跳檢測（FR-009）
 
-- [ ] T040 [US1] 在 BNICalculate/wwwroot/js/worldclock.js 實作心跳檢測：在 ClockState 中追蹤 lastUpdateTime
-- [ ] T041 [US1] 在 BNICalculate/wwwroot/js/worldclock.js 新增 checkHeartbeat() 函式來驗證 5 秒內有更新
-- [ ] T042 [US1] 在 BNICalculate/wwwroot/js/worldclock.js 建立心跳計時器（setInterval 60000ms）來呼叫 checkHeartbeat()
-- [ ] T043 [US1] 在 BNICalculate/wwwroot/js/worldclock.js 實作心跳失敗時的自動重啟邏輯
-- [ ] T044 [US1] 在 BNICalculate/wwwroot/js/worldclock.js 心跳觸發重啟時新增 console.error 日誌記錄
+- [X] T040 [US1] 在 BNICalculate/wwwroot/js/worldclock.js 實作心跳檢測：在 ClockState 中追蹤 lastUpdateTime
+- [X] T041 [US1] 在 BNICalculate/wwwroot/js/worldclock.js 新增 checkHeartbeat() 函式來驗證 5 秒內有更新
+- [X] T042 [US1] 在 BNICalculate/wwwroot/js/worldclock.js 建立心跳計時器（setInterval 60000ms）來呼叫 checkHeartbeat()
+- [X] T043 [US1] 在 BNICalculate/wwwroot/js/worldclock.js 實作心跳失敗時的自動重啟邏輯
+- [X] T044 [US1] 在 BNICalculate/wwwroot/js/worldclock.js 心跳觸發重啟時新增 console.error 日誌記錄
 
 **檢查點**: 此時使用者故事 1 應該完全可運作 - 頁面載入、顯示 10 個城市、每秒更新、處理錯誤、自動從停滯中恢復
 

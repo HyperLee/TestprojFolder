@@ -1,0 +1,95 @@
+@page
+@model BNICalculate.Pages.WorldClockModel
+@{
+    ViewData["Title"] = "世界時鐘";
+}
+
+<div class="container mt-4">
+    <h1 class="text-center mb-4">@ViewData["Title"]</h1>
+    
+    <!-- 載入指示器 -->
+    <div id="loading" class="loading-container text-center" role="status" aria-live="polite">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">載入中...</span>
+        </div>
+        <p class="mt-2">載入中...</p>
+    </div>
+
+    <!-- 錯誤訊息容器 -->
+    <div id="error-message" class="alert alert-danger d-none" role="alert">
+        <h4 class="alert-heading">載入錯誤</h4>
+        <p id="error-text">無法載入時區資料，請檢查您的瀏覽器是否支援 Intl.DateTimeFormat API。</p>
+        <hr>
+        <button class="btn btn-primary" onclick="location.reload()">重新整理頁面</button>
+    </div>
+
+    <!-- 瀏覽器升級訊息容器 -->
+    <div id="browser-upgrade-message" class="alert alert-warning d-none" role="alert">
+        <h4 class="alert-heading">瀏覽器版本過舊</h4>
+        <p>您的瀏覽器版本過舊，可能無法正確顯示時間。請升級至 Chrome 90+、Firefox 88+ 或 Safari 14+</p>
+    </div>
+
+    <!-- 主要時鐘顯示 -->
+    <div id="main-clock" class="main-clock d-none" role="region" aria-labelledby="main-clock-label" aria-live="polite" aria-atomic="true">
+        <h2 id="main-clock-label" class="visually-hidden">主要時間顯示</h2>
+        <div id="main-city-name" class="city-name" aria-label="城市名稱">台北</div>
+        <div id="main-timezone" class="timezone" aria-label="時區">GMT+8</div>
+        <time id="main-time" class="time-display main" aria-label="當前時間">--:--:--</time>
+        <div id="main-date" class="date-display" aria-label="日期">-----</div>
+    </div>
+
+    <!-- 城市時間網格 -->
+    <div id="city-grid" class="city-grid mt-4 d-none" role="region" aria-label="其他城市時間">
+        <!-- 動態生成 9 個城市卡片 -->
+        <div id="city-tokyo" class="city-card" data-city-id="tokyo">
+            <div class="city-card-name">東京</div>
+            <div class="city-card-timezone">GMT+9</div>
+            <time class="city-card-time">--:--:--</time>
+        </div>
+        <div id="city-london" class="city-card" data-city-id="london">
+            <div class="city-card-name">倫敦</div>
+            <div class="city-card-timezone">GMT+0/GMT+1</div>
+            <time class="city-card-time">--:--:--</time>
+        </div>
+        <div id="city-new-york" class="city-card" data-city-id="new-york">
+            <div class="city-card-name">紐約</div>
+            <div class="city-card-timezone">GMT-5/GMT-4</div>
+            <time class="city-card-time">--:--:--</time>
+        </div>
+        <div id="city-los-angeles" class="city-card" data-city-id="los-angeles">
+            <div class="city-card-name">洛杉磯</div>
+            <div class="city-card-timezone">GMT-8/GMT-7</div>
+            <time class="city-card-time">--:--:--</time>
+        </div>
+        <div id="city-paris" class="city-card" data-city-id="paris">
+            <div class="city-card-name">巴黎</div>
+            <div class="city-card-timezone">GMT+1/GMT+2</div>
+            <time class="city-card-time">--:--:--</time>
+        </div>
+        <div id="city-berlin" class="city-card" data-city-id="berlin">
+            <div class="city-card-name">柏林</div>
+            <div class="city-card-timezone">GMT+1/GMT+2</div>
+            <time class="city-card-time">--:--:--</time>
+        </div>
+        <div id="city-moscow" class="city-card" data-city-id="moscow">
+            <div class="city-card-name">莫斯科</div>
+            <div class="city-card-timezone">GMT+3</div>
+            <time class="city-card-time">--:--:--</time>
+        </div>
+        <div id="city-singapore" class="city-card" data-city-id="singapore">
+            <div class="city-card-name">新加坡</div>
+            <div class="city-card-timezone">GMT+8</div>
+            <time class="city-card-time">--:--:--</time>
+        </div>
+        <div id="city-sydney" class="city-card" data-city-id="sydney">
+            <div class="city-card-name">悉尼</div>
+            <div class="city-card-timezone">GMT+10/GMT+11</div>
+            <time class="city-card-time">--:--:--</time>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <link rel="stylesheet" href="~/css/worldclock.css" asp-append-version="true" />
+    <script src="~/js/worldclock.js" asp-append-version="true"></script>
+}

@@ -1,0 +1,166 @@
+/* 世界時鐘樣式表 */
+
+/* ==================== CSS 變數定義 ==================== */
+:root {
+    /* 主要色彩 (FR-025) */
+    --primary-color: #007bff;
+    --secondary-bg: #ffffff;
+    --card-border: #dee2e6;
+    --hover-bg: #e9ecef;
+    --active-border: #007bff;
+    --text-primary: #212529;
+    --text-secondary: #6c757d;
+    --error-bg: #f8d7da;
+    --error-text: #721c24;
+    
+    /* 字體大小 (FR-026) */
+    --font-main-time: 48px;
+    --font-card-time: 24px;
+    --font-city-name: 20px;
+    --font-timezone: 14px;
+    
+    /* 間距 */
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    
+    /* 轉場效果 */
+    --transition-fast: 0.15s ease;
+    --transition-normal: 0.3s ease;
+}
+
+/* ==================== 載入指示器 ==================== */
+.loading-container {
+    padding: var(--spacing-lg);
+    margin: var(--spacing-lg) 0;
+}
+
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
+
+/* ==================== 主要時鐘顯示 ==================== */
+.main-clock {
+    background-color: var(--secondary-bg);
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: var(--spacing-lg);
+    text-align: center;
+    margin: var(--spacing-lg) auto;
+    max-width: 600px;
+}
+
+.city-name {
+    font-size: var(--font-city-name);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.timezone {
+    font-size: var(--font-timezone);
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-md);
+}
+
+/* 時間顯示 - 使用等寬字體 (FR-026) */
+.time-display {
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: block;
+}
+
+.time-display.main {
+    font-size: var(--font-main-time);
+    margin: var(--spacing-md) 0;
+}
+
+.date-display {
+    font-size: var(--font-timezone);
+    color: var(--text-secondary);
+    margin-top: var(--spacing-sm);
+}
+
+/* ==================== 城市時間網格 (響應式) ==================== */
+.city-grid {
+    display: grid;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+}
+
+/* 桌面：3x3 網格 */
+@media (min-width: 992px) {
+    .city-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* 平板：2 欄 */
+@media (min-width: 576px) and (max-width: 991px) {
+    .city-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* 手機：1 欄 */
+@media (max-width: 575px) {
+    .city-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ==================== 城市卡片樣式 ==================== */
+.city-card {
+    background-color: var(--secondary-bg);
+    border: 2px solid var(--card-border);
+    border-radius: 8px;
+    padding: var(--spacing-md);
+    text-align: center;
+    transition: all var(--transition-fast);
+    cursor: pointer;
+}
+
+.city-card-name {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.city-card-timezone {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.city-card-time {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: var(--font-card-time);
+    font-weight: 600;
+    color: var(--text-primary);
+    display: block;
+}
+
+/* ==================== 錯誤訊息樣式 ==================== */
+#error-message {
+    margin-top: var(--spacing-lg);
+}
+
+/* ==================== 工具類別 ==================== */
+.d-none {
+    display: none !important;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
