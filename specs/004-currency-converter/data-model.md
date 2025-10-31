@@ -234,15 +234,15 @@ public static class CurrencyExtensions
 | 欄位名稱 | 型別 | 必要 | 說明 | 驗證規則 |
 |---------|------|------|------|---------|
 | Amount | decimal | ✅ | 輸入金額 | >0，最多 999,999,999 |
-| SourceCurrency | string | ✅ | 來源貨幣代碼 | 3 個字元，支援清單內 |
-| TargetCurrency | string | ✅ | 目標貨幣代碼 | 3 個字元，支援清單內 |
+| SourceCurrency | Currency | ✅ | 來源貨幣 | Currency enum 值 |
+| TargetCurrency | Currency | ✅ | 目標貨幣 | Currency enum 值 |
 | Direction | CalculationDirection | ✅ | 計算方向 | TwdToForeign 或 ForeignToTwd |
 
 **業務規則**:
 
 - SourceCurrency 不可等於 TargetCurrency
 - 金額必須為正數
-- 貨幣代碼必須在支援清單內
+- 貨幣必須在 Currency enum 支援清單內
 
 **C# 實作**:
 
@@ -272,18 +272,16 @@ public class CalculationRequest
     public decimal Amount { get; set; }
 
     /// <summary>
-    /// 來源貨幣代碼
+    /// 來源貨幣
     /// </summary>
     [Required(ErrorMessage = "請選擇來源貨幣")]
-    [StringLength(3, MinimumLength = 3)]
-    public string SourceCurrency { get; set; } = string.Empty;
+    public Currency SourceCurrency { get; set; }
 
     /// <summary>
-    /// 目標貨幣代碼
+    /// 目標貨幣
     /// </summary>
     [Required(ErrorMessage = "請選擇目標貨幣")]
-    [StringLength(3, MinimumLength = 3)]
-    public string TargetCurrency { get; set; } = string.Empty;
+    public Currency TargetCurrency { get; set; }
 
     /// <summary>
     /// 計算方向
@@ -296,7 +294,7 @@ public class CalculationRequest
     /// </summary>
     public bool IsValid()
     {
-        return !SourceCurrency.Equals(TargetCurrency, StringComparison.OrdinalIgnoreCase);
+        return SourceCurrency != TargetCurrency;
     }
 }
 ```

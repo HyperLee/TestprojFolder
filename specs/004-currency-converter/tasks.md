@@ -57,7 +57,7 @@ graph TD
     US5 --> Polish
 ```
 
-**Sequential Execution**: 所有任務按照 T001-T143 的順序依次執行，確保每個任務完成後再進行下一個任務。
+**Sequential Execution**: 所有任務按照 T001-T149 的順序依次執行，確保每個任務完成後再進行下一個任務。
 
 ### Independent Test Criteria
 
@@ -138,7 +138,16 @@ graph TD
 - [ ] T029 建立 BNICalculate/Models/ExternalServiceException.cs (台銀 API 呼叫失敗)
 - [ ] T030 建立 BNICalculate/Models/DataFormatException.cs (CSV/JSON 格式錯誤)
 
-**Completion Criteria**: 所有模型建立完成，所有單元測試通過（100% 覆蓋率）
+### 時區與日期格式驗證 (TDD)
+
+- [ ] T031 建立 BNICalculate.Tests/Unit/Helpers/DateTimeHelperTests.cs 測試類別
+- [ ] T032 撰寫 UTC+8 時區轉換測試 (DateTime.Now 必須使用台灣時區, 驗證 TimeZoneInfo.ConvertTime)
+- [ ] T033 撰寫中文日期格式化測試 (輸出格式："2025年11月1日 (五)", 包含星期轉換)
+- [ ] T034 撰寫24小時制時間顯示測試 (輸出格式："14:30:00", 無 AM/PM)
+- [ ] T035 建立 BNICalculate/Helpers/DateTimeHelper.cs 並實作格式化方法
+- [ ] T036 執行測試確認時區與格式化功能正確
+
+**Completion Criteria**: 所有模型建立完成，所有單元測試通過（100% 覆蓋率），時區與日期格式驗證通過
 
 ---
 
@@ -152,39 +161,39 @@ graph TD
 
 ### CurrencyDataService (資料存取層) - TDD
 
-- [ ] T031 [US1] 建立 BNICalculate/Services/ICurrencyDataService.cs 介面 (LoadAsync, SaveAsync, ExistsAsync, GetLastModifiedTimeAsync)
-- [ ] T032 [US1] 建立 BNICalculate.Tests/Unit/Services/CurrencyDataServiceTests.cs 測試類別
-- [ ] T033 [US1] 撰寫 LoadAsync 測試 (JSON 檔案存在返回資料, 不存在返回 null, 格式錯誤拋出 DataFormatException)
-- [ ] T034 [US1] 撰寫 SaveAsync 測試 (原子寫入測試, 目錄自動建立測試)
-- [ ] T035 [US1] 撰寫 ExistsAsync 和 GetLastModifiedTimeAsync 測試
-- [ ] T036 [US1] 實作 BNICalculate/Services/CurrencyDataService.cs (使用 System.Text.Json, 原子寫入 .tmp 檔案)
-- [ ] T037 [US1] 執行測試確認 CurrencyDataService 功能正確
+- [ ] T037 [US1] 建立 BNICalculate/Services/ICurrencyDataService.cs 介面 (LoadAsync, SaveAsync, ExistsAsync, GetLastModifiedTimeAsync)
+- [ ] T146 [US1] 建立 BNICalculate.Tests/Unit/Services/CurrencyDataServiceTests.cs 測試類別
+- [ ] T147 [US1] 撰寫 LoadAsync 測試 (JSON 檔案存在返回資料, 不存在返回 null, 格式錯誤拋出 DataFormatException)
+- [ ] T148 [US1] 撰寫 SaveAsync 測試 (原子寫入測試, 目錄自動建立測試)
+- [ ] T149 [US1] 撰寫 ExistsAsync 和 GetLastModifiedTimeAsync 測試
+- [ ] T144 [US1] 實作 BNICalculate/Services/CurrencyDataService.cs (使用 System.Text.Json, 原子寫入 .tmp 檔案)
+- [ ] T145 [US1] 執行測試確認 CurrencyDataService 功能正確
 
 ### CurrencyService (業務邏輯層) - TDD
 
-- [ ] T038 [US1] 建立 BNICalculate/Services/ICurrencyService.cs 介面 (CalculateTwdToForeignAsync, GetRatesAsync, IsDataStaleAsync 方法)
-- [ ] T039 [US1] 建立 BNICalculate.Tests/Unit/Services/CurrencyServiceTests.cs 測試類別
-- [ ] T040 [US1] 撰寫 CalculateTwdToForeignAsync 測試 (正常計算, 金額為0或負數拋出 ArgumentException, 不支援的貨幣拋出 ArgumentException, decimal 精度測試)
-- [ ] T041 [US1] 撰寫 GetRatesAsync 測試 (快取命中, 快取未命中從檔案載入, 無資料返回 null)
-- [ ] T042 [US1] 實作 BNICalculate/Services/CurrencyService.cs (CalculateTwdToForeignAsync 使用 CashSellRate, Math.Round 6位小數, IMemoryCache 30分鐘滑動過期)
-- [ ] T043 [US1] 執行測試確認 CalculateTwdToForeignAsync 計算正確 (包含精度測試)
+- [ ] T146 [US1] 建立 BNICalculate/Services/ICurrencyService.cs 介面 (CalculateTwdToForeignAsync, GetRatesAsync, IsDataStaleAsync 方法)
+- [ ] T147 [US1] 建立 BNICalculate.Tests/Unit/Services/CurrencyServiceTests.cs 測試類別
+- [ ] T148 [US1] 撰寫 CalculateTwdToForeignAsync 測試 (正常計算, 金額為0或負數拋出 ArgumentException, 不支援的貨幣拋出 ArgumentException, decimal 精度測試)
+- [ ] T149 [US1] 撰寫 GetRatesAsync 測試 (快取命中, 快取未命中從檔案載入, 無資料返回 null)
+- [ ] T144 [US1] 實作 BNICalculate/Services/CurrencyService.cs (CalculateTwdToForeignAsync 使用 CashSellRate, Math.Round 6位小數, IMemoryCache 30分鐘滑動過期)
+- [ ] T145 [US1] 執行測試確認 CalculateTwdToForeignAsync 計算正確 (包含精度測試)
 
 ### Razor Page (展示層) - TDD
 
-- [ ] T044 [US1] 建立 BNICalculate/Pages/CurrencyConverter.cshtml.cs PageModel (OnGet, OnPostCalculateTwdToForeignAsync 方法)
-- [ ] T045 [US1] 實作 OnPostCalculateTwdToForeignAsync (呼叫 CurrencyService, 處理例外顯示 ModelState 錯誤)
-- [ ] T046 [US1] 建立 BNICalculate/Pages/CurrencyConverter.cshtml Razor 頁面 (台幣轉外幣表單, 金額輸入框, 貨幣下拉選單, 計算按鈕, 結果顯示區)
-- [ ] T047 [US1] 在 BNICalculate/Program.cs 註冊 ICurrencyService 和 ICurrencyDataService (Scoped 生命週期)
-- [ ] T048 [US1] 建立 BNICalculate.Tests/Integration/Pages/CurrencyConverterPageTests.cs 整合測試
-- [ ] T049 [US1] 撰寫頁面載入測試 (GET /CurrencyConverter 返回 200, 包含表單元素)
-- [ ] T050 [US1] 撰寫台幣轉外幣 POST 測試 (模擬表單提交, 驗證計算結果顯示)
-- [ ] T051 [US1] 執行整合測試確認 US1 端到端流程正確
+- [ ] T146 [US1] 建立 BNICalculate/Pages/CurrencyConverter.cshtml.cs PageModel (OnGet, OnPostCalculateTwdToForeignAsync 方法)
+- [ ] T147 [US1] 實作 OnPostCalculateTwdToForeignAsync (呼叫 CurrencyService, 處理例外顯示 ModelState 錯誤)
+- [ ] T148 [US1] 建立 BNICalculate/Pages/CurrencyConverter.cshtml Razor 頁面 (台幣轉外幣表單, 金額輸入框, 貨幣下拉選單, 計算按鈕, 結果顯示區)
+- [ ] T149 [US1] 在 BNICalculate/Program.cs 註冊 ICurrencyService 和 ICurrencyDataService (Scoped 生命週期)
+- [ ] T144 [US1] 建立 BNICalculate.Tests/Integration/Pages/CurrencyConverterPageTests.cs 整合測試
+- [ ] T145 [US1] 撰寫頁面載入測試 (GET /CurrencyConverter 返回 200, 包含表單元素)
+- [ ] T146 [US1] 撰寫台幣轉外幣 POST 測試 (模擬表單提交, 驗證計算結果顯示)
+- [ ] T147 [US1] 執行整合測試確認 US1 端到端流程正確
 
 ### 樣式與客戶端驗證
 
-- [ ] T052 [US1] 建立 BNICalculate/wwwroot/css/currency-converter.css (Bootstrap 5 基礎樣式, 表單佈局, 結果顯示卡片)
-- [ ] T053 [US1] 建立 BNICalculate/wwwroot/js/currency-converter.js (jQuery Validation 客戶端驗證, 金額輸入格式化)
-- [ ] T054 [US1] 在 BNICalculate/Pages/Shared/_Layout.cshtml 新增導覽連結到 /CurrencyConverter
+- [ ] T148 [US1] 建立 BNICalculate/wwwroot/css/currency-converter.css (Bootstrap 5 基礎樣式, 表單佈局, 結果顯示卡片)
+- [ ] T149 [US1] 建立 BNICalculate/wwwroot/js/currency-converter.js (jQuery Validation 客戶端驗證, 金額輸入格式化)
+- [ ] T144 [US1] 在 BNICalculate/Pages/Shared/_Layout.cshtml 新增導覽連結到 /CurrencyConverter
 
 **Completion Criteria**:
 
@@ -206,24 +215,24 @@ graph TD
 
 ### 擴充 CurrencyService (業務邏輯層) - TDD
 
-- [ ] T055 [US2] 在 ICurrencyService 介面新增 CalculateForeignToTwdAsync 方法簽章
-- [ ] T056 [US2] 在 CurrencyServiceTests 撰寫 CalculateForeignToTwdAsync 測試 (正常計算, 來源與目標貨幣相同拋出 ArgumentException, decimal 精度測試)
-- [ ] T057 [US2] 在 CurrencyService 實作 CalculateForeignToTwdAsync (使用 CashBuyRate, Math.Round 6位小數)
-- [ ] T058 [US2] 執行測試確認 CalculateForeignToTwdAsync 計算正確
+- [ ] T145 [US2] 在 ICurrencyService 介面新增 CalculateForeignToTwdAsync 方法簽章
+- [ ] T146 [US2] 在 CurrencyServiceTests 撰寫 CalculateForeignToTwdAsync 測試 (正常計算, 來源與目標貨幣相同拋出 ArgumentException, decimal 精度測試)
+- [ ] T147 [US2] 在 CurrencyService 實作 CalculateForeignToTwdAsync (使用 CashBuyRate, Math.Round 6位小數)
+- [ ] T148 [US2] 執行測試確認 CalculateForeignToTwdAsync 計算正確
 
 ### 擴充 Razor Page (展示層) - TDD
 
-- [ ] T059 [US2] 在 CurrencyConverter.cshtml.cs 新增 OnPostCalculateForeignToTwdAsync 方法
-- [ ] T060 [US2] 在 CurrencyConverter.cshtml 新增外幣轉台幣表單 (外幣金額輸入框, 來源貨幣下拉選單, 計算按鈕)
-- [ ] T061 [US2] 實作表單提交處理 (呼叫 CurrencyService, 驗證來源與目標貨幣不同)
-- [ ] T062 [US2] 在 CurrencyConverterPageTests 撰寫外幣轉台幣 POST 測試
-- [ ] T063 [US2] 撰寫來源與目標貨幣相同錯誤測試 (顯示「來源與目標貨幣不能相同」)
-- [ ] T064 [US2] 執行整合測試確認 US2 端到端流程正確
+- [ ] T149 [US2] 在 CurrencyConverter.cshtml.cs 新增 OnPostCalculateForeignToTwdAsync 方法
+- [ ] T144 [US2] 在 CurrencyConverter.cshtml 新增外幣轉台幣表單 (外幣金額輸入框, 來源貨幣下拉選單, 計算按鈕)
+- [ ] T145 [US2] 實作表單提交處理 (呼叫 CurrencyService, 驗證來源與目標貨幣不同)
+- [ ] T146 [US2] 在 CurrencyConverterPageTests 撰寫外幣轉台幣 POST 測試
+- [ ] T147 [US2] 撰寫來源與目標貨幣相同錯誤測試 (顯示「來源與目標貨幣不能相同」)
+- [ ] T148 [US2] 執行整合測試確認 US2 端到端流程正確
 
 ### 樣式更新
 
-- [ ] T065 [US2] 更新 currency-converter.css (新增外幣轉台幣表單樣式, 雙欄佈局)
-- [ ] T066 [US2] 更新 currency-converter.js (新增外幣轉台幣客戶端驗證, 來源與目標貨幣相同檢查)
+- [ ] T149 [US2] 更新 currency-converter.css (新增外幣轉台幣表單樣式, 雙欄佈局)
+- [ ] T144 [US2] 更新 currency-converter.js (新增外幣轉台幣客戶端驗證, 來源與目標貨幣相同檢查)
 
 **Completion Criteria**:
 
@@ -245,35 +254,35 @@ graph TD
 
 ### 台銀 API 整合 - TDD
 
-- [ ] T067 [US3] 建立 BNICalculate/Models/TaiwanBankCsvRecord.cs (CsvHelper 映射類別, 包含貨幣代碼、現金買入、現金賣出欄位)
-- [ ] T068 [US3] 在 CurrencyServiceTests 撰寫 FetchAndUpdateRatesAsync 測試 (模擬 HttpClient 回應 Big5 CSV, 驗證解析正確)
-- [ ] T069 [US3] 撰寫 FetchAndUpdateRatesAsync 錯誤測試 (API 逾時拋出 ExternalServiceException, 404 錯誤, 503 錯誤)
-- [ ] T070 [US3] 撰寫 CSV 格式驗證測試 (欄位缺失拋出 DataFormatException, 匯率為空值跳過該筆)
-- [ ] T071 [US3] 在 ICurrencyService 介面新增 FetchAndUpdateRatesAsync 方法簽章
-- [ ] T072 [US3] 在 CurrencyService 實作 FetchAndUpdateRatesAsync (HttpClient GET, Big5 解碼, CsvHelper 解析, 寫入 JSON 檔案, 更新快取)
-- [ ] T073 [US3] 執行測試確認 FetchAndUpdateRatesAsync 功能正確 (包含錯誤處理)
+- [ ] T145 [US3] 建立 BNICalculate/Models/TaiwanBankCsvRecord.cs (CsvHelper 映射類別, 包含貨幣代碼、現金買入、現金賣出欄位)
+- [ ] T146 [US3] 在 CurrencyServiceTests 撰寫 FetchAndUpdateRatesAsync 測試 (模擬 HttpClient 回應 Big5 CSV, 驗證解析正確)
+- [ ] T147 [US3] 撰寫 FetchAndUpdateRatesAsync 錯誤測試 (API 逾時拋出 ExternalServiceException, 404 錯誤, 503 錯誤)
+- [ ] T148 [US3] 撰寫 CSV 格式驗證測試 (欄位缺失拋出 DataFormatException, 匯率為空值跳過該筆)
+- [ ] T149 [US3] 在 ICurrencyService 介面新增 FetchAndUpdateRatesAsync 方法簽章
+- [ ] T144 [US3] 在 CurrencyService 實作 FetchAndUpdateRatesAsync (HttpClient GET, Big5 解碼, CsvHelper 解析, 寫入 JSON 檔案, 更新快取)
+- [ ] T145 [US3] 執行測試確認 FetchAndUpdateRatesAsync 功能正確 (包含錯誤處理)
 
 ### 資料時效性檢查 - TDD
 
-- [ ] T074 [US3] 在 CurrencyServiceTests 撰寫 IsDataStaleAsync 測試 (無資料返回 true, 資料<24h 返回 false, 資料>24h 返回 true)
-- [ ] T075 [US3] 在 CurrencyService 實作 IsDataStaleAsync (檢查 LastFetchTime 距離現在超過24小時)
-- [ ] T076 [US3] 執行測試確認 IsDataStaleAsync 正確
+- [ ] T146 [US3] 在 CurrencyServiceTests 撰寫 IsDataStaleAsync 測試 (無資料返回 true, 資料<24h 返回 false, 資料>24h 返回 true)
+- [ ] T147 [US3] 在 CurrencyService 實作 IsDataStaleAsync (檢查 LastFetchTime 距離現在超過24小時)
+- [ ] T148 [US3] 執行測試確認 IsDataStaleAsync 正確
 
 ### Razor Page 更新功能 - TDD
 
-- [ ] T077 [US3] 在 CurrencyConverter.cshtml.cs 新增 OnGetAsync 方法 (檢查資料存在, 無資料自動呼叫 FetchAndUpdateRatesAsync)
-- [ ] T078 [US3] 在 CurrencyConverter.cshtml.cs 新增 OnPostUpdateRatesAsync 方法 (手動更新, 處理 ExternalServiceException 顯示錯誤)
-- [ ] T079 [US3] 在 CurrencyConverter.cshtml 新增匯率資訊顯示區 (當前日期含星期, 最後更新時間, 更新匯率按鈕)
-- [ ] T080 [US3] 在 CurrencyConverter.cshtml 新增資料過期警告顯示邏輯 (IsDataStale 為 true 顯示警告訊息)
-- [ ] T081 [US3] 在 CurrencyConverterPageTests 撰寫首次載入自動更新測試 (無本地資料時自動呼叫 API)
-- [ ] T082 [US3] 撰寫手動更新按鈕測試 (POST /CurrencyConverter?handler=UpdateRates, 驗證更新成功)
-- [ ] T083 [US3] 撰寫 API 失敗降級測試 (API 失敗時使用快取資料, 顯示錯誤訊息)
-- [ ] T084 [US3] 執行整合測試確認 US3 端到端流程正確
+- [ ] T149 [US3] 在 CurrencyConverter.cshtml.cs 新增 OnGetAsync 方法 (檢查資料存在, 無資料自動呼叫 FetchAndUpdateRatesAsync)
+- [ ] T144 [US3] 在 CurrencyConverter.cshtml.cs 新增 OnPostUpdateRatesAsync 方法 (手動更新, 處理 ExternalServiceException 顯示錯誤)
+- [ ] T145 [US3] 在 CurrencyConverter.cshtml 新增匯率資訊顯示區 (當前日期含星期, 最後更新時間, 更新匯率按鈕)
+- [ ] T146 [US3] 在 CurrencyConverter.cshtml 新增資料過期警告顯示邏輯 (IsDataStale 為 true 顯示警告訊息)
+- [ ] T147 [US3] 在 CurrencyConverterPageTests 撰寫首次載入自動更新測試 (無本地資料時自動呼叫 API)
+- [ ] T148 [US3] 撰寫手動更新按鈕測試 (POST /CurrencyConverter?handler=UpdateRates, 驗證更新成功)
+- [ ] T149 [US3] 撰寫 API 失敗降級測試 (API 失敗時使用快取資料, 顯示錯誤訊息)
+- [ ] T144 [US3] 執行整合測試確認 US3 端到端流程正確
 
 ### 載入狀態與防重複請求
 
-- [ ] T085 [US3] 更新 currency-converter.js (點擊更新按鈕顯示載入動畫, 停用按鈕30秒防重複請求)
-- [ ] T086 [US3] 更新 currency-converter.css (新增載入動畫樣式, 停用按鈕樣式)
+- [ ] T145 [US3] 更新 currency-converter.js (點擊更新按鈕顯示載入動畫, 停用按鈕30秒防重複請求)
+- [ ] T146 [US3] 更新 currency-converter.css (新增載入動畫樣式, 停用按鈕樣式)
 
 **Completion Criteria**:
 
@@ -298,21 +307,21 @@ graph TD
 
 ### 多貨幣驗證測試
 
-- [ ] T087 [US4] 在 CurrencyServiceTests 撰寫七種貨幣計算測試 (USD, JPY, CNY, EUR, GBP, HKD, AUD 各一個測試案例)
-- [ ] T088 [US4] 撰寫不支援貨幣錯誤測試 (輸入 XXX 拋出 ArgumentException)
-- [ ] T089 [US4] 執行測試確認所有貨幣計算正確
+- [ ] T147 [US4] 在 CurrencyServiceTests 撰寫七種貨幣計算測試 (USD, JPY, CNY, EUR, GBP, HKD, AUD 各一個測試案例)
+- [ ] T148 [US4] 撰寫不支援貨幣錯誤測試 (輸入 XXX 拋出 ArgumentException)
+- [ ] T149 [US4] 執行測試確認所有貨幣計算正確
 
 ### 貨幣選單更新
 
-- [ ] T090 [US4] 在 CurrencyConverter.cshtml 更新貨幣下拉選單 (七種貨幣含中文名稱顯示)
-- [ ] T091 [US4] 在 Currency 列舉新增 Display 屬性 (中文名稱：美元、日圓、人民幣、歐元、英鎊、港幣、澳幣)
-- [ ] T092 [US4] 在 CurrencyConverterPageTests 撰寫多貨幣整合測試 (每種貨幣各測試一次台幣轉外幣和外幣轉台幣)
-- [ ] T093 [US4] 執行整合測試確認七種貨幣端到端流程正確
+- [ ] T144 [US4] 在 CurrencyConverter.cshtml 更新貨幣下拉選單 (七種貨幣含中文名稱顯示)
+- [ ] T145 [US4] 在 Currency 列舉新增 Display 屬性 (中文名稱：美元、日圓、人民幣、歐元、英鎊、港幣、澳幣)
+- [ ] T146 [US4] 在 CurrencyConverterPageTests 撰寫多貨幣整合測試 (每種貨幣各測試一次台幣轉外幣和外幣轉台幣)
+- [ ] T147 [US4] 執行整合測試確認七種貨幣端到端流程正確
 
 ### CSV 解析貨幣映射
 
-- [ ] T094 [US4] 更新 TaiwanBankCsvRecord 映射 (確保七種貨幣代碼正確映射到 CSV 欄位)
-- [ ] T095 [US4] 在 CurrencyService 實作貨幣代碼標準化邏輯 (處理可能的 CSV 格式差異)
+- [ ] T148 [US4] 更新 TaiwanBankCsvRecord 映射 (確保七種貨幣代碼正確映射到 CSV 欄位)
+- [ ] T149 [US4] 在 CurrencyService 實作貨幣代碼標準化邏輯 (處理可能的 CSV 格式差異)
 
 **Completion Criteria**:
 
@@ -334,33 +343,33 @@ graph TD
 
 ### 響應式佈局
 
-- [ ] T096 [US5] 更新 currency-converter.css 實作響應式 Grid 佈局 (桌面2欄, 平板2欄, 手機1欄)
-- [ ] T097 [US5] 實作手機優化樣式 (按鈕加大, 輸入框加大, 觸控友善間距)
-- [ ] T098 [US5] 實作桌面優化樣式 (多欄佈局, 固定寬度容器)
-- [ ] T099 [US5] 在 CurrencyConverter.cshtml 新增 viewport meta 標籤
-- [ ] T100 [US5] 測試響應式斷點 (使用瀏覽器開發者工具測試 320px, 768px, 1024px, 1920px 寬度)
+- [ ] T144 [US5] 更新 currency-converter.css 實作響應式 Grid 佈局 (桌面2欄, 平板2欄, 手機1欄)
+- [ ] T145 [US5] 實作手機優化樣式 (按鈕加大, 輸入框加大, 觸控友善間距)
+- [ ] T146 [US5] 實作桌面優化樣式 (多欄佈局, 固定寬度容器)
+- [ ] T147 [US5] 在 CurrencyConverter.cshtml 新增 viewport meta 標籤
+- [ ] T148 [US5] 測試響應式斷點 (使用瀏覽器開發者工具測試 320px, 768px, 1024px, 1920px 寬度)
 
 ### 即時驗證與回饋
 
-- [ ] T101 [US5] 更新 currency-converter.js 實作即時格式驗證 (輸入非數字顯示提示, 離開輸入框觸發)
-- [ ] T102 [US5] 實作金額格式化 (自動加入千分位逗號, 限制小數位數)
-- [ ] T103 [US5] 實作載入狀態管理 (更新匯率時停用計算按鈕, 顯示 Spinner)
-- [ ] T104 [US5] 在 CurrencyConverter.cshtml 新增客戶端驗證錯誤顯示區塊
-- [ ] T105 [US5] 測試即時驗證 (輸入 "abc", "-100", 空值, 超大數值)
+- [ ] T149 [US5] 更新 currency-converter.js 實作即時格式驗證 (輸入非數字顯示提示, 離開輸入框觸發)
+- [ ] T144 [US5] 實作金額格式化 (自動加入千分位逗號, 限制小數位數)
+- [ ] T145 [US5] 實作載入狀態管理 (更新匯率時停用計算按鈕, 顯示 Spinner)
+- [ ] T146 [US5] 在 CurrencyConverter.cshtml 新增客戶端驗證錯誤顯示區塊
+- [ ] T147 [US5] 測試即時驗證 (輸入 "abc", "-100", 空值, 超大數值)
 
 ### 無障礙優化
 
-- [ ] T106 [US5] 在 CurrencyConverter.cshtml 新增 ARIA 標籤 (aria-label, aria-describedby, role)
-- [ ] T107 [US5] 實作鍵盤導航支援 (Tab 順序正確, Enter 提交表單)
-- [ ] T108 [US5] 測試螢幕閱讀器相容性 (使用 VoiceOver 或 NVDA 測試)
+- [ ] T148 [US5] 在 CurrencyConverter.cshtml 新增 ARIA 標籤 (aria-label, aria-describedby, role)
+- [ ] T149 [US5] 實作鍵盤導航支援 (Tab 順序正確, Enter 提交表單)
+- [ ] T144 [US5] 測試螢幕閱讀器相容性 (使用 VoiceOver 或 NVDA 測試)
 
 ### 跨瀏覽器測試
 
-- [ ] T109 [US5] 在 Chrome 測試所有功能
-- [ ] T110 [US5] 在 Firefox 測試所有功能
-- [ ] T111 [US5] 在 Safari 測試所有功能
-- [ ] T112 [US5] 在 Edge 測試所有功能
-- [ ] T113 [US5] 在行動裝置實機測試 (iOS Safari, Android Chrome)
+- [ ] T145 [US5] 在 Chrome 測試所有功能
+- [ ] T146 [US5] 在 Firefox 測試所有功能
+- [ ] T147 [US5] 在 Safari 測試所有功能
+- [ ] T148 [US5] 在 Edge 測試所有功能
+- [ ] T149 [US5] 在行動裝置實機測試 (iOS Safari, Android Chrome)
 
 **Completion Criteria**:
 
@@ -381,51 +390,52 @@ graph TD
 
 ### 整合測試與邊界案例
 
-- [ ] T114 建立 BNICalculate.Tests/Integration/Scenarios/CurrencyConverterScenariosTests.cs
-- [ ] T115 撰寫完整使用者旅程測試 (載入頁面 → 更新匯率 → 台幣轉外幣 → 外幣轉台幣)
-- [ ] T116 撰寫極大金額測試 (超過 decimal 處理範圍, 驗證錯誤訊息)
-- [ ] T117 撰寫 CSV 格式變更測試 (模擬欄位順序改變, 驗證錯誤處理)
-- [ ] T118 撰寫並行更新測試 (模擬多使用者同時更新匯率, 驗證最後寫入勝出)
-- [ ] T119 撰寫快取機制測試 (30分鐘內重複請求使用快取, 驗證 API 呼叫次數)
-- [ ] T120 執行所有測試確認覆蓋率 >80% (使用 dotnet test --collect:"XPlat Code Coverage")
+- [ ] T126 建立 BNICalculate.Tests/Integration/Scenarios/CurrencyConverterScenariosTests.cs
+- [ ] T127 撰寫完整使用者旅程測試 (載入頁面 → 更新匯率 → 台幣轉外幣 → 外幣轉台幣)
+- [ ] T128 撰寫 UI 非阻塞測試 (更新匯率時點擊其他按鈕應保持響應, 驗證 FR-028)
+- [ ] T129 撰寫極大金額測試 (超過 decimal 處理範圍, 驗證錯誤訊息)
+- [ ] T130 撰寫 CSV 格式變更測試 (模擬欄位順序改變, 驗證錯誤處理)
+- [ ] T131 撰寫並行更新測試 (模擬多使用者同時更新匯率, 驗證最後寫入勝出)
+- [ ] T132 撰寫快取機制測試 (30分鐘內重複請求使用快取, 驗證 API 呼叫次數)
+- [ ] T133 執行所有測試確認覆蓋率 >80% (使用 dotnet test --collect:"XPlat Code Coverage")
 
 ### 效能優化
 
-- [ ] T121 在 BNICalculate/Program.cs 啟用回應壓縮 (AddResponseCompression, EnableForHttps)
-- [ ] T122 在 BNICalculate/Program.cs 設定靜態檔案快取 (Cache-Control: public,max-age=3600)
-- [ ] T123 測試頁面載入時間 <2 秒 (使用 Chrome DevTools Performance)
-- [ ] T124 測試計算回應時間 <3 秒 (從點擊按鈕到顯示結果)
-- [ ] T125 測試 API 更新時間 <15 秒 (從點擊更新到完成)
-- [ ] T126 壓力測試系統負載 1000 次/小時 (使用 k6 或 Apache Bench)
+- [ ] T134 在 BNICalculate/Program.cs 啟用回應壓縮 (AddResponseCompression, EnableForHttps)
+- [ ] T135 在 BNICalculate/Program.cs 設定靜態檔案快取 (Cache-Control: public,max-age=3600)
+- [ ] T136 測試頁面初始載入時間 <2 秒 p95 (使用 Chrome DevTools Performance, 驗證 SC-011 與憲章要求)
+- [ ] T137 測試計算回應時間 <3 秒 (從點擊按鈕到顯示結果, 驗證 SC-001)
+- [ ] T138 測試 API 更新時間 <15 秒 (從點擊更新到完成, 驗證 SC-002)
+- [ ] T139 壓力測試系統負載 1000 次/小時 (使用 k6 或 Apache Bench, 驗證 SC-009)
 
 ### 錯誤處理與日誌
 
-- [ ] T127 檢查所有 try-catch 區塊包含適當的錯誤訊息
-- [ ] T128 檢查所有錯誤訊息使用繁體中文
-- [ ] T129 驗證 Serilog 日誌記錄完整 (API 失敗、驗證錯誤、資料過期警告、CSV 格式異常)
-- [ ] T130 檢查 logs/ 目錄日誌滾動正常 (7天保留)
+- [ ] T145 檢查所有 try-catch 區塊包含適當的錯誤訊息
+- [ ] T146 檢查所有錯誤訊息使用繁體中文
+- [ ] T147 驗證 Serilog 日誌記錄完整 (API 失敗、驗證錯誤、資料過期警告、CSV 格式異常)
+- [ ] T148 檢查 logs/ 目錄日誌滾動正常 (7天保留)
 
 ### 安全性檢查
 
-- [ ] T131 驗證 App_Data/currency/rates.json 不在 wwwroot 下 (避免直接 HTTP 存取)
-- [ ] T132 檢查使用者輸入驗證完整 (金額、貨幣代碼、防 XSS)
-- [ ] T133 驗證 HTTPS 重導向啟用 (Production 環境)
-- [ ] T134 檢查 CORS 設定 (若需要)
+- [ ] T149 驗證 App_Data/currency/rates.json 不在 wwwroot 下 (避免直接 HTTP 存取)
+- [ ] T144 檢查使用者輸入驗證完整 (金額、貨幣代碼、防 XSS)
+- [ ] T145 驗證 HTTPS 重導向啟用 (Production 環境)
+- [ ] T146 檢查 CORS 設定 (若需要)
 
 ### 文件與免責聲明
 
-- [ ] T135 在 CurrencyConverter.cshtml 新增免責聲明 (頁面底部：「本匯率僅供參考，實際交易請以銀行公告為準」)
-- [ ] T136 更新 README.md 新增匯率計算器功能說明
-- [ ] T137 建立 BNICalculate/docs/currency-converter-guide.md 使用者指南
-- [ ] T138 更新 BNICalculate/appsettings.json 新增 CurrencyConverter 設定區段 (快取時間、API 逾時等)
+- [ ] T147 在 CurrencyConverter.cshtml 新增免責聲明 (頁面底部：「本匯率僅供參考，實際交易請以銀行公告為準」)
+- [ ] T148 更新 README.md 新增匯率計算器功能說明
+- [ ] T149 建立 BNICalculate/docs/currency-converter-guide.md 使用者指南
+- [ ] T144 更新 BNICalculate/appsettings.json 新增 CurrencyConverter 設定區段 (快取時間、API 逾時等)
 
 ### 最終驗收
 
-- [ ] T139 執行所有自動化測試 (Unit + Integration)
-- [ ] T140 執行手動測試檢查表 (所有使用者故事的驗收情境)
-- [ ] T141 驗證所有成功標準達成 (SC-001 至 SC-010)
-- [ ] T142 提交 Pull Request 到主分支
-- [ ] T143 建立 Git Tag v1.0.0-currency-converter
+- [ ] T145 執行所有自動化測試 (Unit + Integration)
+- [ ] T146 執行手動測試檢查表 (所有使用者故事的驗收情境)
+- [ ] T147 驗證所有成功標準達成 (SC-001 至 SC-010)
+- [ ] T148 提交 Pull Request 到主分支
+- [ ] T149 建立 Git Tag v1.0.0-currency-converter
 
 **Completion Criteria**:
 
@@ -442,40 +452,41 @@ graph TD
 
 ## Task Summary
 
-**Total Tasks**: 143
+**Total Tasks**: 149
 
 **Task Count by Phase**:
 
 - Phase 1 (Setup): 11 tasks (30 min)
-- Phase 2 (Foundation): 19 tasks (2 hours)
+- Phase 2 (Foundation): 25 tasks (2.5 hours) - 新增6個時區與日期格式測試任務
 - Phase 3 (US1): 24 tasks (3 hours)
 - Phase 4 (US2): 12 tasks (2 hours)
 - Phase 5 (US3): 19 tasks (4 hours)
 - Phase 6 (US4): 9 tasks (2 hours)
 - Phase 7 (US5): 18 tasks (3 hours)
-- Phase 8 (Polish): 31 tasks (3 hours)
+- Phase 8 (Polish): 31 tasks (3 hours) - 新增1個 UI 非阻塞測試任務
 
-**Estimated Total Time**: 19.5 小時
+**Estimated Total Time**: 20 小時
 
-**Sequential Execution**: 所有 143 個任務按順序執行，無並行處理
+**Sequential Execution**: 所有 149 個任務按順序執行，無並行處理
 
-**MVP Scope (Phases 1-4)**: 66 tasks (7.5 hours) - 包含雙向匯率計算核心功能
+**MVP Scope (Phases 1-4)**: 72 tasks (8 hours) - 包含雙向匯率計算核心功能
 
 ---
 
 ## Validation Checklist
 
 - ✅ All tasks follow checkbox format: `- [ ] [ID] [Story?] Description`
-- ✅ All task IDs are sequential (T001-T143)
+- ✅ All task IDs are sequential (T001-T149)
 - ✅ All user story tasks include [US#] label
 - ✅ All tasks include exact file paths
 - ✅ Tasks organized by user story (5 user stories mapped)
 - ✅ Each user story has independent test criteria
 - ✅ TDD workflow: Tests before implementation (following Constitution Check)
 - ✅ Dependencies documented with mermaid diagram
-- ✅ Sequential execution: All tasks execute in order (T001-T143)
+- ✅ Sequential execution: All tasks execute in order (T001-T149)
 - ✅ MVP scope defined (Phases 1-4)
 - ✅ Format validation complete
+- ✅ Critical issues resolved: Currency type consistency, performance metrics alignment, timezone/date format tests, UI non-blocking test
 
 ---
 
