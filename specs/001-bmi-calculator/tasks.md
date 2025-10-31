@@ -9,11 +9,10 @@
 
 **Organization**: 任務按使用者故事分組，使每個故事可獨立實作和測試。
 
-## Format: `[ID] [P?] [Story] Description`
+## Format: `[ID] [Story] Description`
 
-- **[P]**: 可並行執行（不同檔案，無相依性）
-- **[Story]**: 任務所屬使用者故事（例如：US1, US2）
-- 描述包含確切檔案路徑
+- **[Story]**: Which user story this task belongs to (e.g., US1, US2, US3)
+- Include exact file paths in descriptions
 
 ## Path Conventions
 
@@ -31,9 +30,9 @@
 
 - [ ] T001 建立測試專案 BNICalculate.Tests（使用 `dotnet new xunit`）
 - [ ] T002 新增測試專案參考到主專案（在 BNICalculate.Tests.csproj 中）
-- [ ] T003 [P] 安裝 Microsoft.AspNetCore.Mvc.Testing 套件到測試專案
-- [ ] T004 [P] 建立測試專案目錄結構（Integration/Pages/）
-- [ ] T005 [P] 建立 Usings.cs 定義全域 using 宣告
+- [ ] T003 安裝 Microsoft.AspNetCore.Mvc.Testing 套件到測試專案
+- [ ] T004 建立測試專案目錄結構（Integration/Pages/）
+- [ ] T005 建立 Usings.cs 定義全域 using 宣告
 
 **預期時間**: 30 分鐘
 
@@ -68,7 +67,7 @@
 
 > **注意：先撰寫這些測試，確保它們失敗後再實作**
 
-- [ ] T010 [P] [US1] 建立 BMIPageTests.cs 在 BNICalculate.Tests/Integration/Pages/
+- [ ] T010 [US1] 建立 BMIPageTests.cs 在 BNICalculate.Tests/Integration/Pages/
 - [ ] T011 [US1] 撰寫測試：驗證 /BMI 頁面回應 HTTP 200
 - [ ] T012 [US1] 撰寫測試：驗證頁面包含標題「BMI 計算器」
 - [ ] T013 [US1] 撰寫測試：驗證頁面包含身高輸入欄位（id="height"）
@@ -84,10 +83,10 @@
 
 #### Razor Page 實作
 
-- [ ] T019 [P] [US1] 建立 Pages/BMI.cshtml.cs（PageModel 類別）
+- [ ] T019 [US1] 建立 Pages/BMI.cshtml.cs（PageModel 類別）
 - [ ] T020 [US1] 在 BMI.cshtml.cs 新增 XML 文件註解（繁體中文）
 - [ ] T021 [US1] 實作 OnGet() 方法（空實作，無後端邏輯）
-- [ ] T022 [P] [US1] 建立 Pages/BMI.cshtml（Razor 視圖）
+- [ ] T022 [US1] 建立 Pages/BMI.cshtml（Razor 視圖）
 - [ ] T023 [US1] 在 BMI.cshtml 新增頁面標題「BMI 計算器」（使用 h1）
 - [ ] T024 [US1] 新增身高輸入欄位（label: 身高 (公尺), id: height, type: number, step: 0.01）
 - [ ] T025 [US1] 新增體重輸入欄位（label: 體重 (公斤), id: weight, type: number, step: 0.1）
@@ -99,7 +98,7 @@
 
 #### JavaScript 實作
 
-- [ ] T029 [P] [US1] 建立 wwwroot/js/bmi.js
+- [ ] T029 [US1] 建立 wwwroot/js/bmi.js
 - [ ] T030 [US1] 實作 calculateBMI() 函式（讀取輸入值）
 - [ ] T031 [US1] 實作 BMI 計算邏輯（BMI = weight / (height²)）
 - [ ] T032 [US1] 實作四捨五入至小數點一位（Math.round(bmi * 10) / 10）
@@ -112,7 +111,7 @@
 
 #### 驗證與錯誤處理
 
-- [ ] T037 [P] [US1] 實作 validateInput() 函式在 bmi.js
+- [ ] T037 [US1] 實作 validateInput() 函式在 bmi.js
 - [ ] T038 [US1] 新增空值驗證（顯示「請輸入完整的身高和體重資料」）
 - [ ] T039 [US1] 新增數字格式驗證（使用 isNaN()，顯示「請輸入數字」）
 - [ ] T040 [US1] 新增正數驗證（檢查 > 0，顯示「請輸入有效的{欄位}值（大於 0）」）
@@ -125,7 +124,7 @@
 
 #### CSS 樣式
 
-- [ ] T045 [P] [US1] 建立 wwwroot/css/bmi.css
+- [ ] T045 [US1] 建立 wwwroot/css/bmi.css
 - [ ] T046 [US1] 實作容器樣式（置中，max-width: 500px）
 - [ ] T047 [US1] 實作表單樣式（輸入欄位間距、邊框、padding）
 - [ ] T048 [US1] 實作按鈕樣式（簡潔、無圓角特效、並排顯示）
@@ -162,7 +161,7 @@
 
 ### 測試 for User Story 2（TDD - 先寫測試）⚠️
 
-- [ ] T060 [P] [US2] 在 BMIPageTests.cs 新增測試：驗證頁面包含「清除」按鈕（id="clear-btn"）
+- [ ] T060 [US2] 在 BMIPageTests.cs 新增測試：驗證頁面包含「清除」按鈕（id="clear-btn"）
 - [ ] T061 [US2] 執行測試確認失敗（Red）
 
 **預期時間**: 10 分鐘
@@ -200,54 +199,54 @@
 
 ### 程式碼品質
 
-- [ ] T075 [P] 執行 `dotnet format` 確保程式碼格式一致
-- [ ] T076 [P] 執行 `dotnet build` 確認零警告
-- [ ] T077 [P] 檢查所有 public 方法有 XML 文件註解（繁體中文）
-- [ ] T078 [P] 審查 JavaScript 程式碼命名（camelCase）
-- [ ] T079 [P] 審查 C# 程式碼命名（PascalCase for public, camelCase for private）
+- [ ] T075 執行 `dotnet format` 確保程式碼格式一致
+- [ ] T076 執行 `dotnet build` 確認零警告
+- [ ] T077 檢查所有 public 方法有 XML 文件註解（繁體中文）
+- [ ] T078 審查 JavaScript 程式碼命名（camelCase）
+- [ ] T079 審查 C# 程式碼命名（PascalCase for public, camelCase for private）
 
 **預期時間**: 30 分鐘
 
 ### 效能驗證
 
-- [ ] T080 [P] 測試頁面載入時間（使用 Chrome DevTools，目標 <2 秒）
-- [ ] T081 [P] 測試 BMI 計算回應時間（使用 console.time，目標 <1 秒）
-- [ ] T082 [P] 驗證 CSS 檔案大小（應 <5KB）
-- [ ] T083 [P] 驗證 JavaScript 檔案大小（應 <10KB）
-- [ ] T084 [P] 測試 TTI (Time to Interactive，目標 <3 秒)
+- [ ] T080 測試頁面載入時間（使用 Chrome DevTools，目標 <2 秒）
+- [ ] T081 測試 BMI 計算回應時間（使用 console.time，目標 <1 秒）
+- [ ] T082 驗證 CSS 檔案大小（應 <5KB）
+- [ ] T083 驗證 JavaScript 檔案大小（應 <10KB）
+- [ ] T084 測試 TTI (Time to Interactive，目標 <3 秒)
 
 **預期時間**: 30 分鐘
 
 ### 跨瀏覽器測試
 
-- [ ] T085 [P] 在 Chrome 測試所有功能
-- [ ] T086 [P] 在 Firefox 測試所有功能
-- [ ] T087 [P] 在 Safari 測試所有功能（如有 macOS）
-- [ ] T088 [P] 在 Edge 測試所有功能
+- [ ] T085 在 Chrome 測試所有功能
+- [ ] T086 在 Firefox 測試所有功能
+- [ ] T087 在 Safari 測試所有功能（如有 macOS）
+- [ ] T088 在 Edge 測試所有功能
 
 **預期時間**: 30 分鐘
 
 ### 響應式設計驗證
 
-- [ ] T089 [P] 測試手機尺寸（375px 寬度）
-- [ ] T090 [P] 測試平板尺寸（768px 寬度）
-- [ ] T091 [P] 測試桌面尺寸（1920px 寬度）
+- [ ] T089 測試手機尺寸（375px 寬度）
+- [ ] T090 測試平板尺寸（768px 寬度）
+- [ ] T091 測試桌面尺寸（1920px 寬度）
 
 **預期時間**: 20 分鐘
 
 ### 無障礙檢查
 
-- [ ] T092 [P] 驗證所有輸入欄位有 label
-- [ ] T093 [P] 驗證可使用 Tab 鍵導覽
-- [ ] T094 [P] 驗證錯誤訊息有適當的 ARIA 屬性（如需要）
+- [ ] T092 驗證所有輸入欄位有 label
+- [ ] T093 驗證可使用 Tab 鍵導覽
+- [ ] T094 驗證錯誤訊息有適當的 ARIA 屬性（如需要）
 
 **預期時間**: 20 分鐘
 
 ### 文件更新
 
-- [ ] T095 [P] 更新 README.md 包含 BMI 功能說明
-- [ ] T096 [P] 在 quickstart.md 新增實際測試結果
-- [ ] T097 [P] 截圖並新增到文件（如需要）
+- [ ] T095 更新 README.md 包含 BMI 功能說明
+- [ ] T096 在 quickstart.md 新增實際測試結果
+- [ ] T097 截圖並新增到文件（如需要）
 
 **預期時間**: 20 分鐘
 
@@ -306,34 +305,35 @@ Phase 5 (Polish)
 - ✅ **User Story 1**: 完全獨立，可單獨部署
 - ⚠️ **User Story 2**: 依賴 User Story 1（需要輸入欄位和結果區域）
 
-### 階段內並行機會
+### 階段內執行順序
 
 #### Phase 1: Setup
 
-- T003, T004, T005 可並行（[P] 標記）
+所有任務可獨立執行（T003, T004, T005）
 
 #### Phase 2: Foundational
 
-- T006, T007, T008 可並行（不同設定檔）
+所有任務可獨立執行（T006, T007, T008）
 
 #### Phase 3: User Story 1
 
-並行區塊 1（測試撰寫）:
+執行區塊 1（測試撰寫）:
 
-- T010-T017 可並行（獨立測試案例）
+- T010-T017 依序執行
 
-並行區塊 2（實作）:
+執行區塊 2（實作）:
 
-- T019 (PageModel) 和 T022 (Razor View) 可並行
-- T029 (bmi.js) 和 T045 (bmi.css) 可並行
+- T019-T028 依序執行（PageModel 和 Razor View）
+- T029-T036 依序執行（bmi.js）
+- T045-T051 依序執行（bmi.css）
 
-並行區塊 3（驗證）:
+執行區塊 3（驗證）:
 
-- T037 (驗證邏輯) 獨立於 CSS 實作
+- T037-T044 依序執行（驗證邏輯）
 
 #### Phase 5: Polish
 
-- 所有任務標記 [P] 可並行執行
+所有任務按類別順序執行
 
 ---
 
@@ -365,14 +365,6 @@ Phase 5 (Polish)
 - ✅ Phase 3: User Story 1（核心 BMI 計算功能）
 
 **MVP 預估時間**: 6.75 小時
-
-### 並行機會
-
-- **Setup 階段**: 3 個任務可並行
-- **User Story 1**: 多個任務可並行（測試撰寫、前後端分離）
-- **Polish 階段**: 23 個任務大多可並行
-
-**潛在節省時間**: 如 2 人並行開發，可節省 2-3 小時
 
 ---
 
