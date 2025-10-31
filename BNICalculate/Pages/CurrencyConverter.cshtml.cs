@@ -7,12 +7,18 @@ namespace BNICalculate.Pages;
 
 /// <summary>
 /// 匯率計算器頁面模型
+/// 提供台幣與外幣雙向轉換功能,支援 7 種主要貨幣
 /// </summary>
 public class CurrencyConverterModel : PageModel
 {
     private readonly ICurrencyService _currencyService;
     private readonly ILogger<CurrencyConverterModel> _logger;
 
+    /// <summary>
+    /// 初始化匯率計算器頁面模型
+    /// </summary>
+    /// <param name="currencyService">匯率計算服務</param>
+    /// <param name="logger">日誌記錄器</param>
     public CurrencyConverterModel(
         ICurrencyService currencyService,
         ILogger<CurrencyConverterModel> logger)
@@ -21,28 +27,59 @@ public class CurrencyConverterModel : PageModel
         _logger = logger;
     }
 
+    /// <summary>
+    /// 台幣金額 (用於台幣轉外幣)
+    /// </summary>
     [BindProperty]
     public decimal TwdAmount { get; set; }
 
+    /// <summary>
+    /// 選擇的目標外幣代碼
+    /// </summary>
     [BindProperty]
     public string SelectedCurrency { get; set; } = "USD";
 
+    /// <summary>
+    /// 外幣金額 (用於外幣轉台幣)
+    /// </summary>
     [BindProperty]
     public decimal ForeignAmount { get; set; }
 
+    /// <summary>
+    /// 選擇的來源外幣代碼
+    /// </summary>
     [BindProperty]
     public string SourceCurrency { get; set; } = "USD";
 
+    /// <summary>
+    /// 計算結果
+    /// </summary>
     public CalculationResult? Result { get; set; }
 
+    /// <summary>
+    /// 當前匯率資料
+    /// </summary>
     public ExchangeRateData? CurrentRates { get; set; }
 
+    /// <summary>
+    /// 匯率資料是否過期 (超過 24 小時)
+    /// </summary>
     public bool IsDataStale { get; set; }
 
+    /// <summary>
+    /// 錯誤訊息
+    /// </summary>
     public string? ErrorMessage { get; set; }
 
+    /// <summary>
+    /// 是否正在更新匯率
+    /// </summary>
     public bool IsUpdating { get; set; }
 
+    /// <summary>
+    /// 頁面載入時執行
+    /// 自動載入匯率資料,若無資料則從 API 取得
+    /// </summary>
     public async Task OnGetAsync()
     {
         try
@@ -73,6 +110,10 @@ public class CurrencyConverterModel : PageModel
         }
     }
 
+    /// <summary>
+    /// 計算台幣轉外幣
+    /// </summary>
+    /// <returns>頁面結果,包含計算結果或驗證錯誤</returns>
     public async Task<IActionResult> OnPostCalculateTwdToForeignAsync()
     {
         if (!ModelState.IsValid)
@@ -107,6 +148,10 @@ public class CurrencyConverterModel : PageModel
         return Page();
     }
 
+    /// <summary>
+    /// 計算外幣轉台幣
+    /// </summary>
+    /// <returns>頁面結果,包含計算結果或驗證錯誤</returns>
     public async Task<IActionResult> OnPostCalculateForeignToTwdAsync()
     {
         if (!ModelState.IsValid)
@@ -141,6 +186,11 @@ public class CurrencyConverterModel : PageModel
         return Page();
     }
 
+    /// <summary>
+    /// 手動更新匯率資料
+    /// 從臺灣銀行 API 取得最新匯率並更新快取
+    /// </summary>
+    /// <returns>重導向到頁面或顯示錯誤訊息</returns>
     public async Task<IActionResult> OnPostUpdateRatesAsync()
     {
         try
