@@ -14,15 +14,16 @@
 **Language/Version**: C# 12 / .NET 8.0  
 **Primary Dependencies**: ASP.NET Core 8.0 Razor Pages, Bootstrap 5 (已包含在現有專案中)  
 **Storage**: 不需要（純客戶端時間計算）  
-**Testing**: xUnit + WebApplicationFactory (整合測試)  
+**Testing**: xUnit + WebApplicationFactory (整合測試), Jest 或 Jasmine (JavaScript 單元測試)  
+**Performance Testing**: Lighthouse CI (客戶端效能測量), BenchmarkDotNet (如需伺服器端效能測試)  
 **Target Platform**: Web (跨瀏覽器：Chrome、Firefox、Safari、Edge)  
 **Project Type**: Web (Razor Pages) - 現有 BNICalculate 專案擴充  
 **Performance Goals**:
 
-- 頁面載入時間 < 2 秒
-- 時間更新延遲 < 100 毫秒
-- 視覺回饋響應 < 50 毫秒
-- 支援長時間運行（24 小時無誤差累積）
+- 頁面載入時間 < 2 秒 (SC-001) - 使用 Lighthouse CI 測量
+- 時間更新延遲 < 100 毫秒 (SC-002) - 使用 Performance API 測量
+- 視覺回饋響應 < 50 毫秒 (SC-005) - 使用 Chrome DevTools Performance 測量
+- 支援長時間運行（24 小時無誤差累積） (SC-006) - 手動測試
 
 **Constraints**:
 

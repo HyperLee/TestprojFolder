@@ -6,9 +6,11 @@
 
 **測試策略**:
 
-- 整合測試優先使用手動驗證（開啟瀏覽器測試）
-- 自動化測試為選用項目（如環境問題可跳過）
-- 每個使用者故事都可獨立驗證功能
+- 遵循 TDD 工作流程：先撰寫測試（Red）→ 實作功能（Green）→ 重構（Refactor）
+- 整合測試使用 xUnit + WebApplicationFactory 驗證頁面載入和 HTML 結構
+- 手動驗證作為補充測試方式（開啟瀏覽器驗證互動和視覺效果）
+- 每個使用者故事都必須通過自動化測試和手動驗證
+- 目標覆蓋率：JavaScript 核心邏輯 80%，PageModel 80%
 
 **組織方式**: 任務依使用者故事分組，每個故事都可獨立實作和測試
 
@@ -53,26 +55,24 @@
 
 ### 使用者故事 1 的測試
 
-**注意**: 整合測試為選用項目。如果測試環境有問題（例如：建置失敗、相依性問題、執行超時），請使用以下替代方案：
+**測試方法（TDD 工作流程）**:
 
-**主要測試方式（手動驗證）**:
+1. **自動化測試**（必需）：
+   - 撰寫整合測試驗證頁面載入和 HTML 結構
+   - 測試必須先於實作程式碼提交
+   - 使用 xUnit + WebApplicationFactory
 
-- 開啟瀏覽器訪問 `/WorldClock` 頁面
-- 驗證顯示 10 個城市（1 個主要 + 9 個次要）
-- 驗證時間格式為 HH:mm:ss
-- 驗證時間每秒更新
+2. **手動驗證**（補充）：
+   - 開啟瀏覽器訪問 `/WorldClock` 頁面
+   - 驗證顯示 10 個城市（1 個主要 + 9 個次要）
+   - 驗證時間格式為 HH:mm:ss
+   - 驗證時間每秒更新
 
-**選用測試方式（自動化測試）**:
+**自動化測試任務**:
 
-- [ ] T009 [US1] 在 BNICalculate.Tests/Integration/Pages/WorldClockPageTests.cs 建立 WorldClockPageTests.cs 並加上頁面載入測試（如環境問題可跳過）
-- [ ] T010 [US1] 在 WorldClockPageTests.cs 新增測試驗證 10 個城市顯示（如環境問題可跳過）
-- [ ] T011 [US1] 在 WorldClockPageTests.cs 新增測試驗證正確的 HTML 結構（主要 + 9 張卡片）（如環境問題可跳過）
-
-**備註**: 如果執行 `dotnet test` 時遇到以下問題：
-
-- 建置錯誤：跳過自動化測試，使用手動驗證
-- 執行超時：跳過自動化測試，使用手動驗證
-- 相依性問題：跳過自動化測試，使用手動驗證
+- [ ] T009 [US1] 在 BNICalculate.Tests/Integration/Pages/WorldClockPageTests.cs 建立 WorldClockPageTests.cs 並加上頁面載入測試
+- [ ] T010 [US1] 在 WorldClockPageTests.cs 新增測試驗證 10 個城市顯示
+- [ ] T011 [US1] 在 WorldClockPageTests.cs 新增測試驗證正確的 HTML 結構（主要 + 9 張卡片）並驗證日期格式為 YYYY-MM-DD
 
 ### 使用者故事 1 的實作
 
@@ -133,18 +133,24 @@
 
 ### 使用者故事 2 的測試
 
-**主要測試方式（手動驗證）**:
+**測試方法（TDD 工作流程）**:
 
-- 開啟瀏覽器訪問 `/WorldClock` 頁面
-- 點選任一城市卡片
-- 驗證被點選的城市移至正中央
-- 驗證原主要城市移至下方列表
-- 驗證 hover 和 active 視覺效果
+1. **自動化測試**（必需）：
+   - 撰寫整合測試驗證城市切換互動
+   - 可能需要 Selenium/Playwright 進行 UI 互動測試
+   - 測試必須先於實作程式碼提交
 
-**選用測試方式（自動化測試）**:
+2. **手動驗證**（補充）：
+   - 開啟瀏覽器訪問 `/WorldClock` 頁面
+   - 點選任一城市卡片
+   - 驗證被點選的城市移至正中央
+   - 驗證原主要城市移至下方列表
+   - 驗證 hover 和 active 視覺效果
 
-- [ ] T045 [US2] 在 WorldClockPageTests.cs 新增測試驗證城市卡片點選互動（可能需要 Selenium/Playwright）（如環境問題可跳過）
-- [ ] T046 [US2] 在 WorldClockPageTests.cs 新增測試驗證主要/次要城市交換（如環境問題可跳過）
+**自動化測試任務**:
+
+- [ ] T045 [US2] 在 WorldClockPageTests.cs 新增測試驗證城市卡片點選互動（可能需要 Selenium/Playwright）
+- [ ] T046 [US2] 在 WorldClockPageTests.cs 新增測試驗證主要/次要城市交換
 
 ### 使用者故事 2 的實作
 
@@ -183,25 +189,31 @@
 
 ### 使用者故事 3 的測試
 
-**主要測試方式（手動驗證）**:
+**測試方法（TDD 工作流程）**:
 
-- 開啟瀏覽器訪問 `/WorldClock` 頁面
-- 驗證各城市時區標示正確（包含夏令時間狀態）
-- 驗證跨越午夜時日期自動更新
-- 驗證不同城市可能在不同日期
+1. **自動化測試**（必需）：
+   - 撰寫整合測試驗證 DST 處理和日期變更
+   - 使用模擬的日期時間測試邊界情況
+   - 測試必須先於實作程式碼提交
 
-**選用測試方式（自動化測試）**:
+2. **手動驗證**（補充）：
+   - 開啟瀏覽器訪問 `/WorldClock` 頁面
+   - 驗證各城市時區標示正確（包含夏令時間狀態）
+   - 驗證跨越午夜時日期自動更新
+   - 驗證不同城市可能在不同日期
 
-- [ ] T061 [US3] 在 WorldClockPageTests.cs 新增測試驗證 DST 處理（模擬 DST 轉換日期）（如環境問題可跳過）
-- [ ] T062 [US3] 在 WorldClockPageTests.cs 新增測試驗證午夜日期變更（如環境問題可跳過）
-- [ ] T063 [US3] 在 WorldClockPageTests.cs 新增測試驗證跨時區日期差異（如環境問題可跳過）
+**自動化測試任務**:
+
+- [ ] T061 [US3] 在 WorldClockPageTests.cs 新增測試驗證 DST 處理（模擬 DST 轉換日期）
+- [ ] T062 [US3] 在 WorldClockPageTests.cs 新增測試驗證午夜日期變更並確認日期格式為 YYYY-MM-DD
+- [ ] T063 [US3] 在 WorldClockPageTests.cs 新增測試驗證跨時區日期差異
 
 ### 使用者故事 3 的實作
 
 #### DST 處理（透過 Intl API 自動處理）
 
 - [ ] T064 [US3] 在 BNICalculate/wwwroot/js/worldclock.js 驗證 Intl.DateTimeFormat 自動處理所有 6 個 DST 城市
-- [ ] T065 [US3] 在 worldclock.js 新增單元測試驗證 DST 偏移量變更（倫敦 GMT+0/+1、紐約 GMT-5/-4）
+- [ ] T065 [US3] 在 worldclock.js 新增單元測試驗證 DST 偏移量變更（倫敦 3月從 GMT+0→GMT+1、10月從 GMT+1→GMT+0；紐約 3月從 GMT-5→GMT-4、11月從 GMT-4→GMT-5）
 - [ ] T066 [US3] 在 BNICalculate/wwwroot/js/worldclock.js 的 updateMainClock() 中更新 offsetLabel 顯示以顯示當前 DST 狀態
 
 #### 日期變更處理（FR-020）
@@ -214,7 +226,8 @@
 
 - [ ] T070 [US3] 在 BNICalculate/wwwroot/js/worldclock.js 實作 checkBrowserSupport() 函式來偵測 Intl.DateTimeFormat 支援
 - [ ] T071 [US3] 在 BNICalculate/wwwroot/js/worldclock.js 新增瀏覽器版本偵測（Chrome/Edge 90+、Firefox 88+、Safari 14+）
-- [ ] T072 [US3] 在 BNICalculate/wwwroot/js/worldclock.js 偵測到不支援的瀏覽器時顯示瀏覽器升級訊息
+- [ ] T072 [US3] 在 BNICalculate/wwwroot/js/worldclock.js 偵測到不支援的瀏覽器時顯示瀏覽器升級訊息：「您的瀏覽器版本過舊，可能無法正確顯示時間。請升級至 Chrome 90+、Firefox 88+ 或 Safari 14+」
+- [ ] T072a [US3] 在 WorldClockPageTests.cs 新增測試驗證瀏覽器升級訊息在不支援瀏覽器上顯示，在支援瀏覽器上不顯示
 - [ ] T073 [US3] 在 BNICalculate/Pages/WorldClock.cshtml 新增升級訊息的 HTML 容器
 - [ ] T074 [US3] 在 BNICalculate/wwwroot/css/worldclock.css 設定瀏覽器升級訊息樣式
 
@@ -226,8 +239,8 @@
 
 **目的**: 影響多個使用者故事的改進和最終品質保證
 
-- [ ] T075 在 BNICalculate/Pages/WorldClock.cshtml.cs 為 WorldClockModel 類別新增 XML 文件註解
-- [ ] T076 在 BNICalculate/wwwroot/js/worldclock.js 為所有 JavaScript 函式新增 JSDoc 註解
+- [ ] T075 在 BNICalculate/Pages/WorldClock.cshtml.cs 為 WorldClockModel 類別及所有 public 屬性/方法新增繁體中文 XML 文件註解
+- [ ] T076 在 BNICalculate/wwwroot/js/worldclock.js 為所有導出函式（如 startClock, stopClock, switchMainCity）新增 JSDoc 註解
 - [ ] T077 在 BNICalculate/wwwroot/js/worldclock.js 優化 formatter 實例重用（依照 research.md 快取 formatters）
 - [ ] T078 在 BNICalculate/wwwroot/js/worldclock.js 新增 Page Visibility API 來在分頁隱藏時暫停時鐘
 - [ ] T079 使用瀏覽器 DevTools 測試頁面效能：載入時間 <2秒（SC-001）、更新延遲 <100ms（SC-002）
@@ -237,6 +250,7 @@
 - [ ] T083 審查並更新 README.md 加上世界時鐘功能描述
 - [ ] T084 依照 quickstart.md 執行驗證：驗證所有驗收情境通過
 - [ ] T085 程式碼審查：檢查安全性問題、移除 console.log、錯誤處理完整性
+- [ ] T086 設置 Lighthouse CI 或效能測試工具以自動測量 SC-001（載入時間）、SC-002（更新延遲）、SC-005（視覺回饋響應時間）
 
 ---
 
@@ -319,45 +333,48 @@
 
 ### 測試策略
 
-**重要**: 測試環境問題的應對策略
+**重要**: 測試遵循憲章要求
 
-如果 `BNICalculate.Tests` 專案遇到問題：
+本專案遵循憲章 Section II 的 TDD 工作流程：
 
-1. **建置問題**
-   - 檢查 .NET SDK 版本：`dotnet --version`
-   - 檢查 NuGet 套件還原：`dotnet restore`
-   - 如果問題持續：跳過自動化測試，使用手動驗證
+1. **自動化測試為必需項目**：
+   - 所有整合測試使用 xUnit + WebApplicationFactory
+   - 測試必須先於實作程式碼提交到版本控制
+   - 目標覆蓋率：JavaScript 核心邏輯 80%，PageModel 80%
 
-2. **執行超時**
-   - 檢查測試伺服器是否已啟動
-   - 檢查防火牆設定
-   - 如果問題持續：跳過自動化測試，使用手動驗證
+2. **測試類型**：
+   - 整合測試：驗證頁面載入、HTML 結構、基本功能
+   - 互動測試：測試點選、鍵盤導覽、城市切換（可能需要 Selenium/Playwright）
+   - 單元測試：JavaScript 核心邏輯（時間格式化、狀態管理、DST 處理）
 
-3. **相依性問題**
-   - 檢查 xUnit 和 WebApplicationFactory 套件版本
-   - 如果問題持續：跳過自動化測試，使用手動驗證
+3. **手動驗證作為補充**：
+   - 視覺回饋效果（hover、active 狀態）
+   - 跨瀏覽器相容性（Chrome、Firefox、Safari、Edge）
+   - 長時間執行測試（24 小時穩定性）
+   - 無障礙測試（使用 axe DevTools）
 
 **主要測試方法（強烈建議）**:
 
-- **手動驗證**: 每個使用者故事都應該透過開啟瀏覽器並手動測試來驗證
-- **整合測試**: 驗證頁面載入、HTML 結構、基本功能（選用）
-- **互動測試**: 測試點選、鍵盤導覽、視覺回饋（手動）
+- **手動驗證**: 每個使用者故事都應該透過開啟瀏覽器並手動測試來驗證視覺效果和互動體驗
+- **整合測試**: 驗證頁面載入、HTML 結構、基本功能（必需，使用 xUnit + WebApplicationFactory）
+- **單元測試**: 測試 JavaScript 核心邏輯（時間格式化、狀態管理、DST 處理，必需）
+- **互動測試**: 測試點選、鍵盤導覽、視覺回饋（必需，可能需要 Selenium/Playwright）
 - **長時間執行測試**: 保持頁面開啟 24 小時驗證穩定性（手動）
 - **跨瀏覽器測試**: 在 Chrome、Firefox、Safari、Edge 上驗證（T081，手動）
 - **無障礙測試**: 使用 axe DevTools 驗證 WCAG 合規性（T082）
-- **效能測試**: 測量載入時間、更新延遲、24 小時執行時間（T079、T080，手動）
+- **效能測試**: 測量載入時間、更新延遲、24 小時執行時間（T079、T080、T086）
 
 ---
 
 ## 任務摘要
 
-- **總任務數**: 85
+- **總任務數**: 86
 - **設定階段**: 5 個任務
 - **基礎建設階段**: 3 個任務
 - **使用者故事 1（P1）**: 36 個任務（包含測試、HTML、CSS、JS、心跳檢測）
 - **使用者故事 2（P2）**: 16 個任務（包含測試、互動性、無障礙功能）
-- **使用者故事 3（P3）**: 14 個任務（包含測試、DST、瀏覽器相容性）
-- **優化階段**: 11 個任務
+- **使用者故事 3（P3）**: 15 個任務（包含測試、DST、瀏覽器相容性）
+- **優化階段**: 12 個任務（包含效能測試工具設置）
 
 **預估時程**（單一開發人員）:
 
