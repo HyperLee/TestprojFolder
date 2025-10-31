@@ -307,7 +307,7 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.File(
         path: "logs/currency-.log",
         rollingInterval: RollingInterval.Day,
-        retainedFileCountLimit: 7,
+        retainedFileCountLimit: 7, // 保留最近7天日誌，自動刪除舊檔案
         outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz}] [{Level:u3}] {Message:lj}{NewLine}{Exception}")
     .CreateLogger();
 
@@ -340,6 +340,12 @@ dotnet add package Serilog.AspNetCore --version 8.0.0
 dotnet add package Serilog.Sinks.Console --version 5.0.1
 dotnet add package Serilog.Sinks.File --version 5.0.0
 ```
+
+**日誌保留策略**:
+
+- **滾動間隔**: 每日滾動（`RollingInterval.Day`），檔案名稱格式：`currency-20251101.log`
+- **保留數量**: 最近 7 天（`retainedFileCountLimit: 7`），自動刪除超過 7 天的舊日誌
+- **理由**: 平衡磁碟空間與除錯需求，7 天足夠追蹤近期問題，同時避免日誌無限增長
 
 **替代方案**:
 
