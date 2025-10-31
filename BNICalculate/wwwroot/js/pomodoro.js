@@ -255,6 +255,37 @@ function formatTime(seconds) {
 }
 
 /**
+ * T093-T095: 更新圓形進度環
+ * @param {number} remainingSeconds - 剩餘秒數
+ * @param {number} totalSeconds - 總秒數
+ * @param {string} sessionType - 時段類型 ('work' 或 'break')
+ */
+function updateProgressRing(remainingSeconds, totalSeconds, sessionType) {
+    const circle = document.getElementById('progress-ring-circle');
+    if (!circle) return;
+    
+    // T093: 計算 circumference（圓周長 = 2 * π * r）
+    const radius = 130; // 與 SVG 中的 r 屬性相同
+    const circumference = 2 * Math.PI * radius; // ≈ 816.81
+    
+    // 計算進度百分比（已完成的部分）
+    const progress = (totalSeconds - remainingSeconds) / totalSeconds;
+    
+    // T093: 更新 stroke-dashoffset（從滿圓開始逆向減少）
+    const offset = circumference * (1 - progress);
+    circle.style.strokeDashoffset = offset;
+    
+    // T095: 工作/休息時段顏色切換
+    if (sessionType === 'work') {
+        circle.classList.remove('break-phase');
+        circle.classList.add('work-phase');
+    } else {
+        circle.classList.remove('work-phase');
+        circle.classList.add('break-phase');
+    }
+}
+
+/**
  * 顯示 Bootstrap Toast 通知（T027）
  * @param {string} message - 通知訊息
  * @param {string} type - 通知類型：'success', 'info', 'warning', 'danger'
@@ -262,4 +293,146 @@ function formatTime(seconds) {
 function showNotification(message, type = 'info') {
     // 將在 Phase 3 UI 實作中完成
     console.log(`[${type.toUpperCase()}] ${message}`);
+}
+
+/**
+ * T059-T061: 記錄完成的時段至伺服器（含錯誤處理和重試）
+ * @param {string} sessionType - 時段類型：'work' 或 'break'
+ * @param {number} durationMinutes - 時長（分鐘）
+ * @returns {Promise<boolean>} 是否成功記錄
+ */
+async function recordCompletedSession(sessionType, durationMinutes) {
+    const maxRetries = 3;
+    let attempt = 0;
+    
+    while (attempt < maxRetries) {
+        try {
+            const response = await fetch('/Pomodoro?handler=RecordComplete', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+                },
+                body: JSON.stringify({
+                    sessionType: sessionType,
+                    durationMinutes: durationMinutes
+                })
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                if (data.success) {
+                    return data;
+                }
+            }
+            
+            throw new Error(`HTTP ${response.status}`);
+        } catch (error) {
+            attempt++;
+            console.error(`記錄時段失敗（嘗試 ${attempt}/${maxRetries}）:`, error);
+            
+            if (attempt < maxRetries) {
+                // 等待後重試（指數退避）
+                await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+            } else {
+                // 最後一次嘗試失敗
+                if (window.showNotification) {
+                    showNotification('無法記錄統計資料，請檢查網路連線', 'danger');
+                }
+                return null;
+            }
+        }
+    }
+    
+    return null;
+}
+
+/**
+ * T066-T072: MultiWindowGuard 類別 - 多視窗衝突偵測
+ */
+class MultiWindowGuard {
+    constructor() {
+        this.lockKey = 'pomodoroWindowLock';
+        this.heartbeatInterval = null;
+        this.isMainWindow = false;
+    }
+    
+    /**
+     * T067: 嘗試取得主視窗鎖定
+     * @returns {boolean} 是否成功取得鎖定
+     */
+    tryAcquireLock() {
+        try {
+            const now = Date.now();
+            const lockData = localStorage.getItem(this.lockKey);
+            
+            if (lockData) {
+                const lock = JSON.parse(lockData);
+                const timeSinceHeartbeat = now - lock.lastHeartbeat;
+                
+                // T067: 檢查心跳，若超過 5 秒視為過期
+                if (timeSinceHeartbeat < 5000) {
+                    // 另一個視窗正在運作
+                    return false;
+                }
+            }
+            
+            // 設定鎖定
+            this._setLock(now);
+            this.isMainWindow = true;
+            
+            // T068: 啟動心跳機制
+            this.startHeartbeat();
+            
+            return true;
+        } catch (e) {
+            console.error('無法取得視窗鎖定:', e);
+            return false;
+        }
+    }
+    
+    /**
+     * T068: 啟動心跳機制（每 2 秒更新）
+     */
+    startHeartbeat() {
+        this.heartbeatInterval = setInterval(() => {
+            if (this.isMainWindow) {
+                this._setLock(Date.now());
+            }
+        }, 2000);
+    }
+    
+    /**
+     * T069: 釋放鎖定
+     */
+    releaseLock() {
+        try {
+            if (this.heartbeatInterval) {
+                clearInterval(this.heartbeatInterval);
+                this.heartbeatInterval = null;
+            }
+            
+            if (this.isMainWindow) {
+                localStorage.removeItem(this.lockKey);
+                this.isMainWindow = false;
+            }
+        } catch (e) {
+            console.error('無法釋放視窗鎖定:', e);
+        }
+    }
+    
+    /**
+     * 設定鎖定資料
+     * @private
+     */
+    _setLock(timestamp) {
+        try {
+            localStorage.setItem(this.lockKey, JSON.stringify({
+                lastHeartbeat: timestamp,
+                windowId: Math.random().toString(36).substring(7)
+            }));
+        } catch (e) {
+            console.error('無法儲存視窗鎖定:', e);
+        }
+    }
 }

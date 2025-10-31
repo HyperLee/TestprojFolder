@@ -9,19 +9,52 @@
     border-radius: 20px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     color: white;
+    position: relative;
 }
 
-#timer-text {
-    font-family: 'Courier New', monospace;
-    font-size: 5rem;
-    font-weight: bold;
+/* T091-T092: 圓形進度環容器 */
+.progress-ring-container {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    margin: 0 auto;
+}
+
+/* T092: 進度環樣式 */
+.progress-ring {
+    transform: rotate(-90deg); /* 從頂部開始 */
+}
+
+.progress-ring-circle {
+    transition: stroke-dashoffset 1s linear;
+}
+
+/* T096: 工作/休息時段顏色切換 */
+.progress-ring-progress.work-phase {
+    stroke: url(#progressGradient);
+}
+
+.progress-ring-progress.break-phase {
+    stroke: #17a2b8; /* 藍色用於休息 */
+}
+
+/* 進度環中央文字 */
+.progress-ring-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    pointer-events: none;
+}
+
+.progress-ring-text #timer-text {
     margin: 0;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-#session-type {
-    font-size: 1.5rem;
-    margin-top: 1rem;
+.progress-ring-text #session-type {
+    margin-top: 0.5rem;
     opacity: 0.9;
 }
 
@@ -58,6 +91,33 @@
 
 #stats-display .badge {
     padding: 0.5rem 1rem;
+}
+
+/* 設定表單區域 (T084) */
+#settings-form {
+    margin-top: 2rem;
+}
+
+#settings-form .card {
+    border: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+#settings-form .form-label {
+    font-weight: 600;
+    color: #495057;
+}
+
+#settings-form .form-control {
+    border-radius: 8px;
+}
+
+#settings-form .form-control.is-invalid {
+    border-color: #dc3545;
+}
+
+#settings-form .invalid-feedback {
+    display: block;
 }
 
 /* Toast 通知樣式 */
