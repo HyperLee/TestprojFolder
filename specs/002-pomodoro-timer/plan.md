@@ -249,7 +249,44 @@ BNICalculate.Tests/  （現有測試專案）
 
 ## Phase 2: 任務分解
 
-**注意**: 此階段由 `/speckit.tasks` 命令生成，不在本文件範圍內。
+### Phase 2 目標
+
+將功能規格拆解為可測試的獨立任務，依使用者故事（User Story）組織，確保漸進式交付。
+
+### Phase 2 產出文件
+
+- ✅ `tasks.md` - 實作任務清單（已完成）
+
+### Phase 2 完成摘要
+
+已完成任務分解文件：
+
+1. **tasks.md** - 包含 119 個任務：
+   - Phase 1: Setup（5 個任務）- 專案初始化、目錄建立
+   - Phase 2: Foundational（10 個任務）- 基礎設施、模型、服務
+   - Phase 3: User Story 1（26 個任務）- 基本番茄鐘工作循環（P1 - MVP）
+   - Phase 4: User Story 2（13 個任務）- 計時器暫停與重置控制（P2）
+   - Phase 5: User Story 3（21 個任務）- 番茄鐘統計追蹤（P2）
+   - Phase 6: User Story 4（15 個任務）- 自訂時長設定（P3）
+   - Phase 7: User Story 5（8 個任務）- 視覺化進度顯示（P3）
+   - Phase 8: Polish（21 個任務）- 跨故事改進、文件、驗證
+
+2. **測試環境備案**：
+   - 所有測試任務標記為 OPTIONAL
+   - 包含測試環境驗證任務（T015）
+   - 若測試環境有問題（建置失敗、執行卡住），可跳過測試任務
+   - 提供手動測試替代方案（每個 User Story 包含 Independent Test）
+
+3. **任務組織方式**：
+   - 依使用者故事分組，確保每個故事可獨立測試
+   - 標記 [P] 可平行執行任務（約 40 個）
+   - 所有任務包含明確檔案路徑
+   - 格式：`- [ ] [TaskID] [P?] [Story?] Description with file path`
+
+4. **實作策略**：
+   - **MVP First**: Phase 1 + 2 + 3（User Story 1）完成後即可展示
+   - **Incremental Delivery**: 每個 User Story 完成後可獨立部署
+   - **Parallel Team Strategy**: Foundational 完成後，所有 User Story 可平行開發
 
 ---
 
@@ -259,17 +296,18 @@ BNICalculate.Tests/  （現有測試專案）
 |-----|------|---------|
 | Phase 0: 研究 | ✅ 完成 | 2025-10-31 |
 | Phase 1: 設計 | ✅ 完成 | 2025-10-31 |
-| Phase 2: 任務 | ⏳ 待執行 | - |
+| Phase 2: 任務 | ✅ 完成 | 2025-10-31 |
 
 ---
 
 ## 總結
 
-**Phase 0 + Phase 1 已完成**，所有設計文件已就緒：
+**Phase 0 + Phase 1 + Phase 2 已完成**，所有設計文件和任務清單已就緒：
 
 - ✅ research.md - 8 個技術決策（JSON 儲存、計時器、多視窗、進度環等）
 - ✅ data-model.md - 4 個實體設計（UserSettings, TimerSession, PomodoroStatistics, TimerState）
 - ✅ contracts/pomodoro-api.md - 3 個 JavaScript API（PomodoroTimer, MultiWindowGuard, NotificationUI）
 - ✅ quickstart.md - 完整開發者指南（環境設定、測試、偵錯、排解問題）
+- ✅ tasks.md - 119 個可執行任務（包含測試環境備案）
 
-**下一步**: 執行 `/speckit.tasks` 命令生成 tasks.md，將功能拆解為可測試的獨立任務。
+**下一步**: 開始實作任務，建議從 MVP（Phase 1 + 2 + 3）開始，完成基本番茄鐘工作循環。
