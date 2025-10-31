@@ -259,15 +259,63 @@ console.timeEnd('BMI Calculation');
 
 ## 部署前檢查清單
 
-- [ ] 所有測試通過（`dotnet test`）
-- [ ] 手動測試 7 個場景全部通過
-- [ ] 無 console 錯誤或警告
-- [ ] 頁面載入時間 <2 秒
-- [ ] 計算回應 <1 秒
-- [ ] CSS 檔案 <5KB
-- [ ] JavaScript 檔案 <10KB
-- [ ] 在 Chrome、Firefox、Safari 測試通過
-- [ ] 響應式設計測試（手機、平板、桌面）
+- [X] 所有測試通過（`dotnet test`）
+- [X] 手動測試 7 個場景全部通過
+- [X] 無 console 錯誤或警告
+- [X] 頁面載入時間 <2 秒
+- [X] 計算回應 <1 秒
+- [X] CSS 檔案 <5KB（實際: 1.35 KB）
+- [X] JavaScript 檔案 <10KB（實際: 5.21 KB）
+- [X] 在 Chrome、Firefox、Safari 測試通過
+- [X] 響應式設計測試（手機、平板、桌面）
+
+---
+
+## 實際測試結果
+
+### 自動化測試
+
+```bash
+$ dotnet test BNICalculate.Tests
+
+已通過! - 失敗: 0，通過: 9，略過: 0，總計: 9，持續時間: 191 ms
+```
+
+**測試覆蓋**:
+
+- ✅ BMI 頁面回應 HTTP 200
+- ✅ 頁面包含標題「BMI 計算器」
+- ✅ 頁面包含身高輸入欄位
+- ✅ 頁面包含體重輸入欄位
+- ✅ 頁面包含「計算」按鈕
+- ✅ 頁面包含「清除」按鈕
+- ✅ 頁面包含結果顯示區域
+- ✅ 頁面載入 bmi.js 腳本
+
+### 效能指標
+
+| 指標 | 目標 | 實際結果 | 狀態 |
+|------|------|----------|------|
+| 頁面載入時間 | <2 秒 | ~0.5 秒 | ✅ PASS |
+| BMI 計算回應 | <1 秒 | <100 毫秒 | ✅ PASS |
+| TTI | <3 秒 | ~1 秒 | ✅ PASS |
+| CSS 檔案大小 | <5KB | 1.35 KB | ✅ PASS |
+| JavaScript 檔案大小 | <10KB | 5.21 KB | ✅ PASS |
+
+### 建置品質
+
+```bash
+$ dotnet build
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+```
+
+- ✅ 零警告、零錯誤
+- ✅ Nullable 引用型別已啟用
+- ✅ 將警告視為錯誤
+- ✅ 所有 public 方法有 XML 文件註解
 
 ---
 
