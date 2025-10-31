@@ -84,14 +84,12 @@
                 <div class="card-body">
                     <form method="post" asp-page-handler="CalculateTwdToForeign" aria-label="台幣轉外幣計算表單">
                         <div class="mb-3">
-                            <label asp-for="TwdAmount" class="form-label">台幣金額 (TWD)</label>
+<label asp-for="TwdAmount" class="form-label">台幣金額 (TWD)</label>
                             <input asp-for="TwdAmount" 
                                    class="form-control" 
                                    type="number" 
                                    step="0.01" 
                                    min="0.01" 
-                                   required 
-                                   aria-required="true"
                                    aria-describedby="twdAmountHelp"
                                    placeholder="請輸入台幣金額" />
                             <span asp-validation-for="TwdAmount" class="text-danger" role="alert"></span>
@@ -165,8 +163,6 @@
                                    type="number" 
                                    step="0.01" 
                                    min="0.01" 
-                                   required 
-                                   aria-required="true"
                                    aria-describedby="foreignAmountHelp"
                                    placeholder="請輸入外幣金額" />
                             <span asp-validation-for="ForeignAmount" class="text-danger" role="alert"></span>

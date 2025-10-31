@@ -119,20 +119,26 @@ public class CurrencyConverterModel : PageModel
         // 清除不相關的欄位驗證錯誤
         ModelState.Remove(nameof(ForeignAmount));
         
+        _logger.LogInformation("台幣轉外幣計算 - TwdAmount: {Amount}, SelectedCurrency: {Currency}", TwdAmount, SelectedCurrency);
+        
         if (!TwdAmount.HasValue || TwdAmount.Value <= 0)
         {
+            _logger.LogWarning("台幣金額無效: {Amount}", TwdAmount);
             ModelState.AddModelError(nameof(TwdAmount), "請輸入大於 0 的金額");
         }
 
         if (!ModelState.IsValid)
         {
+            _logger.LogWarning("ModelState 無效，錯誤: {Errors}", string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)));
             await OnGetAsync();
             return Page();
         }
 
         try
         {
+            _logger.LogInformation("開始計算台幣轉外幣: {Amount} TWD -> {Currency}", TwdAmount!.Value, SelectedCurrency);
             Result = await _currencyService.CalculateTwdToForeignAsync(TwdAmount!.Value, SelectedCurrency);
+            _logger.LogInformation("計算完成，結果: {TargetAmount} {TargetCurrency}", Result?.TargetAmount, Result?.TargetCurrency);
             await OnGetAsync(); // 重新載入匯率資訊
             return Page();
         }
