@@ -1,0 +1,235 @@
+@page
+@model BNICalculate.Pages.CurrencyConverterModel
+@{
+    ViewData["Title"] = "匯率計算器";
+}
+
+<!-- Skip to main content link for keyboard navigation -->
+<a href="#main-content" class="skip-link sr-only sr-only-focusable">跳至主要內容</a>
+
+<div class="container mt-4" id="main-content">
+    <h1 class="mb-4">💱 匯率計算器</h1>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="status" aria-live="polite">
+            ✓ @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="關閉"></button>
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="alert alert-danger" role="alert" aria-live="assertive">
+            ⚠️ @Model.ErrorMessage
+        </div>
+    }
+
+    @if (Model.IsDataStale)
+    {
+        <div class="alert alert-warning" role="status" aria-live="polite">
+            ⚠️ 匯率資料已超過 24 小時,建議更新以取得最新匯率。
+        </div>
+    }
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    @if (Model.CurrentRates != null)
+                    {
+                        <h5 class="card-title">📊 當前匯率資訊</h5>
+                        <p class="card-text mb-0">
+                            <strong>資料來源：</strong>@Model.CurrentRates.DataSource<br />
+                            <strong>最後更新：</strong>@BNICalculate.Helpers.DateTimeHelper.GetFullDateTimeString(Model.CurrentRates.LastFetchTime)
+                        </p>
+                    }
+                    else
+                    {
+                        <h5 class="card-title">📊 匯率資訊</h5>
+                        <p class="card-text mb-0 text-muted">
+                            目前尚無匯率資料，請點擊右側按鈕取得最新匯率。
+                        </p>
+                    }
+                </div>
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                    <form method="post" asp-page-handler="UpdateRates" class="d-inline" aria-label="更新匯率資料表單">
+                        <button type="submit" 
+                                class="btn btn-outline-primary" 
+                                @(Model.IsUpdating ? "disabled" : "")
+                                aria-label="更新匯率資料"
+                                aria-busy="@(Model.IsUpdating ? "true" : "false")">
+                            @if (Model.IsUpdating)
+                            {
+                                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                <span>更新中...</span>
+                            }
+                            else
+                            {
+                                <span>🔄 更新匯率</span>
+                            }
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">台幣轉外幣</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" asp-page-handler="CalculateTwdToForeign" aria-label="台幣轉外幣計算表單">
+                        <div class="mb-3">
+<label asp-for="TwdAmount" class="form-label">台幣金額 (TWD)</label>
+                            <input asp-for="TwdAmount" 
+                                   class="form-control" 
+                                   type="number" 
+                                   step="0.01" 
+                                   min="0.01" 
+                                   aria-describedby="twdAmountHelp"
+                                   placeholder="請輸入台幣金額" />
+                            <span asp-validation-for="TwdAmount" class="text-danger" role="alert"></span>
+                            <small id="twdAmountHelp" class="form-text text-muted">請輸入大於 0.01 的金額</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="SelectedCurrency" class="form-label">目標貨幣</label>
+                            <select asp-for="SelectedCurrency" 
+                                    class="form-select"
+                                    aria-label="選擇目標貨幣"
+                                    aria-describedby="currencyHelp">
+                                <option value="USD">美元 (USD) 💵</option>
+                                <option value="JPY">日圓 (JPY) 💴</option>
+                                <option value="CNY">人民幣 (CNY) 💴</option>
+                                <option value="EUR">歐元 (EUR) 💶</option>
+                                <option value="GBP">英鎊 (GBP) 💷</option>
+                                <option value="HKD">港幣 (HKD) 💵</option>
+                                <option value="AUD">澳幣 (AUD) 💵</option>
+                            </select>
+                            <small id="currencyHelp" class="form-text text-muted">選擇要轉換的外幣幣別</small>
+                        </div>
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
+
+                        <button type="submit" 
+                                class="btn btn-primary w-100"
+                                aria-label="計算台幣轉外幣匯率">
+                            💹 計算
+                        </button>
+                    </form>
+
+                    @if (Model.Result != null && Model.Result.SourceCurrency == "TWD")
+                    {
+                        <div class="alert alert-success mt-4" role="status" aria-live="polite">
+                            <h6 class="alert-heading">✓ 計算結果</h6>
+                            <div class="mb-2">
+                                <div class="row">
+                                    <div class="col-6 text-muted">原始金額：</div>
+                                    <div class="col-6 text-end"><strong>@Model.Result.GetFormattedSourceAmount() TWD</strong></div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-6 text-muted">兌換後金額：</div>
+                                    <div class="col-6 text-end">
+                                        <span class="fs-5 text-success fw-bold">@Model.Result.GetFormattedTargetAmount() @Model.Result.TargetCurrency</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                            <small class="text-muted">
+                                匯率：1 TWD = @Model.Result.ExchangeRate.ToString("N6") @Model.Result.TargetCurrency<br />
+                                計算時間：@BNICalculate.Helpers.DateTimeHelper.GetFullDateTimeString(Model.Result.CalculatedAt)
+                            </small>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">外幣轉台幣</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" asp-page-handler="CalculateForeignToTwd" aria-label="外幣轉台幣計算表單">
+                        <div class="mb-3">
+                            <label asp-for="ForeignAmount" class="form-label">外幣金額</label>
+                            <input asp-for="ForeignAmount" 
+                                   class="form-control" 
+                                   type="number" 
+                                   step="0.01" 
+                                   min="0.01" 
+                                   aria-describedby="foreignAmountHelp"
+                                   placeholder="請輸入外幣金額" />
+                            <span asp-validation-for="ForeignAmount" class="text-danger" role="alert"></span>
+                            <small id="foreignAmountHelp" class="form-text text-muted">請輸入大於 0.01 的金額</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="SourceCurrency" class="form-label">來源貨幣</label>
+                            <select asp-for="SourceCurrency" 
+                                    class="form-select"
+                                    aria-label="選擇來源貨幣"
+                                    aria-describedby="sourceCurrencyHelp">
+                                <option value="USD">美元 (USD) 💵</option>
+                                <option value="JPY">日圓 (JPY) 💴</option>
+                                <option value="CNY">人民幣 (CNY) 💴</option>
+                                <option value="EUR">歐元 (EUR) 💶</option>
+                                <option value="GBP">英鎊 (GBP) 💷</option>
+                                <option value="HKD">港幣 (HKD) 💵</option>
+                                <option value="AUD">澳幣 (AUD) 💵</option>
+                            </select>
+                            <small id="sourceCurrencyHelp" class="form-text text-muted">選擇要換算的外幣幣別</small>
+                        </div>
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
+
+                        <button type="submit" 
+                                class="btn btn-success w-100"
+                                aria-label="計算外幣轉台幣匯率">
+                            💱 計算
+                        </button>
+                    </form>
+
+                    @if (Model.Result != null && Model.Result.TargetCurrency == "TWD")
+                    {
+                        <div class="alert alert-success mt-4" role="status" aria-live="polite">
+                            <h6 class="alert-heading">✓ 計算結果</h6>
+                            <div class="mb-2">
+                                <div class="row">
+                                    <div class="col-6 text-muted">原始金額：</div>
+                                    <div class="col-6 text-end"><strong>@Model.Result.GetFormattedSourceAmount() @Model.Result.SourceCurrency</strong></div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-6 text-muted">兌換後金額：</div>
+                                    <div class="col-6 text-end">
+                                        <span class="fs-5 text-success fw-bold">@Model.Result.GetFormattedTargetAmount() TWD</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                            <small class="text-muted">
+                                匯率：1 @Model.Result.SourceCurrency = @Model.Result.ExchangeRate.ToString("N6") TWD<br />
+                                計算時間：@BNICalculate.Helpers.DateTimeHelper.GetFullDateTimeString(Model.Result.CalculatedAt)
+                            </small>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <p class="text-muted small">
+            <strong>免責聲明：</strong>本匯率僅供參考，實際交易請以銀行公告為準。
+        </p>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
