@@ -1,0 +1,340 @@
+@page
+@model BNICalculate.Pages.PomodoroModel
+@{
+    ViewData["Title"] = "番茄鐘計時器";
+}
+
+<!-- T036: 引入 pomodoro.css -->
+<link rel="stylesheet" href="~/css/pomodoro.css" asp-append-version="true" />
+
+<div class="text-center">
+    <h1 class="display-4">番茄鐘計時器</h1>
+    <p>使用番茄工作法提升專注力和生產力</p>
+</div>
+
+<div class="container mt-4">
+    <!-- T070: 多視窗警告橫幅（初始隱藏） -->
+    <div id="multi-window-warning" class="alert alert-warning alert-dismissible fade show" role="alert" style="display:none;">
+        <strong>⚠️ 多視窗偵測</strong> 偵測到另一個分頁正在使用番茄鐘計時器。為避免衝突，此分頁的功能已停用。
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <!-- T024: 計時器顯示區域（MM:SS 格式、時段類型標籤） -->
+            <div id="timer-display" class="text-center mb-4">
+                <!-- T091: SVG 圓形進度環 -->
+                <div class="progress-ring-container">
+                    <svg class="progress-ring" width="300" height="300">
+                        <!-- 背景圓圈 -->
+                        <circle class="progress-ring-background"
+                                cx="150" cy="150" r="130"
+                                stroke="#e9ecef" stroke-width="15" fill="transparent" />
+                        <!-- 進度圓圈 -->
+                        <circle id="progress-ring-circle" class="progress-ring-progress work-phase"
+                                cx="150" cy="150" r="130"
+                                stroke="url(#progressGradient)" stroke-width="15" fill="transparent"
+                                stroke-dasharray="816.81" stroke-dashoffset="816.81" />
+                        <!-- 漸變定義 -->
+                        <defs>
+                            <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <!-- 時間顯示在圓圈中央 -->
+                    <div class="progress-ring-text">
+                        <h1 id="timer-text" class="display-1 fw-bold">25:00</h1>
+                        <p id="session-type" class="lead">準備開始工作</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- T025: 控制按鈕區（開始工作按鈕、HTML 結構） -->
+            <div id="timer-controls" class="text-center mt-4">
+                <button id="start-work-btn" class="btn btn-primary btn-lg">開始工作</button>
+                <button id="pause-btn" class="btn btn-warning btn-lg" style="display:none;">暫停</button>
+                <button id="resume-btn" class="btn btn-success btn-lg" style="display:none;">繼續</button>
+                <button id="reset-btn" class="btn btn-secondary btn-lg" style="display:none;">重置</button>
+            </div>
+            
+            <!-- T026: Bootstrap Toast 通知容器（橫幅訊息 HTML） -->
+            <div class="position-fixed top-0 end-0 p-3" style="z-index: 11">
+                <div id="notification-toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header">
+                        <strong class="me-auto">番茄鐘通知</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body" id="toast-message">
+                        通知訊息
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 統計顯示區域 -->
+            <div id="stats-display" class="mt-5 text-center">
+                <h4>今日完成</h4>
+                <p class="lead">番茄鐘數量：<span id="pomodoro-count" class="badge bg-success fs-4">@Model.Statistics.CompletedPomodoroCount</span></p>
+            </div>
+            
+            <!-- T080-T084: 設定表單區域 -->
+            <div id="settings-form" class="mt-5">
+                <h4>自訂設定</h4>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="work-duration-input" class="form-label">工作時長（分鐘）</label>
+                                <input type="number" class="form-control" id="work-duration-input" 
+                                       value="@Model.Settings.WorkDurationMinutes" 
+                                       min="1" max="60" required />
+                                <div class="invalid-feedback">請輸入 1-60 分鐘</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="break-duration-input" class="form-label">休息時長（分鐘）</label>
+                                <input type="number" class="form-control" id="break-duration-input" 
+                                       value="@Model.Settings.BreakDurationMinutes" 
+                                       min="1" max="30" required />
+                                <div class="invalid-feedback">請輸入 1-30 分鐘</div>
+                            </div>
+                        </div>
+                        <button id="save-settings-btn" class="btn btn-primary">儲存設定</button>
+                        <small class="text-muted ms-2">設定變更後需重新開始計時</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 隱藏欄位：傳遞設定給 JavaScript -->
+<input type="hidden" id="work-duration" value="@Model.Settings.WorkDurationMinutes" />
+<input type="hidden" id="break-duration" value="@Model.Settings.BreakDurationMinutes" />
+
+<!-- CSRF Token for AJAX requests -->
+@Html.AntiForgeryToken()
+
+@section Scripts {
+    <script src="~/js/pomodoro.js"></script>
+    <script>
+        // T029: 綁定開始按鈕事件監聽器
+        // T030: UI 更新邏輯（onTick 更新顯示、onComplete 顯示通知）
+        document.addEventListener('DOMContentLoaded', function() {
+            const workDuration = parseInt(document.getElementById('work-duration').value);
+            const breakDuration = parseInt(document.getElementById('break-duration').value);
+            
+            // T071: 多視窗管理初始化
+            const windowGuard = new MultiWindowGuard();
+            window.windowGuard = windowGuard; // 儲存至全域以便 beforeunload 使用
+            const hasLock = windowGuard.tryAcquireLock();
+            
+            if (!hasLock) {
+                // T071: 失敗則禁用功能並顯示警告
+                document.getElementById('multi-window-warning').style.display = 'block';
+                document.getElementById('timer-controls').style.display = 'none';
+                return; // 停止初始化
+            }
+            
+            // T027: 實作 showNotification() 函式（Bootstrap Toast 顯示、4 秒自動消失）
+            window.showNotification = function(message, type = 'info') {
+                const toastEl = document.getElementById('notification-toast');
+                const toastBody = document.getElementById('toast-message');
+                const toast = new bootstrap.Toast(toastEl, { delay: 4000 });
+                
+                toastBody.textContent = message;
+                
+                // 設定背景顏色
+                toastEl.className = 'toast';
+                if (type === 'success') toastEl.classList.add('bg-success', 'text-white');
+                else if (type === 'info') toastEl.classList.add('bg-info', 'text-white');
+                else if (type === 'warning') toastEl.classList.add('bg-warning');
+                else if (type === 'danger') toastEl.classList.add('bg-danger', 'text-white');
+                
+                toast.show();
+            };
+            
+            // 建立計時器實例
+            const timer = new PomodoroTimer({
+                workDuration: workDuration,
+                breakDuration: breakDuration,
+                onTick: function(remainingSeconds) {
+                    // T030: onTick 更新顯示
+                    document.getElementById('timer-text').textContent = formatTime(remainingSeconds);
+                    // T094: 更新進度環
+                    updateProgressRing(remainingSeconds, timer.totalDuration, timer.sessionType);
+                },
+                onWorkComplete: async function() {
+                    // T030: onComplete 顯示通知
+                    showNotification('工作時段完成！進入休息時段', 'success');
+                    
+                    // T059: 記錄完成的工作時段至伺服器
+                    const result = await recordCompletedSession('work', workDuration);
+                    if (result && result.completedPomodoroCount !== undefined) {
+                        // T061: 成功記錄後更新顯示
+                        document.getElementById('pomodoro-count').textContent = result.completedPomodoroCount;
+                    }
+                    
+                    document.getElementById('session-type').textContent = '休息時間';
+                    timer.startBreak();
+                },
+                onBreakComplete: async function() {
+                    // T059: 記錄完成的休息時段至伺服器
+                    await recordCompletedSession('break', breakDuration);
+                    
+                    showNotification('休息完成！準備下一個番茄鐘', 'info');
+                    document.getElementById('session-type').textContent = '準備開始工作';
+                    
+                    // 顯示開始按鈕
+                    document.getElementById('start-work-btn').style.display = 'inline';
+                    document.getElementById('pause-btn').style.display = 'none';
+                    document.getElementById('resume-btn').style.display = 'none';
+                    document.getElementById('reset-btn').style.display = 'none';
+                },
+                onStateChange: function(state) {
+                    // 根據狀態顯示/隱藏按鈕
+                    if (state === 'running') {
+                        document.getElementById('start-work-btn').style.display = 'none';
+                        document.getElementById('pause-btn').style.display = 'inline';
+                        document.getElementById('resume-btn').style.display = 'none';
+                        document.getElementById('reset-btn').style.display = 'inline';
+                    } else if (state === 'paused') {
+                        document.getElementById('pause-btn').style.display = 'none';
+                        document.getElementById('resume-btn').style.display = 'inline';
+                        document.getElementById('reset-btn').style.display = 'inline';
+                    } else {
+                        document.getElementById('start-work-btn').style.display = 'inline';
+                        document.getElementById('pause-btn').style.display = 'none';
+                        document.getElementById('resume-btn').style.display = 'none';
+                        document.getElementById('reset-btn').style.display = 'none';
+                    }
+                }
+            });
+            
+            // T029: 綁定開始按鈕事件
+            document.getElementById('start-work-btn').addEventListener('click', function() {
+                timer.startWork();
+                document.getElementById('session-type').textContent = '工作中';
+            });
+            
+            // 綁定暫停按鈕（Phase 4）
+            document.getElementById('pause-btn').addEventListener('click', function() {
+                timer.pause();
+                document.getElementById('session-type').textContent = '已暫停';
+            });
+            
+            // 綁定繼續按鈕（Phase 4）
+            document.getElementById('resume-btn').addEventListener('click', function() {
+                timer.resume();
+                const sessionText = timer.sessionType === 'work' ? '工作中' : '休息時間';
+                document.getElementById('session-type').textContent = sessionText;
+            });
+            
+            // 綁定重置按鈕（Phase 4）
+            document.getElementById('reset-btn').addEventListener('click', function() {
+                if (confirm('確定要重置計時器嗎？')) {
+                    timer.reset();
+                    document.getElementById('timer-text').textContent = formatTime(workDuration * 60);
+                    document.getElementById('session-type').textContent = '準備開始工作';
+                }
+            });
+            
+            // T033: 頁面載入時恢復狀態
+            const restored = timer.loadState();
+            if (restored) {
+                showNotification('已恢復計時器狀態', 'info');
+                const sessionText = timer.sessionType === 'work' ? '工作中' : '休息時間';
+                if (timer.state === 'paused') {
+                    document.getElementById('session-type').textContent = '已暫停';
+                } else {
+                    document.getElementById('session-type').textContent = sessionText;
+                }
+                document.getElementById('timer-text').textContent = formatTime(timer.remainingSeconds);
+            }
+            
+            // T085-T087: 設定表單邏輯
+            document.getElementById('save-settings-btn').addEventListener('click', async function() {
+                const workInput = document.getElementById('work-duration-input');
+                const breakInput = document.getElementById('break-duration-input');
+                
+                const workValue = parseInt(workInput.value);
+                const breakValue = parseInt(breakInput.value);
+                
+                // T085: 前端驗證
+                let isValid = true;
+                if (workValue < 1 || workValue > 60) {
+                    workInput.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    workInput.classList.remove('is-invalid');
+                }
+                
+                if (breakValue < 1 || breakValue > 30) {
+                    breakInput.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    breakInput.classList.remove('is-invalid');
+                }
+                
+                if (!isValid) {
+                    showNotification('請輸入有效的時長設定', 'danger');
+                    return;
+                }
+                
+                try {
+                    // 發送至伺服器
+                    const response = await fetch('/Pomodoro?handler=SaveSettings', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
+                        },
+                        body: JSON.stringify({
+                            workDurationMinutes: workValue,
+                            breakDurationMinutes: breakValue,
+                            enableSound: false
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        // T087: 顯示成功訊息
+                        showNotification('設定已儲存！', 'success');
+                        
+                        // T086: 更新計時器實例的時長屬性
+                        timer.workDuration = workValue;
+                        timer.breakDuration = breakValue;
+                        
+                        // 更新隱藏欄位
+                        document.getElementById('work-duration').value = workValue;
+                        document.getElementById('break-duration').value = breakValue;
+                        
+                        // 如果計時器在 idle 狀態，更新顯示
+                        if (timer.state === 'idle') {
+                            timer.totalDuration = workValue * 60;
+                            timer.remainingSeconds = timer.totalDuration;
+                            document.getElementById('timer-text').textContent = formatTime(timer.totalDuration);
+                        }
+                    } else {
+                        showNotification(result.message || '儲存失敗', 'danger');
+                    }
+                } catch (error) {
+                    console.error('儲存設定失敗:', error);
+                    showNotification('儲存失敗，請稍後再試', 'danger');
+                }
+            });
+        });
+        
+        // T072: 頁面關閉時釋放鎖定
+        window.addEventListener('beforeunload', function() {
+            if (window.windowGuard) {
+                window.windowGuard.releaseLock();
+            }
+        });
+        // T034: 頁面卸載時儲存狀態
+        window.addEventListener('beforeunload', function() {
+            // 狀態已在 timer.saveState() 中自動儲存
+        });
+    </script>
+}

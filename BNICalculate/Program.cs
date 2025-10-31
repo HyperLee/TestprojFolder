@@ -9,6 +9,10 @@ public class Program
         // Add services to the container.
         builder.Services.AddRazorPages();
 
+        // 註冊番茄鐘服務
+        builder.Services.AddMemoryCache();
+        builder.Services.AddScoped<Services.PomodoroDataService>();
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.

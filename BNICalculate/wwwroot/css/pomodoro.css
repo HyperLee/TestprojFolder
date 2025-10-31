@@ -1,0 +1,147 @@
+/**
+ * 番茄鐘計時器樣式
+ */
+
+/* 計時器顯示區域 */
+#timer-display {
+    padding: 2rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    color: white;
+    position: relative;
+}
+
+/* T091-T092: 圓形進度環容器 */
+.progress-ring-container {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    margin: 0 auto;
+}
+
+/* T092: 進度環樣式 */
+.progress-ring {
+    transform: rotate(-90deg); /* 從頂部開始 */
+}
+
+.progress-ring-circle {
+    transition: stroke-dashoffset 1s linear;
+}
+
+/* T096: 工作/休息時段顏色切換 */
+.progress-ring-progress.work-phase {
+    stroke: url(#progressGradient);
+}
+
+.progress-ring-progress.break-phase {
+    stroke: #17a2b8; /* 藍色用於休息 */
+}
+
+/* 進度環中央文字 */
+.progress-ring-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    pointer-events: none;
+}
+
+.progress-ring-text #timer-text {
+    margin: 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.progress-ring-text #session-type {
+    margin-top: 0.5rem;
+    opacity: 0.9;
+}
+
+/* 控制按鈕區 */
+#timer-controls {
+    margin-top: 2rem;
+}
+
+#timer-controls .btn {
+    margin: 0 0.5rem;
+    padding: 0.75rem 2rem;
+    font-size: 1.1rem;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+}
+
+#timer-controls .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* 統計顯示區域 */
+#stats-display {
+    padding: 1.5rem;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    border-left: 4px solid #28a745;
+}
+
+#stats-display h4 {
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+#stats-display .badge {
+    padding: 0.5rem 1rem;
+}
+
+/* 設定表單區域 (T084) */
+#settings-form {
+    margin-top: 2rem;
+}
+
+#settings-form .card {
+    border: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+#settings-form .form-label {
+    font-weight: 600;
+    color: #495057;
+}
+
+#settings-form .form-control {
+    border-radius: 8px;
+}
+
+#settings-form .form-control.is-invalid {
+    border-color: #dc3545;
+}
+
+#settings-form .invalid-feedback {
+    display: block;
+}
+
+/* Toast 通知樣式 */
+.toast {
+    min-width: 300px;
+}
+
+.toast-header {
+    font-weight: 600;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+    #timer-text {
+        font-size: 3.5rem;
+    }
+    
+    #session-type {
+        font-size: 1.2rem;
+    }
+    
+    #timer-controls .btn {
+        margin: 0.25rem;
+        padding: 0.5rem 1.5rem;
+        font-size: 1rem;
+    }
+}

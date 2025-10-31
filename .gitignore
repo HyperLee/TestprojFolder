@@ -482,3 +482,6 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# Pomodoro timer user data (do not commit user-specific data)
+BNICalculate/App_Data/pomodoro/*.json
