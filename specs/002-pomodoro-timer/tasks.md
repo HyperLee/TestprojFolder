@@ -53,11 +53,11 @@
 - [ ] T011 建立基礎 Razor Page 在 BNICalculate/Pages/Pomodoro.cshtml（空白頁面含 @page 指令）
 - [ ] T012 建立 PageModel 在 BNICalculate/Pages/Pomodoro.cshtml.cs（載入設定和統計）
 
-**測試（OPTIONAL - 若測試環境有問題可跳過）**:
+**測試（⚠️ OPTIONAL - 若測試環境有問題可跳過）**:
 
-- [ ] T013 建立 UserSettingsTests 在 BNICalculate.Tests/Unit/Models/UserSettingsTests.cs（驗證規則測試）
-- [ ] T014 建立 PomodoroDataServiceTests 在 BNICalculate.Tests/Unit/Services/PomodoroDataServiceTests.cs（JSON 序列化、檔案讀寫、預設值測試）
-- [ ] T015 執行基礎測試確認環境正常：`dotnet test --filter "FullyQualifiedName~PomodoroDataServiceTests"`（若失敗則標記測試為可選）
+- [ ] T013 ⚠️ 建立 UserSettingsTests 在 BNICalculate.Tests/Unit/Models/UserSettingsTests.cs（驗證規則測試）
+- [ ] T014 ⚠️ 建立 PomodoroDataServiceTests 在 BNICalculate.Tests/Unit/Services/PomodoroDataServiceTests.cs（JSON 序列化、檔案讀寫、預設值測試）
+- [ ] T015 ⚠️ 執行基礎測試確認環境正常：`dotnet test --filter "FullyQualifiedName~PomodoroDataServiceTests"`（若失敗則標記測試為可選）
 
 **Checkpoint**: 基礎架構就緒 - 使用者故事可開始依序實作
 
@@ -110,10 +110,10 @@
 - [ ] T038 [US1] 在 Pomodoro.cshtml.cs OnGet() 載入 PomodoroStatistics（呼叫 PomodoroDataService）
 - [ ] T039 [US1] 在 Pomodoro.cshtml 將設定資料傳遞給 JavaScript（隱藏欄位或 data 屬性）
 
-### 測試（OPTIONAL - 環境問題可跳過）
+### 測試（⚠️ OPTIONAL - 環境問題可跳過）
 
-- [ ] T040 [US1] 建立 PomodoroPageTests 在 BNICalculate.Tests/Integration/Pages/PomodoroPageTests.cs（測試頁面載入、設定傳遞）
-- [ ] T041 [US1] 執行整合測試：`dotnet test --filter "FullyQualifiedName~PomodoroPageTests"`（若失敗記錄問題但繼續）
+- [ ] T040 ⚠️ [US1] 建立 PomodoroPageTests 在 BNICalculate.Tests/Integration/Pages/PomodoroPageTests.cs（測試頁面載入、設定傳遞）
+- [ ] T041 ⚠️ [US1] 執行整合測試：`dotnet test --filter "FullyQualifiedName~PomodoroPageTests"`（若失敗記錄問題但繼續）
 
 **Checkpoint**: User Story 1 完成 - 基本計時功能可獨立測試（手動測試：開啟頁面 → 點擊開始 → 觀察 25 分鐘倒數 → 驗證自動切換休息）
 
@@ -191,9 +191,9 @@
 - [ ] T071 [US3] 在 pomodoro.js 頁面載入時執行 tryAcquireLock()（失敗則禁用功能）
 - [ ] T072 [US3] 在 window.beforeunload 綁定 releaseLock() 呼叫
 
-### 測試（US3 - OPTIONAL）
+### 測試（⚠️ OPTIONAL - US3）
 
-- [ ] T073 [US3] 建立 PomodoroStatisticsTests 在 BNICalculate.Tests/Unit/Models/PomodoroStatisticsTests.cs（測試 IsToday()、RecordWorkSession()）
+- [ ] T073 ⚠️ [US3] 建立 PomodoroStatisticsTests 在 BNICalculate.Tests/Unit/Models/PomodoroStatisticsTests.cs（測試 IsToday()、RecordWorkSession()）
 - [ ] T074 [US3] 手動測試：完成 2 個番茄鐘 → 檢查統計顯示 2 → 關閉頁面 → 重新開啟 → 驗證顯示 2
 - [ ] T075 [US3] 手動測試多視窗：開啟第一個視窗 → 開啟第二個視窗 → 驗證第二個視窗顯示警告並禁用
 
@@ -230,9 +230,9 @@
 - [ ] T086 [US4] 在設定儲存成功後更新 PomodoroTimer 實例的時長屬性
 - [ ] T087 [US4] 在 pomodoro.js 實作設定變更時顯示 Toast 確認訊息
 
-### 測試（US4 - OPTIONAL）
+### 測試（⚠️ OPTIONAL - US4）
 
-- [ ] T088 [US4] 建立 UserSettingsValidationTests 在 BNICalculate.Tests/Unit/Models/UserSettingsTests.cs（測試 Range 驗證、IsValid()）
+- [ ] T088 ⚠️ [US4] 建立 UserSettingsValidationTests 在 BNICalculate.Tests/Unit/Models/UserSettingsTests.cs（測試 Range 驗證、IsValid()）
 - [ ] T089 [US4] 手動測試：設定工作 30 分鐘、休息 10 分鐘 → 儲存 → 開始工作 → 驗證顯示 30:00
 - [ ] T090 [US4] 手動測試：輸入無效值（0 分鐘）→ 驗證顯示錯誤訊息
 
@@ -257,7 +257,7 @@
 - [ ] T095 [US5] 實作工作/休息時段顏色切換（工作綠色、休息藍色，動態修改 class）
 - [ ] T096 [US5] 在 pomodoro.css 新增進度環顏色類別（.work-phase、.break-phase）
 
-### 測試（US5 - OPTIONAL）
+### 測試（⚠️ OPTIONAL - US5）
 
 - [ ] T097 [US5] 手動測試：開始工作 → 觀察進度環從 0% 到 100% 平滑更新 → 切換休息 → 驗證進度環重置並變色
 - [ ] T098 [US5] 手動測試：暫停 → 驗證進度環停留在暫停位置 → 繼續 → 驗證進度環繼續更新
@@ -296,11 +296,11 @@
 - [ ] T111 確認所有 JavaScript 函式包含 JSDoc 註解
 - [ ] T112 執行 Markdown linter 檢查所有文件格式正確
 
-### 最終測試（OPTIONAL - 若環境允許）
+### 最終測試（⚠️ OPTIONAL - 若環境允許）
 
-- [ ] T113 執行所有單元測試：`dotnet test --filter "Category=Unit"`（若失敗記錄但不阻塞）
-- [ ] T114 執行所有整合測試：`dotnet test --filter "Category=Integration"`（若失敗記錄但不阻塞）
-- [ ] T115 產生測試覆蓋率報告：`dotnet test --collect:"XPlat Code Coverage"`（目標：服務層 80%+）
+- [ ] T113 ⚠️ 執行所有單元測試：`dotnet test --filter "Category=Unit"`（若失敗記錄但不阻塞）
+- [ ] T114 ⚠️ 執行所有整合測試：`dotnet test --filter "Category=Integration"`（若失敗記錄但不阻塞）
+- [ ] T115 ⚠️ 產生測試覆蓋率報告：`dotnet test --collect:"XPlat Code Coverage"`（目標：服務層 80%+）
 
 ### 部署準備
 
@@ -341,17 +341,23 @@
 ### Test Execution Strategy (若環境允許)
 
 ```bash
-# 確認測試環境
-dotnet build BNICalculate.Tests/BNICalculate.Tests.csproj
+# 第一步：確認測試環境（設定 5 分鐘逾時）
+timeout 300 dotnet build BNICalculate.Tests/BNICalculate.Tests.csproj
 
-# 若建置失敗，記錄問題並跳過所有測試任務
-# 若建置成功，執行小批次測試：
+# 若建置失敗或逾時 >5 分鐘：
+# → 記錄問題並 **直接跳過所有帶 ⚠️ 的測試任務**
+# → 改用手動測試驗證功能
 
-# 測試單一類別
-dotnet test --filter "FullyQualifiedName~UserSettingsTests"
+# 若建置成功，執行小批次測試（每個測試設 5 分鐘逾時）：
+timeout 300 dotnet test --filter "FullyQualifiedName~UserSettingsTests"
 
-# 若執行超過 30 秒卡住，停止並標記該測試為 SKIP
-# 繼續其他實作任務，不阻塞開發流程
+# 若任何測試執行逾時 >5 分鐘或錯誤無法解決：
+# → 立即終止測試流程
+# → **跳過所有剩餘的帶 ⚠️ 測試任務**
+# → 使用手動測試替代（每個 User Story 的 Independent Test）
+# → 繼續實作任務，不阻塞開發流程
+
+# ⚠️ 重要：測試環境問題不應阻礙功能交付
 ```
 
 ---
@@ -389,12 +395,19 @@ dotnet test --filter "FullyQualifiedName~UserSettingsTests"
 
 ### 測試環境備案
 
-**重要提醒**: BNICalculate.Tests 專案若遇到環境問題：
+**⚠️ 重要提醒**: BNICalculate.Tests 專案若遇到環境問題：
 
 1. **建置失敗**: 記錄錯誤訊息，跳過所有標記 OPTIONAL 的測試任務
-2. **執行卡住**: 單一測試超過 30 秒未完成，終止並標記為 SKIP
-3. **替代方案**: 使用手動測試驗證功能（每個 User Story 的 Independent Test）
-4. **不阻塞開發**: 測試問題不應阻止實作任務進行，優先交付可工作的功能
+2. **執行逾時**: 單一測試超過 5 分鐘未完成，立即終止
+3. **錯誤無法解決**: 若測試環境問題無法在合理時間內修復
+4. **備案**: 如果測試專案建置或執行遇到問題（逾時 >5 分鐘、錯誤無法解決），**直接跳過剩餘任務和所有帶 ⚠️ 的測試任務**，改用手動測試驗證功能。
+5. **替代方案**: 使用手動測試驗證功能（每個 User Story 的 Independent Test）
+6. **不阻塞開發**: 測試問題不應阻止實作任務進行，優先交付可工作的功能
+
+**標記說明**：
+
+- 帶 ⚠️ 的測試任務 = 環境有問題時可直接跳過
+- 手動測試 = 不依賴測試專案，可隨時執行
 
 ### 提交建議
 
