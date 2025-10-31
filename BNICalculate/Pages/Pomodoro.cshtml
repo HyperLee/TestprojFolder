@@ -239,18 +239,6 @@
                 }
             });
             
-            // T071: 多視窗管理初始化
-            const windowGuard = new MultiWindowGuard();
-            const hasLock = windowGuard.tryAcquireLock();
-            
-            if (!hasLock) {
-                // T071: 失敗則禁用功能並顯示警告
-                document.getElementById('multi-window-warning').style.display = 'block';
-                document.getElementById('timer-controls').style.display = 'none';
-                showNotification('偵測到多視窗，功能已停用', 'warning');
-                return; // 停止初始化
-            }
-            
             // T033: 頁面載入時恢復狀態
             const restored = timer.loadState();
             if (restored) {
